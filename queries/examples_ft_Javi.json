@@ -1,0 +1,652 @@
+[
+  {
+    "question": "Which proteins are encoded by the EGFR gene in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which genes are involved in DNA repair in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "If the APOE gene is linked to the development of Alzheimer's, what molecular function do the proteins it encodes have in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which proteins directly interact with the proteins encoded by the PTEN gene in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which transcription factors regulate the expression of the RUNX1 gene in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which genes are in the same regulatory domain (TAD) as the GATA3 gene in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which transcription factors activate the NFKB2 gene in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which proteins interact with the proteins encoded by the TP53 gene in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which proteins are involved in the development of Parkinson's disease in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which proteins are involved in DNA repair and form complexes with FOXL1 in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which proteins are associated with cytokine-mediated signaling pathways in autoimmune diseases in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which proteins have kinase activity in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which proteins transport iron in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which proteins regulate apoptosis and interact with the proteins encoded by the caspase-9 gene in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which proteins inhibit the activity of the proteins encoded by the VEGFA gene in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which proteins have helicase activity associated with DNA repair in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which genes are involved in the Wnt signaling pathway in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which genes are associated with pulmonary fibrosis and participate in mRNA catabolic processes in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which genes in humans are involved in fatty acid beta-oxidation?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which proteins activate the MAPK signaling pathway in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which genes are involved in pyrimidine synthesis in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which proteins regulate calcium homeostasis in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which genes are involved in the regulation of gluconeogenesis in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which genes are key to collagen biosynthesis in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which proteins negatively regulate the innate immune response in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "What genes are involved in regulating neurotransmitter secretion in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which proteins are involved in the nerve growth factor (NGF) signaling pathway in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which genes regulate the phosphatidylinositol 3-kinase/protein kinase B pathway in type 2 diabetes in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which genes are essential for the insulin receptor signaling pathway in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which proteins are involved in the regulation of autophagy in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which signaling pathways are associated with breast cancer in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which genes regulate the activity of the MMP9 gene and are involved in gastric cancer in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which genes respond to interleukin-7 and have molecular interactions with SIRT1 in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which proteins have protein-binding activity and are involved in the response to oxidative stress in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which genes regulate mRNA stability in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which proteins regulate the proteins with RNA polymerase I activity in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which genes are regulated by the TGF gene in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which genes are involved in folic acid metabolism in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which genes on chromosome 2 encode ligase activity proteins related to DNA repair, and which diseases are associated with these genes in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which genes on chromosome 11 encode proteins involved in the apoptotic process of B cells located in the cytoplasm or nucleus in humans?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "What are the human genes located on chromosome 19 that encode proteins associated with molecular functions that involve protein binding and biological processes related to DNA damage repair?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "What are the human genes located on chromosome X that encode proteins involved in molecular functions with kinase activity and biological processes related to the cellular response to hypoxia?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "What are the human genes located on chromosome 1 that encode proteins associated with molecular functions involving signaling and biological processes related to the DNA damage response?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "What are the human genes located on chromosome 6 that encode proteins involved in biological processes related to DNA repair and are associated with specific diseases?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "What are the human genes located on chromosome 3 that encode proteins associated with molecular functions involving ADP binding and biological processes related to DNA recombination?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "What are the human genes located on chromosome 21 that encode proteins associated with molecular functions involving histone binding and biological processes related to DNA repair?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "What are the human proteins encoded by genes associated with breast cancer?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "What are the human proteins encoded by genes associated with molecular functions related to tumor necrosis and biological processes related to DNA repair?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "What are the human genes that encode proteins associated with biological processes related to DNA methylation and linked to diseases such as neuropathy?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  },
+  {
+    "question": "Which human proteins are involved in the amyloid-beta metabolic process?",
+    "graphs": {
+      "entity_graphs": [],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": [],
+      "output": [],
+      "relationships": []
+    },
+    "sparql": ""
+  }
+]

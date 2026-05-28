@@ -1,0 +1,244 @@
+[
+  {
+    "question": "In which organisms is the Fbxl6 gene found? Provide the taxon and its synonym.",
+    "graphs": {
+      "entity_graphs": ["gene", "taxon"],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": ["Fbxl6"],
+      "output": ["taxon name", "taxon synonym"],
+      "relationships": [
+        {"subject": "Fbxl6", "predicate": "found in taxon", "object": "taxon"},
+        {"subject": "taxon", "predicate": "has synonym", "object": "taxon synonym"}
+      ]
+    },
+    "sparql": "SELECT DISTINCT ?name ?synonym WHERE { GRAPH <http://rdf.biogateway.eu/graph/gene> { ?uri_gen <http://www.w3.org/2004/02/skos/core#prefLabel> \"Fbxl6\"; <http://purl.obolibrary.org/obo/RO_0002162> ?taxon. } GRAPH <http://rdf.biogateway.eu/graph/taxon> { ?taxon <http://www.w3.org/2000/01/rdf-schema#label> ?name; <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> ?synonym. } }"
+  },
+  {
+    "question": "What are the close matches to the GLA gene?",
+    "graphs": {
+      "entity_graphs": ["gene"],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": ["GLA"],
+      "output": ["close match"],
+      "relationships": [
+        {"subject": "GLA", "predicate": "has close match", "object": "close match"}
+      ]
+    },
+    "sparql": "SELECT DISTINCT ?uri_gene ?match WHERE { ?uri_gene <http://www.w3.org/2004/02/skos/core#prefLabel> \"GLA\"; <http://www.w3.org/2004/02/skos/core#closeMatch> ?match. }"
+  },
+  {
+    "question": "Tell me the start and end positions of the GLA gene.",
+    "graphs": {
+      "entity_graphs": ["gene"],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": ["GLA"],
+      "output": ["start position", "end position"],
+      "relationships": [
+        {"subject": "GLA", "predicate": "has start position", "object": "start position"},
+        {"subject": "GLA", "predicate": "has end position", "object": "end position"}
+      ]
+    },
+    "sparql": "SELECT DISTINCT ?uri_gene ?start ?end WHERE { ?uri_gene <http://www.w3.org/2004/02/skos/core#prefLabel> \"GLA\"; <http://purl.obolibrary.org/obo/GENO_0000894> ?start; <http://purl.obolibrary.org/obo/GENO_0000895> ?end . }"
+  },
+  {
+    "question": "Tell me the start position of the GLA gene.",
+    "graphs": {
+      "entity_graphs": ["gene"],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": ["GLA"],
+      "output": ["start position"],
+      "relationships": [
+        {"subject": "GLA", "predicate": "has start position", "object": "start position"}
+      ]
+    },
+    "sparql": "SELECT DISTINCT ?uri_gene ?start WHERE { ?uri_gene <http://www.w3.org/2004/02/skos/core#prefLabel> \"GLA\"; <http://purl.obolibrary.org/obo/GENO_0000894> ?start. }"
+  },
+  {
+    "question": "Tell me the end position of the GLA gene.",
+    "graphs": {
+      "entity_graphs": ["gene"],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": ["GLA"],
+      "output": ["end position"],
+      "relationships": [
+        {"subject": "GLA", "predicate": "has end position", "object": "end position"}
+      ]
+    },
+    "sparql": "SELECT DISTINCT ?uri_gene ?end WHERE { ?uri_gene <http://www.w3.org/2004/02/skos/core#prefLabel> \"GLA\"; <http://purl.obolibrary.org/obo/GENO_0000895> ?end . }"
+  },
+  {
+    "question": "Which genes are associated with Marfan syndrome?",
+    "graphs": {
+      "entity_graphs": ["gene", "omim"],
+      "relation_graphs": ["gene2phen"]
+    },
+    "extracted": {
+      "entities": ["Marfan syndrome"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "associated with", "object": "Marfan syndrome"}
+      ]
+    },
+    "sparql": "SELECT DISTINCT ?uri_gene ?gene_label WHERE { ?disease <http://www.w3.org/2004/02/skos/core#prefLabel> \"Marfan syndrome\". ?uri_gene <http://purl.obolibrary.org/obo/RO_0002331> ?disease; <http://www.w3.org/2004/02/skos/core#prefLabel> ?gene_label. }"
+  },
+  {
+    "question": "What enhancers are associated with the TOX3 gene?",
+    "graphs": {
+      "entity_graphs": ["crm", "gene"],
+      "relation_graphs": ["crm2gene"]
+    },
+    "extracted": {
+      "entities": ["TOX3"],
+      "output": ["enhancer"],
+      "relationships": [
+        {"subject": "enhancer", "predicate": "regulates", "object": "TOX3"}
+      ]
+    },
+    "sparql": "SELECT DISTINCT ?enhancer ?enh_label WHERE { ?enhancer <http://purl.obolibrary.org/obo/RO_0002429> ?uri_gene . ?uri_gene <http://www.w3.org/2004/02/skos/core#prefLabel> \"TOX3\". ?enhancer <http://www.w3.org/2004/02/skos/core#prefLabel> ?enh_label. }"
+  },
+  {
+    "question": "What diseases are linked to the enhancer CRMHS00000003515?",
+    "graphs": {
+      "entity_graphs": ["crm", "omim"],
+      "relation_graphs": ["crm2phen"]
+    },
+    "extracted": {
+      "entities": ["CRMHS00000003515"],
+      "output": ["disease"],
+      "relationships": [
+        {"subject": "CRMHS00000003515", "predicate": "associated with", "object": "disease"}
+      ]
+    },
+    "sparql": "SELECT DISTINCT ?disease WHERE { <http://rdf.biogateway.eu/crm/9606/CRMHS00000003515> <http://purl.obolibrary.org/obo/RO_0002331> ?disease . }"
+  },
+  {
+    "question": "What is the preferred label of the protein Q99593?",
+    "graphs": {
+      "entity_graphs": ["prot"],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": ["Q99593"],
+      "output": ["preferred label"],
+      "relationships": [
+        {"subject": "Q99593", "predicate": "has preferred label", "object": "preferred label"}
+      ]
+    },
+    "sparql": "SELECT DISTINCT ?label WHERE { <http://uniprot.org/uniprot/Q99593> <http://www.w3.org/2004/02/skos/core#prefLabel> ?label. }"
+  },
+  {
+    "question": "Which genes does the transcription factor P04637 positively regulate?",
+    "graphs": {
+      "entity_graphs": ["prot", "gene"],
+      "relation_graphs": ["tfac2gene"]
+    },
+    "extracted": {
+      "entities": ["P04637"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "P04637", "predicate": "positively regulates", "object": "gene"}
+      ]
+    },
+    "sparql": "SELECT DISTINCT ?gene ?gene_label WHERE { <http://uniprot.org/uniprot/P04637> <http://purl.obolibrary.org/obo/RO_0002429> ?gene . ?gene <http://www.w3.org/2004/02/skos/core#prefLabel> ?gene_label. }"
+  },
+  {
+    "question": "Which genes does the transcription factor P04637 negatively regulate?",
+    "graphs": {
+      "entity_graphs": ["prot", "gene"],
+      "relation_graphs": ["tfac2gene"]
+    },
+    "extracted": {
+      "entities": ["P04637"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "P04637", "predicate": "negatively regulates", "object": "gene"}
+      ]
+    },
+    "sparql": "SELECT DISTINCT ?gene ?gene_label WHERE { <http://uniprot.org/uniprot/P04637> <http://purl.obolibrary.org/obo/RO_0002430> ?gene . ?gene <http://www.w3.org/2004/02/skos/core#prefLabel> ?gene_label. }"
+  },
+  {
+    "question": "What cellular components is the protein P53_HUMAN part of?",
+    "graphs": {
+      "entity_graphs": ["prot", "go"],
+      "relation_graphs": ["prot2cc"]
+    },
+    "extracted": {
+      "entities": ["P53_HUMAN"],
+      "output": ["cellular component"],
+      "relationships": [
+        {"subject": "P53_HUMAN", "predicate": "part of", "object": "cellular component"}
+      ]
+    },
+    "sparql": "SELECT DISTINCT ?cc ?cc_label WHERE { ?prot <http://www.w3.org/2004/02/skos/core#prefLabel> \"P53_HUMAN\"; <http://purl.obolibrary.org/obo/BFO_0000050> ?cc . ?cc <http://www.w3.org/2000/01/rdf-schema#label> ?cc_label. }"
+  },
+  {
+    "question": "What molecular functions does the protein TBX5_HUMAN have?",
+    "graphs": {
+      "entity_graphs": ["prot", "go"],
+      "relation_graphs": ["prot2mf"]
+    },
+    "extracted": {
+      "entities": ["TBX5_HUMAN"],
+      "output": ["molecular function"],
+      "relationships": [
+        {"subject": "TBX5_HUMAN", "predicate": "has molecular function", "object": "molecular function"}
+      ]
+    },
+    "sparql": "SELECT DISTINCT ?mf ?mf_label WHERE { ?prot <http://www.w3.org/2004/02/skos/core#prefLabel> \"TBX5_HUMAN\"; <http://purl.obolibrary.org/obo/RO_0002327> ?mf . ?mf <http://www.w3.org/2000/01/rdf-schema#label> ?mf_label. }"
+  },
+  {
+    "question": "Which enhancers are located on chromosome 12?",
+    "graphs": {
+      "entity_graphs": ["crm"],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": ["chromosome 12"],
+      "output": ["enhancer", "start position", "end position"],
+      "relationships": [
+        {"subject": "enhancer", "predicate": "located in", "object": "chromosome 12"}
+      ]
+    },
+    "sparql": "SELECT DISTINCT ?enh ?enh_label ?start ?end WHERE { ?enh <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://purl.obolibrary.org/obo/SO_0000727>; <http://www.w3.org/2004/02/skos/core#prefLabel> ?enh_label; <http://purl.obolibrary.org/obo/BFO_0000050> <https://www.ncbi.nlm.nih.gov/nuccore/NC_000012.12>; <http://purl.obolibrary.org/obo/GENO_0000894> ?start; <http://purl.obolibrary.org/obo/GENO_0000895> ?end . }"
+  },
+  {
+    "question": "What is the source database of the enhancer CRMHS00000003515?",
+    "graphs": {
+      "entity_graphs": ["crm"],
+      "relation_graphs": []
+    },
+    "extracted": {
+      "entities": ["CRMHS00000003515"],
+      "output": ["database"],
+      "relationships": [
+        {"subject": "CRMHS00000003515", "predicate": "described by", "object": "database"}
+      ]
+    },
+    "sparql": "SELECT DISTINCT ?db ?db_label WHERE { ?inst <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.biogateway.eu/crm/9606/CRMHS00000003515>; <http://semanticscience.org/resource/SIO_000253> ?db . ?db <http://www.w3.org/2004/02/skos/core#prefLabel> ?db_label. }"
+  },
+  {
+    "question": "What orthologous proteins does Q99593 have?",
+    "graphs": {
+      "entity_graphs": ["prot"],
+      "relation_graphs": ["ortho"]
+    },
+    "extracted": {
+      "entities": ["Q99593"],
+      "output": ["ortholog"],
+      "relationships": [
+        {"subject": "Q99593", "predicate": "orthologous to", "object": "protein"}
+      ]
+    },
+    "sparql": "SELECT DISTINCT ?ortholog WHERE { <http://uniprot.org/uniprot/Q99593> <http://semanticscience.org/resource/SIO_000558> ?ortholog . }"
+  }
+]

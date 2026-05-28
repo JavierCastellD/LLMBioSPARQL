@@ -1,0 +1,87 @@
+#Generate a dataset with information about OMIM phenotypes, their associated genes, 
+#CRM sequences annotated as enhancers of these genes (include coordinates and source database), 
+#distance between CRM sequences and start of these genes, proteins encoded by the genes, and interacting proteins. 
+#If the encoded proteins are transcription factors, also include their target genes, 
+#making a distinction between positive and negative regulation.
+
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX sio: <http://semanticscience.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX faldo: <http://biohackathon.org/resource/faldo#>
+SELECT DISTINCT ?omim ?disease_label ?gene_label ?enh_label ?chr_label ?enh_start ?enh_end ?enh_source_name ?dist_TSSgene_enhMiddle ?prot_label ?bp ?bp_label ?prot_interact_label ?posit_tf2gene ?neg_tf2gene
+WHERE {
+	GRAPH <http://rdf.biogateway.eu/graph/omim> {
+		?disease skos:notation ?omim ;
+			skos:prefLabel ?disease_label .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/gene2phen> {
+		?gene obo:RO_0002331 ?disease .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/gene> {
+		{
+		?gene rdfs:subClassOf sio:SIO_010035;
+			skos:prefLabel ?gene_label ;
+			sio:SIO_010078 ?prot ;
+			obo:BFO_0000050 ?chr ;
+			obo:GENO_0000906 faldo:ForwardStrandPosition ;
+			obo:GENO_0000894 ?TSS_gene .
+		} UNION {
+		?gene rdfs:subClassOf sio:SIO_010035;
+			skos:prefLabel ?gene_label ;
+			sio:SIO_010078 ?prot ;
+			obo:BFO_0000050 ?chr ;
+			obo:GENO_0000906 faldo:ReverseStrandPosition  ;
+			obo:GENO_0000895 ?TSS_gene .
+		}
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/crm2gene> {
+		?enhID obo:RO_0002429 ?gene .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/crm> {
+		?enhID rdfs:subClassOf obo:SO_0000727 ;
+			skos:prefLabel ?enh_label ;
+			obo:GENO_0000894 ?enh_start ;
+                        obo:GENO_0000895 ?enh_end ;
+                        obo:BFO_0000050 ?chr .
+			
+		?enh_inst rdf:type ?enhID ;
+                        sio:SIO_000253 ?enh_source .
+
+		?enh_source skos:prefLabel ?enh_source_name .
+		?chr skos:prefLabel ?chr_label .
+	}
+
+	BIND((?enh_end - ?enh_start) AS ?enh_range)
+        BIND((ROUND(?enh_range/2) + ?enh_start) AS ?enh_middle)
+        BIND(ABS(?TSS_gene - ?enh_middle) AS ?dist_TSSgene_enhMiddle)
+
+
+	GRAPH <http://rdf.biogateway.eu/graph/prot2bp> {
+		?prot obo:RO_0002331 ?bp .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/go> {
+		?bp rdfs:label ?bp_label .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/prot2prot> {
+		?prot obo:RO_0002436 ?prot_interact .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/prot> {
+		?prot skos:prefLabel ?prot_label .
+		?prot_interact skos:prefLabel ?prot_interact_label .
+	}
+
+	OPTIONAL {
+		GRAPH <http://rdf.biogateway.eu/graph/tfac2gene> {
+			{?prot obo:RO_0002429 ?posit_tf2gene} UNION {?prot obo:RO_0002430 ?neg_tf2gene}
+		}
+	}		
+}
