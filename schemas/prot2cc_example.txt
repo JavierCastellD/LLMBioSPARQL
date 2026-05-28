@@ -1,0 +1,25 @@
+@prefix prot2go: <http://rdf.biogateway.eu/prot-onto/> .
+@prefix uniprot: <http://uniprot.org/uniprot/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix obo: <http://purl.obolibrary.org/obo/>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix sio: <http://semanticscience.org/resource/>.
+
+prot2go:uniprot!A0A023T778--obo!GO_0005634 rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    rdf:subject uniprot:A0A023T778 ;
+    rdf:predicate obo:BFO_0000050 ;
+    rdf:object obo:GO_0005634 ;
+    skos:prefLabel "A0A023T778--GO:0005634" ;
+    skos:definition "Association between protein A0A023T778 and cellular component GO:0005634" .
+	
+prot2go:uniprot!A0A023T778--obo!GO_0005634#goa rdf:type prot2go:uniprot!A0A023T778--obo!GO_0005634 ;
+	sio:SIO_000253 <http://identifiers.org/goa/> ;
+	rdfs:isDefinedBy "IEA" .
+
+uniprot:A0A023T778 obo:BFO_0000050 obo:GO_0005634 .
+
+rdf:Statement rdf:type owl:Class ;
+	skos:prefLabel "Triple" .

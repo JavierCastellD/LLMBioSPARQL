@@ -1,0 +1,73 @@
+@prefix hcrm: <http://rdf.biogateway.eu/crm/9606/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix obo: <http://purl.obolibrary.org/obo/>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix nuccore: <https://www.ncbi.nlm.nih.gov/nuccore/>.
+@prefix biolink: <https://w3id.org/biolink/vocab/>.
+@prefix dc: <http://purl.org/dc/terms/>.
+@prefix assembly: <https://www.ncbi.nlm.nih.gov/assembly/>.
+@prefix linkml: <https://w3id.org/linkml/>.
+@prefix schema: <http://schema.org/>.
+@prefix sio: <http://semanticscience.org/resource/>.
+@prefix pubmed: <http://www.ncbi.nlm.nih.gov/pubmed/>.
+@prefix id_pubmed: <http://identifiers.org/pubmed/>.
+
+hcrm:CRMHS00000003515 rdf:type owl:Class ;
+    rdfs:subClassOf obo:SO_0000727 ;
+    skos:definition "Cis-regulatory module located in Homo sapiens chr12 between 114025907 and 114026275" ;
+    skos:prefLabel "crm/CRMHS00000003515" ;
+    obo:RO_0002162 obo:NCBITaxon_9606 ;
+    dc:hasVersion assembly:GCF_000001405.26 ;
+    obo:BFO_0000050 nuccore:NC_000012.12 ;
+    obo:GENO_0000895 "114026275"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+    obo:GENO_0000894 "114025907"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+hcrm:CRMHS00000003515#endb rdf:type hcrm:CRMHS00000003515 ;
+    skos:definition "Cis-regulatory module located in Homo sapiens chr12 between 114025907 and 114026275 according to ENdb" ;
+    skos:prefLabel "crm#CRMHS00000003515#endb" ;
+    obo:TXPO_0003500 obo:BTO_0002181 ;
+    obo:TXPO_0003500 obo:CL_0002518 ;
+    obo:TXPO_0003500 obo:CLO_0037372 ;
+    obo:TXPO_0003500 obo:UBERON_0002113 ;
+    schema:evidenceOrigin <http://www.licpathway.net/ENdb/search/Detail.php?Species=Human&Enhancer_id=E_01_358> ;
+    rdfs:isDefinedBy obo:ECO_0000226 ;
+    sio:SIO_000772 id_pubmed:22543974 ;
+    sio:SIO_000253 <http://www.licpathway.net/ENdb/> .
+
+obo:SO_0000727 rdf:type owl:Class ;
+    skos:prefLabel "CRM" ;
+    skos:altLabel "cis-regulatory module" ;
+    linkml:is_a biolink:RegulatoryRegion .
+
+nuccore:NC_000012.12 rdf:type owl:Class ;
+    rdfs:subClassOf obo:SO_0000340 ;
+    skos:prefLabel "chr-12" ;
+    biolink:category biolink:GenomicSequenceLocalization ;
+    skos:closeMatch obo:NCIT_C13207 .
+
+obo:NCBITaxon_9606 biolink:category biolink:OrganismTaxon .
+
+assembly:GCF_000001405.26 rdf:type owl:Class ;
+    rdfs:subClassOf obo:SO_0001505 ;
+    skos:prefLabel "GRCh38" ;
+    skos:altLabel "hg38" ;
+    biolink:category biolink:Genome .
+
+obo:BTO_0002181 biolink:category biolink:CellLine .
+obo:CL_0002518 biolink:category biolink:Cell .
+obo:CLO_0037372 biolink:category biolink:CellLine .
+obo:UBERON_0002113 biolink:category biolink:GrossAnatomicalStructure .
+obo:ECO_0000226 biolink:category biolink:EvidenceType .
+
+id_pubmed:22543974 skos:exactMatch pubmed:22543974 .
+pubmed:22543974 biolink:category biolink:Article .
+
+<http://www.licpathway.net/ENdb/> rdf:type owl:Class ;
+    rdfs:subClassOf obo:NCIT_C15426 ;
+    skos:prefLabel "ENdb" ;
+    biolink:category biolink:InformationResource .
+	
+obo:NCIT_C15426 rdf:type owl:Class ;
+    skos:prefLabel "Database" .

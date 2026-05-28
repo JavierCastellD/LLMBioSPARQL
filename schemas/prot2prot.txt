@@ -1,0 +1,30 @@
+@prefix prot2prot: <http://rdf.biogateway.eu/prot-prot/> .
+@prefix uniprot: <http://uniprot.org/uniprot/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix obo: <http://purl.obolibrary.org/obo/>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix sio: <http://semanticscience.org/resource/>.
+@prefix schema: <http://schema.org/>.
+@prefix id_pubmed: <http://identifiers.org/pubmed/>.
+
+prot2prot:uniprot!PrimaryAccession--uniprot!PrimaryAccession rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    rdf:subject uniprot:PrimaryAccession ;
+    rdf:predicate obo:RO_0002436 ;
+    rdf:object uniprot:PrimaryAccession ;
+    skos:prefLabel "uniprot!PrimaryAccession--uniprot!PrimaryAccession" ;
+    skos:definition "PrimaryAccession molecularly interacts with PrimaryAccession" .
+	
+prot2prot:uniprot!PrimaryAccession--uniprot!PrimaryAccession#database_name rdf:type prot2prot:uniprot!PrimaryAccession--uniprot!PrimaryAccession ;
+	rdf:type obo:MI_0915 ;
+	sio:SIO_000253 <original_URL_database> ;
+	rdfs:isDefinedBy obo:MI_ID ;
+	schema:evidenceLevel "value" ;
+	sio:SIO_000772 id_pubmed:PMID .
+
+uniprot:PrimaryAccession obo:RO_0002436 uniprot:PrimaryAccession .
+
+rdf:Statement rdf:type owl:Class ;
+	skos:prefLabel "Triple" .

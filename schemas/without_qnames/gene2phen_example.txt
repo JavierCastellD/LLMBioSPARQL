@@ -1,0 +1,27 @@
+@prefix gene2phen: <http://rdf.biogateway.eu/gene-phen/> .
+@prefix hgene: <http://rdf.biogateway.eu/gene/9606/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix obo: <http://purl.obolibrary.org/obo/>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix sio: <http://semanticscience.org/resource/>.
+@prefix omim: <http://purl.bioontology.org/ontology/OMIM/>.
+
+<http://rdf.biogateway.eu/gene-phen/hgncsymb!AAAS--omim!231550> rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    rdf:subject hgene:AAAS ;
+    rdf:predicate obo:RO_0002331 ;
+    rdf:object hgene:AAAS ;
+    skos:prefLabel "AAAS--231550" ;
+    skos:definition "Association between gene AAAS and disease Achalasia-addisonianism-alacrima syndrome (AAAS)" .
+	
+<http://rdf.biogateway.eu/gene-phen/hgncsymb!AAAS--omim!231550#uniprot> rdf:type <http://rdf.biogateway.eu/gene-phen/hgncsymb!AAAS--omim!231550> ;
+	sio:SIO_000253 <http://uniprot.org/uniprot> .
+
+hgene:AAAS obo:RO_0002331 omim:231550 .
+
+omim:231550 skos:prefLabel "Achalasia-addisonianism-alacrima syndrome (AAAS)" .
+
+rdf:Statement rdf:type owl:Class ;
+	skos:prefLabel "Triple" .

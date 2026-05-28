@@ -1,0 +1,69 @@
+@prefix htad: <http://rdf.biogateway.eu/tad/9606/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix obo: <http://purl.obolibrary.org/obo/>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix nuccore: <https://www.ncbi.nlm.nih.gov/nuccore/>.
+@prefix biolink: <https://w3id.org/biolink/vocab/>.
+@prefix dc: <http://purl.org/dc/terms/>.
+@prefix assembly: <https://www.ncbi.nlm.nih.gov/assembly/>.
+@prefix linkml: <https://w3id.org/linkml/>.
+@prefix schema: <http://schema.org/>.
+@prefix sio: <http://semanticscience.org/resource/>.
+@prefix pubmed: <http://www.ncbi.nlm.nih.gov/pubmed/>.
+@prefix id_pubmed: <http://identifiers.org/pubmed/>.
+
+htad:TADHS00000000001 rdf:type owl:Class ;
+    rdfs:subClassOf obo:SO_0002304 ;
+    skos:definition "Topologically associated domain located in Homo sapiens chr1 between 800000 and 3720000" ;
+    skos:prefLabel "tad/TADHS00000000001" ;
+    obo:RO_0002162 obo:NCBITaxon_9606 ;
+    dc:hasVersion assembly:GCF_000001405.26 ;
+    obo:BFO_0000050 nuccore:NC_000001.11 ;
+    obo:GENO_0000895 "3720000"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+    obo:GENO_0000894 "800000"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+htad:TADHS00000000001#3dgb rdf:type htad:TADHS00000000001 ;
+    skos:definition "Topologically associated domain located in Homo sapiens chr1 between 800000 and 3720000 according to 3DGB" ;
+    skos:prefLabel "tad#TADHS00000000001#3dgb" ;
+    obo:TXPO_0003500 obo:BTO_0000018 ;
+    obo:TXPO_0003500 obo:CL_0000082 ;
+    obo:TXPO_0003500 obo:CLO_0001601 ;
+    obo:TXPO_0003500 obo:UBERON_0002048 ;
+    rdfs:isDefinedBy obo:ECO_0000238 ;
+    sio:SIO_000772 id_pubmed:30286773 ;
+    sio:SIO_000253 <http://3dgenome.fsm.northwestern.edu/index.html> .
+
+obo:SO_0002304 rdf:type owl:Class ;
+    skos:prefLabel "TAD" ;
+    skos:altLabel "topologically associated domain" ;
+    linkml:is_a biolink:NucleicAcidEntity .
+
+nuccore:NC_000001.11 rdf:type owl:Class ;
+    rdfs:subClassOf obo:SO_0000340 ;
+    skos:prefLabel "chr-1" ;
+    biolink:category biolink:GenomicSequenceLocalization ;
+    skos:closeMatch obo:NCIT_C13207 .
+
+obo:NCBITaxon_9606 biolink:category biolink:OrganismTaxon .
+
+assembly:GCF_000001405.26 rdf:type owl:Class ;
+    rdfs:subClassOf obo:SO_0001505 ;
+    skos:prefLabel "GRCh38" ;
+    skos:altLabel "hg38" ;
+    biolink:category biolink:Genome .
+
+obo:BTO_0000018 biolink:category biolink:CellLine .
+obo:CL_0000082 biolink:category biolink:Cell .
+obo:CLO_0001601 biolink:category biolink:CellLine .
+obo:UBERON_0002048 biolink:category biolink:GrossAnatomicalStructure .
+obo:ECO_0000238 biolink:category biolink:EvidenceType .
+
+id_pubmed:30286773 skos:exactMatch pubmed:30286773 .
+pubmed:30286773 biolink:category biolink:Article .
+
+<http://3dgenome.fsm.northwestern.edu/index.html> rdf:type owl:Class ;
+    rdfs:subClassOf obo:NCIT_C15426 ;
+    skos:prefLabel "3DGB" ;
+    biolink:category biolink:InformationResource .

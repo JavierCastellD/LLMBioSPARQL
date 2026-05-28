@@ -1,0 +1,31 @@
+@prefix uniprot: <http://uniprot.org/uniprot/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix sio: <http://semanticscience.org/resource/>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix obo: <http://purl.obolibrary.org/obo/>.
+@prefix id_ensembl: <http://identifiers.org/ensembl/>.
+@prefix id_refseq: <http://identifiers.org/refseq/>.
+@prefix id_pubmed: <http://identifiers.org/pubmed/>.
+@prefix schema: <http://schema.org/>.
+@prefix uniparc: <http://uniprot.org/uniparc/>.
+
+
+uniprot:Q99593 rdf:type owl:Class ;
+    rdfs:subClassOf sio:SIO_010043 ;
+    skos:definition "T-box transcription factor TBX5 (T-box protein 5)" ;
+    skos:prefLabel "TBX5_HUMAN" ;
+	skos:altLabel "Q99593" , "TBX5" ;
+    obo:RO_0002162 obo:NCBITaxon_9606 ; #in taxon "human"
+	skos:closeMatch <http://identifiers.org/ensembl/ENSP00000309913.4> , <http://identifiers.org/refseq/NP_000183.2> ;
+	sio:SIO_000772 id_pubmed:16541075 ;
+	schema:evidenceLevel "5.0" .
+	
+uniparc:UPI000002B4EC rdf:type uniprot:Q99593 ;
+	skos:prefLabel "Q99593-2" ;
+	skos:altLabel "instance of TBX5_HUMAN" .
+	
+sio:SIO_010043 rdf:type owl:Class ;
+    skos:prefLabel "Protein" .
+	

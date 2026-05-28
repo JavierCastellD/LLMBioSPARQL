@@ -1,0 +1,29 @@
+@prefix ortho: <http://rdf.biogateway.eu/ortho/> .
+@prefix uniprot: <http://uniprot.org/uniprot/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix obo: <http://purl.obolibrary.org/obo/>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix sio: <http://semanticscience.org/resource/>.
+@prefix schema: <http://schema.org/>.
+
+
+ortho:uniprot!PrimaryAccession--uniprot!PrimaryAccession rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    rdf:subject uniprot:PrimaryAccession ;
+    rdf:predicate sio:SIO_000558 ;
+    rdf:object uniprot:PrimaryAccession ;
+    skos:prefLabel "PrimaryAccession--PrimaryAccession" ;
+    skos:definition "Pair of orthologous proteins PrimaryAccession and PrimaryAccession" .
+	
+uniprot:PrimaryAccession sio:SIO_000558 uniprot:PrimaryAccession ;
+	schema:memberOf <original_URL_crossreference> .
+	
+ortho:uniprot!PrimaryAccession--uniprot!PrimaryAccession#database_name rdf:type ortho:uniprot!PrimaryAccession--uniprot!PrimaryAccession ;
+	obo:BFO_0000050 <original_URL_crossreference> ;
+	sio:SIO_000253 <original_URL_database> ;
+	skos:prefLabel "PrimaryAccession--PrimaryAccession" .
+
+rdf:Statement rdf:type owl:Class ;
+	skos:prefLabel "Triple" .

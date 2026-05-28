@@ -1,0 +1,76 @@
+@prefix reg2utrg: <http://rdf.biogateway.eu/reg2utrg/> .
+@prefix reg2ptrg: <http://rdf.biogateway.eu/reg2ptrg/> .
+@prefix reg2ntrg: <http://rdf.biogateway.eu/reg2ntrg/> .
+@prefix uniprot: <http://uniprot.org/uniprot/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix obo: <http://purl.obolibrary.org/obo/>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix sio: <http://semanticscience.org/resource/>.
+@prefix id_pubmed: <http://identifiers.org/pubmed/>.
+@prefix schema: <http://schema.org/>.
+
+
+<http://rdf.biogateway.eu/reg2utrg/uniprot!P15976--uniprot!P02549> rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    rdf:subject uniprot:P15976 ;
+    rdf:predicate obo:RO_0002428 ;
+    rdf:object uniprot:P02549 ;
+    skos:prefLabel "uniprot!P15976--uniprot!P02549" ;
+    skos:definition "P15976 involved in regulation of P02549" .
+
+uniprot:P15976 obo:RO_0002428 uniprot:P02549 .
+	
+<http://rdf.biogateway.eu/reg2utrg/uniprot!P15976--uniprot!P02549#signor> rdf:type <http://rdf.biogateway.eu/reg2utrg/uniprot!P15976--uniprot!P02549> ;
+	sio:SIO_000253 <http://signor.uniroma2.it> ;
+	sio:SIO_000772 id_pubmed:10037687 ;
+	skos:prefLabel "uniprot!P15976--uniprot!P02549" ;
+	schema:evidenceLevel "0.386" ;
+	rdfs:isDefinedBy obo:MI_0364 ;
+	obo:RO_0002331 obo:MI_2247 ;
+	skos:relatedMatch obo:MI_2286 .
+
+rdf:Statement rdf:type owl:Class ;
+	skos:prefLabel "Triple" .
+	
+<http://rdf.biogateway.eu/reg2ptrg/uniprot!Q9UGU0--uniprot!P08254> rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    rdf:subject uniprot:Q9UGU0 ;
+    rdf:predicate obo:RO_0002429 ;
+    rdf:object uniprot:P08254 ;
+    skos:prefLabel "uniprot!Q9UGU0--uniprot!P08254" ;
+    skos:definition "Q9UGU0 involved in positive regulation of P08254" .
+
+uniprot:Q9UGU0 obo:RO_0002429 uniprot:P08254 .
+
+uniprot:P04150 obo:RO_0002578 uniprot:P49716 .
+uniprot:Q9Y5J3 obo:RO_0012012 uniprot:Q06413 .
+
+<http://rdf.biogateway.eu/reg2ptrg/uniprot!Q9UGU0--uniprot!P08254#signor> rdf:type <http://rdf.biogateway.eu/reg2ptrg/uniprot!Q9UGU0--uniprot!P08254> ;
+	sio:SIO_000253 <http://signor.uniroma2.it> ;
+	sio:SIO_000772 id_pubmed:7760812 ;
+	skos:prefLabel "uniprot!Q9UGU0--uniprot!P08254" ;
+	schema:evidenceLevel "0.427" ;
+	rdfs:isDefinedBy obo:MI_0364 ;
+	obo:RO_0002331 obo:MI_2247 ;
+	skos:relatedMatch obo:MI_2286 .
+	
+<http://rdf.biogateway.eu/reg2ntrg/uniprot!A8MYZ6--uniprot!P32189> rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    rdf:subject uniprot:A8MYZ6 ;
+    rdf:predicate obo:RO_0002430 ;
+    rdf:object uniprot:P32189 ;
+    skos:prefLabel "uniprot!A8MYZ6--uniprot!P32189" ;
+    skos:definition "A8MYZ6 involved in negative regulation of P32189" .
+
+uniprot:A8MYZ6 obo:RO_0002430 uniprot:P32189 .
+
+<http://rdf.biogateway.eu/reg2ntrg/uniprot!A8MYZ6--uniprot!P32189#signor> rdf:type <http://rdf.biogateway.eu/reg2ntrg/uniprot!A8MYZ6--uniprot!P32189> ;
+	sio:SIO_000253 <http://signor.uniroma2.it> ;
+	sio:SIO_000772 id_pubmed:18805788 ;
+	skos:prefLabel "uniprot!A8MYZ6--uniprot!P32189" ;
+	schema:evidenceLevel "0.2" ;
+	rdfs:isDefinedBy obo:MI_0364 ;
+	obo:RO_0002331 obo:MI_2247 ;
+	skos:relatedMatch obo:MI_2286 .

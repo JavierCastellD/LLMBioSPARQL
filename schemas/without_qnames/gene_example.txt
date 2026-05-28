@@ -1,0 +1,52 @@
+@prefix hgene: <http://rdf.biogateway.eu/gene/9606/>. #specific to human (Taxon ID 9606)
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix sio: <http://semanticscience.org/resource/>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix obo: <http://purl.obolibrary.org/obo/>.
+@prefix dc: <http://purl.org/dc/terms/>.
+@prefix assembly: <https://www.ncbi.nlm.nih.gov/assembly/>.
+@prefix nuccore: <https://www.ncbi.nlm.nih.gov/nuccore/>.
+@prefix faldo: <http://biohackathon.org/resource/faldo#>.
+@prefix uniprot: <http://uniprot.org/uniprot/>.
+@prefix biolink: <https://w3id.org/biolink/vocab/>.
+@prefix id_ensembl: <http://identifiers.org/ensembl/>.
+@prefix id_ncbigene: <http://identifiers.org/ncbigene/>.
+
+
+hgene:A1CF rdf:type owl:Class ;
+    rdfs:subClassOf sio:SIO_010035 ;
+    skos:definition "gene 9606/A1CF encoding [A1CF_HUMAN F8W9F8_HUMAN Q5T0W7_HUMAN]" ;
+    skos:prefLabel "A1CF" ;
+	skos:altLabel "ACF" , "ASP" ;
+    obo:RO_0002162 obo:NCBITaxon_9606 ; #in taxon "human"
+    dc:hasVersion <https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.26> ; #hg38 assembly as reference
+    obo:BFO_0000050 <https://www.ncbi.nlm.nih.gov/nuccore/NC_000010.11> ; #chromosome
+    obo:GENO_0000895 "50885627"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+    obo:GENO_0000894 "50799409"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	obo:GENO_0000906 faldo:ReverseStrandPosition ;
+	sio:SIO_010078 uniprot:F8W9F8 , uniprot:Q5T0W7 , uniprot:Q9NQ94 ;
+	skos:closeMatch <http://identifiers.org/ensembl/ENSG00000148584.16> , id_ncbigene:29974 .
+	
+id_ncbigene:29974 biolink:category biolink:Gene .
+	
+<http://rdf.biogateway.eu/gene/9606/A1CF#ENSG00000148584.16> rdf:type hgene:A1CF ;
+	skos:prefLabel "Ensembl#ENSG00000148584.16" .
+	
+<http://rdf.biogateway.eu/gene/9606/A1CF#29974> rdf:type hgene:A1CF ;
+	skos:prefLabel "GeneID#29974" .
+
+sio:SIO_010035 rdf:type owl:Class ;
+    skos:prefLabel "Gene" .
+
+<https://www.ncbi.nlm.nih.gov/nuccore/NC_000010.11> rdf:type owl:Class ;
+    rdfs:subClassOf obo:SO_0000340 ;
+    skos:prefLabel "chr-10" ;
+    biolink:category biolink:GenomicSequenceLocalization .
+
+<https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.26> rdf:type owl:Class ;
+    rdfs:subClassOf obo:SO_0001505 ;
+    skos:prefLabel "GRCh38" ;
+    skos:altLabel "hg38" ;
+    biolink:category biolink:Genome .

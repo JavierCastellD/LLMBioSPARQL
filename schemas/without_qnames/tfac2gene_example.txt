@@ -1,0 +1,75 @@
+@prefix tfac2ugene: <http://rdf.biogateway.eu/reg2utrg/> .
+@prefix tfac2pgene: <http://rdf.biogateway.eu/reg2ptrg/> .
+@prefix tfac2ngene: <http://rdf.biogateway.eu/reg2ntrg/> .
+@prefix uniprot: <http://uniprot.org/uniprot/> .
+@prefix hgene: <http://rdf.biogateway.eu/gene/9606/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix obo: <http://purl.obolibrary.org/obo/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix sio: <http://semanticscience.org/resource/> .
+@prefix id_pubmed: <http://identifiers.org/pubmed/> .
+@prefix schema: <http://schema.org/> .
+
+
+<http://rdf.biogateway.eu/reg2utrg/uniprot!Q99801--gene!9606/WIF1> rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    rdf:subject uniprot:Q99801 ;
+    rdf:predicate obo:RO_0002428 ;
+    rdf:object hgene:WIF1 ;
+    skos:prefLabel "uniprot!Q99801--gene!9606/WIF1" ;
+    skos:definition "Q99801 involved in regulation of 9606/WIF1" ;
+	obo:RO_0002331 obo:MI_2247 .
+	
+<http://rdf.biogateway.eu/reg2utrg/uniprot!Q99801--gene!9606/WIF1#coltri> rdf:type <http://rdf.biogateway.eu/reg2utrg/uniprot!Q99801--gene!9606/WIF1> ;
+	sio:SIO_000253 <https://github.com/saezlab/CollecTRI> ;
+	sio:SIO_000772 id_pubmed:23975733 ;
+	schema:evidenceLevel "1" .
+
+<http://rdf.biogateway.eu/reg2utrg/uniprot!Q99801--gene!9606/WIF1#tflink> rdf:type <http://rdf.biogateway.eu/reg2utrg/uniprot!Q99801--gene!9606/WIF1> ;
+	sio:SIO_000253 <https://tflink.net> ;
+	sio:SIO_000772 id_pubmed:29126285 ;
+	skos:prefLabel "uniprot!Q99801--gene!9606/WIF1" ;
+	schema:evidenceLevel "Low" ;
+	rdfs:isDefinedBy obo:MI_0402 .
+
+uniprot:Q99801 obo:RO_0002428 hgene:WIF1 .
+
+rdf:Statement rdf:type owl:Class ;
+	skos:prefLabel "Triple" .
+
+<http://rdf.biogateway.eu/reg2ptrg/uniprot!Q9UL17--gene!9606/B3GAT1> rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    rdf:subject uniprot:Q9UL17 ;
+    rdf:predicate obo:RO_0002429 ;
+    rdf:object hgene:B3GAT1 ;
+    skos:prefLabel "uniprot!Q9UL17--gene!9606/B3GAT1" ;
+    skos:definition "Q9UL17 involved in positive regulation of 9606/B3GAT1" ;
+	obo:RO_0002331 obo:MI_2247 .
+	
+uniprot:Q9UL17 obo:RO_0002429 hgene:B3GAT1 .
+
+<http://rdf.biogateway.eu/reg2ptrg/uniprot!Q9UL17--gene!9606/B3GAT1#coltri> rdf:type <http://rdf.biogateway.eu/reg2ptrg/uniprot!Q9UL17--gene!9606/B3GAT1> ;
+	sio:SIO_000253 <https://github.com/saezlab/CollecTRI> ;
+	sio:SIO_000772 id_pubmed:23440501 ;
+	skos:prefLabel "uniprot!Q9UL17--gene!9606/B3GAT1" ;
+	schema:evidenceLevel "1" .
+	
+<http://rdf.biogateway.eu/reg2ntrg/uniprot!A0AVK6--gene!9606/E2F1> rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    rdf:subject uniprot:A0AVK6 ;
+    rdf:predicate obo:RO_0002430 ;
+    rdf:object hgene:E2F1 ;
+    skos:prefLabel "uniprot!A0AVK6--gene!9606/E2F1" ;
+    skos:definition "A0AVK6 involved in negative regulation of 9606/E2F1" ;
+	obo:RO_0002331 obo:MI_2247 .
+	
+uniprot:A0AVK6 obo:RO_0002430 hgene:E2F1 .
+
+<http://rdf.biogateway.eu/reg2ntrg/uniprot!A0AVK6--gene!9606/E2F1#tflink> rdf:type <http://rdf.biogateway.eu/reg2ntrg/uniprot!A0AVK6--gene!9606/E2F1> ;
+	sio:SIO_000253 <https://tflink.net> ;
+	sio:SIO_000772 id_pubmed:16179649 ;
+	skos:prefLabel "uniprot!A0AVK6--gene!9606/E2F1" ;
+	schema:evidenceLevel "High" ;
+	rdfs:isDefinedBy obo:MI_0402 .

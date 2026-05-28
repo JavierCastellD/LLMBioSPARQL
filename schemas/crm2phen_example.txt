@@ -1,0 +1,88 @@
+@prefix crm2phen: <http://rdf.biogateway.eu/crm2phen/>.
+@prefix hcrm: <http://rdf.biogateway.eu/crm/9606/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix obo: <http://purl.obolibrary.org/obo/>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix biolink: <https://w3id.org/biolink/vocab/>.
+@prefix schema: <http://schema.org/>.
+@prefix sio: <http://semanticscience.org/resource/>.
+@prefix pubmed: <http://www.ncbi.nlm.nih.gov/pubmed/>.
+@prefix id_pubmed: <http://identifiers.org/pubmed/>.
+@prefix mesh: <https://id.nlm.nih.gov/mesh/>.
+@prefix id_mesh: <http://identifiers.org/mesh/>.
+@prefix omim: <http://purl.bioontology.org/ontology/OMIM/>.
+@prefix obo_omim: <http://purl.obolibrary.org/obo/OMIM_>.
+
+crm2phen:bgw!CRMHS00000003515--doid!1682 rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    biolink:category biolink:EntityToDiseaseAssociationMixin ;
+    skos:prefLabel "bgw!CRMHS00000003515--doid!1682" ;
+    skos:definition "Association between cis-regulatory module CRMHS00000003515 and disease DOID:1682" ;
+    rdf:subject hcrm:CRMHS00000003515 ;
+    rdf:predicate obo:RO_0002331 ;
+    rdf:object obo:DOID_1682 .
+
+hcrm:CRMHS00000003515 obo:RO_0002331 obo:DOID_1682 .
+obo:DOID_1682 biolink:category biolink:Disease .
+
+crm2phen:bgw!CRMHS00000003515--doid!1682#endb rdf:type crm2phen:bgw!CRMHS00000003515--doid!1682 ;
+    skos:prefLabel "bgw!CRMHS00000003515--doid!1682#endb" ;
+    skos:definition "Association between cis-regulatory module CRMHS00000003515 and disease DOID:1682 according to ENdb" ;
+    schema:evidenceOrigin <http://www.licpathway.net/ENdb/search/Detail.php?Species=Human&Enhancer_id=E_01_358> ;
+    sio:SIO_000772 id_pubmed:22543974 ;
+    sio:SIO_000253 <http://www.licpathway.net/ENdb/> .
+
+id_pubmed:22543974 skos:exactMatch pubmed:22543974 .
+pubmed:22543974 biolink:category biolink:Article .
+
+<http://www.licpathway.net/ENdb/> rdf:type owl:Class ;
+    rdfs:subClassOf obo:NCIT_C15426 ;
+    skos:prefLabel "ENdb" ;
+    biolink:category biolink:InformationResource .
+	
+obo:NCIT_C15426 rdf:type owl:Class ;
+    skos:prefLabel "Database" .
+	
+crm2phen:bgw!CRMHS00000003515--mesh!D006330 rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    biolink:category biolink:EntityToDiseaseAssociationMixin ;
+    skos:prefLabel "bgw!CRMHS00000003515--mesh!D006330" ;
+    skos:definition "Association between cis-regulatory module CRMHS00000003515 and disease mesh:D006330" ;
+    rdf:subject hcrm:CRMHS00000003515 ;
+    rdf:predicate obo:RO_0002331 ;
+    rdf:object obo:DOID_1682 .
+
+hcrm:CRMHS00000003515 obo:RO_0002331 mesh:D006330 .
+mesh:D006330 skos:exactMatch id_mesh:D006330 ;
+	biolink:category biolink:Disease .
+
+crm2phen:bgw!CRMHS00000003515--mesh!D006330#endb rdf:type crm2phen:bgw!CRMHS00000003515--mesh!D006330 ;
+    skos:prefLabel "bgw!CRMHS00000003515--mesh!D006330#endb" ;
+    skos:definition "Association between cis-regulatory module CRMHS00000003515 and disease mesh:D006330 according to ENdb" ;
+    schema:evidenceOrigin <http://www.licpathway.net/ENdb/search/Detail.php?Species=Human&Enhancer_id=E_01_358> ;
+    sio:SIO_000772 id_pubmed:22543974 ;
+    sio:SIO_000253 <http://www.licpathway.net/ENdb/> .
+	
+crm2phen:bgw!CRMHS00000000054--omim!114500 rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    biolink:category biolink:EntityToDiseaseAssociationMixin ;
+    skos:prefLabel "bgw!CRMHS00000000054--omim!114500" ;
+    skos:definition "Association between cis-regulatory module CRMHS00000000054 and disease omim:114500" ;
+    rdf:subject hcrm:CRMHS00000000054 ;
+    rdf:predicate obo:RO_0002331 ;
+    rdf:object obo:DOID_1682 .
+
+hcrm:CRMHS00000000054 obo:RO_0002331 omim:114500 .
+omim:114500 skos:exactMatch obo_omim:114500 .
+obo_omim:114500 biolink:category biolink:Disease .
+
+crm2phen:bgw!CRMHS00000000054--omim!114500#endisease rdf:type crm2phen:bgw!CRMHS00000000054--omim!114500 ;
+    skos:prefLabel "bgw!CRMHS00000000054--omim!114500#endisease" ;
+    skos:definition "Association between cis-regulatory module CRMHS00000000054 and disease omim:114500 according to EnDisease" ;
+    sio:SIO_000772 id_pubmed:27049830 ;
+    sio:SIO_000253 <http://health.tsinghua.edu.cn/jianglab/endisease/> .
+	
+id_pubmed:27049830 skos:exactMatch pubmed:27049830 .
+pubmed:27049830 biolink:category biolink:Article .

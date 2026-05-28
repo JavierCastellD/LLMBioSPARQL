@@ -1,0 +1,70 @@
+@prefix htad: <http://rdf.biogateway.eu/tad/9606/>. #specific to human (Taxon ID 9606)
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix obo: <http://purl.obolibrary.org/obo/>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix nuccore: <https://www.ncbi.nlm.nih.gov/nuccore/>.
+@prefix biolink: <https://w3id.org/biolink/vocab/>.
+@prefix dc: <http://purl.org/dc/terms/>.
+@prefix assembly: <https://www.ncbi.nlm.nih.gov/assembly/>.
+@prefix linkml: <https://w3id.org/linkml/>.
+@prefix schema: <http://schema.org/>.
+@prefix sio: <http://semanticscience.org/resource/>.
+@prefix pubmed: <http://www.ncbi.nlm.nih.gov/pubmed/>.
+@prefix id_pubmed: <http://identifiers.org/pubmed/>.
+
+htad:tad_id rdf:type owl:Class ;
+    rdfs:subClassOf obo:SO_0002304 ;
+    skos:definition "Topologically associated domain located in Homo sapiens chr_name between start_position and end_position" ;
+    skos:prefLabel "tad/tad_id" ;
+    obo:RO_0002162 obo:NCBITaxon_9606 ;
+    dc:hasVersion assembly:GCF_000001405.26 ;
+    obo:BFO_0000050 nuccore:chr_ID ;
+    obo:GENO_0000895 xsd:integer ; #start position
+    obo:GENO_0000894 xsd:integer . #end position
+
+htad:tad_id#database_name rdf:type htad:tad_id ;
+    skos:definition "Topologically associated domain located in Homo sapiens chr_name between start_position and end_position according to database_name" ;
+    skos:prefLabel "tad#tad_id#database_name" ;
+    obo:TXPO_0003500 obo:BTO_ID ;
+    obo:TXPO_0003500 obo:CL_ID ;
+    obo:TXPO_0003500 obo:CLO_ID ;
+    obo:TXPO_0003500 obo:UBERON_ID ;
+    rdfs:isDefinedBy obo:ECO_ID ;
+    schema:evidenceOrigin <original_URL_crossreference> ;
+    sio:SIO_000772 id_pubmed:PMID ;
+    sio:SIO_000253 <original_URL_database> .
+
+obo:SO_0002304 rdf:type owl:Class ;
+    skos:prefLabel "TAD" ;
+    skos:altLabel "topologically associated domain" ;
+    linkml:is_a biolink:NucleicAcidEntity .
+
+nuccore:chr_ID rdf:type owl:Class ;
+    rdfs:subClassOf obo:SO_0000340 ;
+    skos:prefLabel "chr_name" ;
+    biolink:category biolink:GenomicSequenceLocalization ;
+    skos:closeMatch obo:NCIT_ID .
+
+obo:NCBITaxon_9606 biolink:category biolink:OrganismTaxon .
+
+assembly:GCF_000001405.26 rdf:type owl:Class ;
+    rdfs:subClassOf obo:SO_0001505 ;
+    skos:prefLabel "GRCh38" ;
+    skos:altLabel "hg38" ;
+    biolink:category biolink:Genome .
+
+obo:CL_ID biolink:category biolink:Cell .
+obo:CLO_ID biolink:category biolink:CellLine .
+obo:UBERON_ID biolink:category biolink:GrossAnatomicalStructure .
+obo:ECO_ID biolink:category biolink:EvidenceType .
+
+id_pubmed:PMID skos:exactMatch pubmed:PMID .
+pubmed:PMID biolink:category biolink:Article .
+
+<original_URL_database> rdf:type owl:Class ;
+    rdfs:subClassOf obo:NCIT_C15426 ;
+    skos:prefLabel "database_name" ;
+    biolink:category biolink:InformationResource .

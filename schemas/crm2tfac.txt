@@ -1,0 +1,61 @@
+@prefix crm2tfac: <http://rdf.biogateway.eu/crm2tfac/>.
+@prefix hcrm: <http://rdf.biogateway.eu/crm/9606/>.
+@prefix uniprot: <http://uniprot.org/uniprot/>.
+@prefix purl_uniprot: <http://purl.uniprot.org/uniprot/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix obo: <http://purl.obolibrary.org/obo/>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix biolink: <https://w3id.org/biolink/vocab/>.
+@prefix schema: <http://schema.org/>.
+@prefix sio: <http://semanticscience.org/resource/>.
+@prefix pubmed: <http://www.ncbi.nlm.nih.gov/pubmed/>.
+@prefix id_pubmed: <http://identifiers.org/pubmed/>.
+
+crm2tfac:bgw!crm_ID--uniprot!PrimaryAccession rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    skos:prefLabel "bgw!crm_ID--uniprot!PrimaryAccession" ;
+    skos:definition "Association between cis-regulatory module crm_ID and transcription factor PrimaryAccession" ;
+    rdf:subject hcrm:crm_ID ;
+    rdf:predicate obo:RO_0002436 ;
+    rdf:object uniprot:PrimaryAccession .
+
+hcrm:crm_ID obo:RO_0002436 uniprot:PrimaryAccession .
+uniprot:PrimaryAccession obo:RO_0002436 hcrm:crm_ID ;
+    rdfs:subClassOf obo:NCIT_C17207 ;
+    skos:exactMatch purl_uniprot:PrimaryAccession .
+
+purl_uniprot:PrimaryAccession biolink:category biolink:Protein .
+
+obo:NCIT_C17207 rdf:type owl:Class ;
+    skos:prefLabel "Transcription Factor" ;
+    skos:altLabel "TF" .
+
+crm2tfac:bgw!crm_ID--uniprot!PrimaryAccession#database_name rdf:type crm2tfac:bgw!crm_ID--uniprot!PrimaryAccession ;
+    skos:prefLabel "bgw!crm_ID--uniprot!PrimaryAccession#database_name" ;
+    skos:definition "Association between cis-regulatory module crm_ID and transcription factor PrimaryAccession according to database_name" ;
+    obo:TXPO_0003500 obo:BTO_ID ;
+    obo:TXPO_0003500 obo:CL_ID ;
+    obo:TXPO_0003500 obo:CLO_ID ;
+    obo:TXPO_0003500 obo:UBERON_ID ;
+    schema:evidenceOrigin <original_URL_crossreference> ;
+    rdfs:isDefinedBy obo:ECO_ID ;
+    sio:SIO_000772 id_pubmed:PMID ;
+    sio:SIO_000253 <original_URL_database> .
+
+obo:CL_ID biolink:category biolink:Cell .
+obo:CLO_ID biolink:category biolink:CellLine .
+obo:UBERON_ID biolink:category biolink:GrossAnatomicalStructure .
+obo:ECO_ID biolink:category biolink:EvidenceType .
+
+id_pubmed:PMID skos:exactMatch pubmed:PMID .
+pubmed:PMID biolink:category biolink:Article .
+
+<original_URL_database> rdf:type owl:Class ;
+    rdfs:subClassOf obo:NCIT_C15426 ;
+    skos:prefLabel "database_name" ;
+    biolink:category biolink:InformationResource .
+
+obo:NCIT_C15426 rdf:type owl:Class ;
+    skos:prefLabel "Database" .

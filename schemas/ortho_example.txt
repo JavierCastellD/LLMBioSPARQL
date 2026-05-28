@@ -1,0 +1,31 @@
+@prefix ortho: <http://rdf.biogateway.eu/ortho/> .
+@prefix uniprot: <http://uniprot.org/uniprot/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix obo: <http://purl.obolibrary.org/obo/>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix sio: <http://semanticscience.org/resource/>.
+@prefix schema: <http://schema.org/>.
+
+
+ortho:uniprot!B1AQN2--uniprot!Q9VJ95 rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    rdf:subject uniprot:B1AQN2 ;
+    rdf:predicate sio:SIO_000558 ;
+    rdf:object uniprot:Q9VJ95 ;
+    skos:prefLabel "B1AQN2--Q9VJ95" ;
+    skos:definition "Pair of orthologous proteins B1AQN2 and Q9VJ95" .
+	
+uniprot:B1AQN2 sio:SIO_000558 uniprot:Q9VJ95 ;
+	schema:memberOf <https://www.orthodb.org/?query=2875525at2759> .
+uniprot:Q9VJ95 sio:SIO_000558 uniprot:B1AQN2 ;
+	schema:memberOf <https://www.orthodb.org/?query=2875525at2759> .
+	
+ortho:uniprot!B1AQN2--uniprot!Q9VJ95#orthodb rdf:type ortho:uniprot!B1AQN2--uniprot!Q9VJ95 ;
+	obo:BFO_0000050 <https://www.orthodb.org/?query=2875525at2759> ;
+	sio:SIO_000253 <https://www.orthodb.org> ;
+	skos:prefLabel "B1AQN2--Q9VJ95" .
+
+rdf:Statement rdf:type owl:Class ;
+	skos:prefLabel "Triple" .

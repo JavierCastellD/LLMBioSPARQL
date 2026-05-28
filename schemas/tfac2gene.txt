@@ -1,0 +1,72 @@
+@prefix tfac2ugene: <http://rdf.biogateway.eu/reg2utrg/> .
+@prefix tfac2pgene: <http://rdf.biogateway.eu/reg2ptrg/> .
+@prefix tfac2ngene: <http://rdf.biogateway.eu/reg2ntrg/> .
+@prefix uniprot: <http://uniprot.org/uniprot/>.
+@prefix hgene: <http://rdf.biogateway.eu/gene/9606/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix obo: <http://purl.obolibrary.org/obo/>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix sio: <http://semanticscience.org/resource/>.
+@prefix id_pubmed: <http://identifiers.org/pubmed/>.
+@prefix schema: <http://schema.org/>.
+
+
+tfac2ugene:uniprot!PrimaryAccession--gene!9606/GeneSymbol rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    rdf:subject uniprot:PrimaryAccession ;
+    rdf:predicate obo:RO_0002428 ;
+    rdf:object hgene:GeneSymbol ;
+    skos:prefLabel "uniprot!PrimaryAccession--gene!9606/GeneSymbol" ;
+    skos:definition "PrimaryAccession involved in regulation of 9606/GeneSymbol" ;
+	obo:RO_0002331 obo:MI_2247 .
+
+uniprot:PrimaryAccession obo:RO_0002428 hgene:GeneSymbol .
+	
+tfac2ugene:uniprot!PrimaryAccession--gene!9606/GeneSymbol#database_name rdf:type tfac2ugene:uniprot!PrimaryAccession--gene!9606/GeneSymbol ;
+	sio:SIO_000253 <original_URL_database> ;
+	sio:SIO_000772 id_pubmed:PMID ;
+	skos:prefLabel "uniprot!PrimaryAccession--gene!9606/GeneSymbol" ;
+	schema:evidenceLevel "value" ;
+	rdfs:isDefinedBy obo:MI_ID .
+
+rdf:Statement rdf:type owl:Class ;
+	skos:prefLabel "Triple" .
+	
+tfac2pgene:uniprot!PrimaryAccession--gene!9606/GeneSymbol rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    rdf:subject uniprot:PrimaryAccession ;
+    rdf:predicate obo:RO_0002429 ;
+    rdf:object hgene:GeneSymbol ;
+    skos:prefLabel "uniprot!PrimaryAccession--gene!9606/GeneSymbol" ;
+    skos:definition "PrimaryAccession involved in regulation of 9606/GeneSymbol" ;
+	obo:RO_0002331 obo:MI_2247 .
+
+uniprot:PrimaryAccession obo:RO_0002429 hgene:GeneSymbol .
+	
+tfac2pgene:uniprot!PrimaryAccession--gene!9606/GeneSymbol#database_name rdf:type tfac2pgene:uniprot!PrimaryAccession--gene!9606/GeneSymbol ;
+	sio:SIO_000253 <original_URL_database> ;
+	sio:SIO_000772 id_pubmed:PMID ;
+	skos:prefLabel "uniprot!PrimaryAccession--gene!9606/GeneSymbol" ;
+	schema:evidenceLevel "value" ;
+	rdfs:isDefinedBy obo:MI_ID .
+	
+tfac2ngene:uniprot!PrimaryAccession--gene!9606/GeneSymbol rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    rdf:subject uniprot:PrimaryAccession ;
+    rdf:predicate obo:RO_0002430 ;
+    rdf:object hgene:GeneSymbol ;
+    skos:prefLabel "uniprot!PrimaryAccession--gene!9606/GeneSymbol" ;
+    skos:definition "PrimaryAccession involved in regulation of 9606/GeneSymbol" ;
+	obo:RO_0002331 obo:MI_2247 .
+
+uniprot:PrimaryAccession obo:RO_0002430 hgene:GeneSymbol .
+	
+tfac2ngene:uniprot!PrimaryAccession--gene!9606/GeneSymbol#database_name rdf:type tfac2ngene:uniprot!PrimaryAccession--gene!9606/GeneSymbol ;
+	sio:SIO_000253 <original_URL_database> ;
+	sio:SIO_000772 id_pubmed:PMID ;
+	skos:prefLabel "uniprot!PrimaryAccession--gene!9606/GeneSymbol" ;
+	schema:evidenceLevel "value" ;
+	rdfs:isDefinedBy obo:MI_ID .
+	

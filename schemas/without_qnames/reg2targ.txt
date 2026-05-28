@@ -1,0 +1,78 @@
+@prefix reg2utrg: <http://rdf.biogateway.eu/reg2utrg/> .
+@prefix reg2ptrg: <http://rdf.biogateway.eu/reg2ptrg/> .
+@prefix reg2ntrg: <http://rdf.biogateway.eu/reg2ntrg/> .
+@prefix uniprot: <http://uniprot.org/uniprot/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix obo: <http://purl.obolibrary.org/obo/>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix sio: <http://semanticscience.org/resource/>.
+@prefix id_pubmed: <http://identifiers.org/pubmed/>.
+@prefix schema: <http://schema.org/>.
+
+
+<http://rdf.biogateway.eu/reg2utrg/uniprot!PrimaryAccession--uniprot!PrimaryAccession> rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    rdf:subject uniprot:PrimaryAccession ;
+    rdf:predicate obo:RO_0002428 ;
+    rdf:object uniprot:PrimaryAccession ;
+    skos:prefLabel "uniprot!PrimaryAccession--uniprot!PrimaryAccession" ;
+    skos:definition "PrimaryAccession involved in regulation of PrimaryAccession" .
+
+uniprot:PrimaryAccession obo:RO_0002428 uniprot:PrimaryAccession .
+uniprot:PrimaryAccession obo:RO_0002578 uniprot:PrimaryAccession .
+uniprot:PrimaryAccession obo:RO_0012012 uniprot:PrimaryAccession .
+
+<http://rdf.biogateway.eu/reg2utrg/uniprot!PrimaryAccession--uniprot!PrimaryAccession#database_name> rdf:type <http://rdf.biogateway.eu/reg2utrg/uniprot!PrimaryAccession--uniprot!PrimaryAccession> ;
+	sio:SIO_000253 <original_URL_database> ;
+	sio:SIO_000772 id_pubmed:PMID ;
+	skos:prefLabel "uniprot!PrimaryAccession--uniprot!PrimaryAccession" ;
+	schema:evidenceLevel "value" ;
+	rdfs:isDefinedBy obo:MI_ID ; #Currently only MI_0364
+	obo:RO_0002331 obo:MI_ID ;
+	skos:relatedMatch obo:MI_ID , obo:GO_ID ;
+	obo:BFO_0000066 obo:BTO_ID . 
+
+rdf:Statement rdf:type owl:Class ;
+	skos:prefLabel "Triple" .
+		
+<http://rdf.biogateway.eu/reg2ptrg/uniprot!PrimaryAccession--uniprot!PrimaryAccession> rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    rdf:subject uniprot:PrimaryAccession ;
+    rdf:predicate obo:RO_0002429 ;
+    rdf:object uniprot:PrimaryAccession ;
+    skos:prefLabel "uniprot!PrimaryAccession--uniprot!PrimaryAccession" ;
+    skos:definition "PrimaryAccession involved in positive regulation of PrimaryAccession" .
+
+uniprot:PrimaryAccession obo:RO_0002429 uniprot:PrimaryAccession .
+
+<http://rdf.biogateway.eu/reg2ptrg/uniprot!PrimaryAccession--uniprot!PrimaryAccession#database_name> rdf:type <http://rdf.biogateway.eu/reg2ptrg/uniprot!PrimaryAccession--uniprot!PrimaryAccession> ;
+	sio:SIO_000253 <original_URL_database> ;
+	sio:SIO_000772 id_pubmed:PMID ;
+	skos:prefLabel "uniprot!PrimaryAccession--uniprot!PrimaryAccession" ;
+	schema:evidenceLevel "value" ;
+	rdfs:isDefinedBy obo:MI_ID ; #Currently only MI_0364
+	obo:RO_0002331 obo:MI_ID ;
+	skos:relatedMatch obo:MI_ID , obo:GO_ID ;
+	obo:BFO_0000066 obo:BTO_ID . 
+
+<http://rdf.biogateway.eu/reg2ntrg/uniprot!PrimaryAccession--uniprot!PrimaryAccession> rdf:type owl:Class ;
+    rdfs:subClassOf rdf:Statement ;
+    rdf:subject uniprot:PrimaryAccession ;
+    rdf:predicate obo:RO_0002430 ;
+    rdf:object uniprot:PrimaryAccession ;
+    skos:prefLabel "uniprot!PrimaryAccession--uniprot!PrimaryAccession" ;
+    skos:definition "PrimaryAccession involved in negative regulation of PrimaryAccession" .
+
+uniprot:PrimaryAccession obo:RO_0002430 uniprot:PrimaryAccession .
+
+<http://rdf.biogateway.eu/reg2ntrg/uniprot!PrimaryAccession--uniprot!PrimaryAccession#database_name> rdf:type <http://rdf.biogateway.eu/reg2ntrg/uniprot!PrimaryAccession--uniprot!PrimaryAccession> ;
+	sio:SIO_000253 <original_URL_database> ;
+	sio:SIO_000772 id_pubmed:PMID ;
+	skos:prefLabel "uniprot!PrimaryAccession--uniprot!PrimaryAccession" ;
+	schema:evidenceLevel "value" ;
+	rdfs:isDefinedBy obo:MI_ID ; #Currently only MI_0364
+	obo:RO_0002331 obo:MI_ID ;
+	skos:relatedMatch obo:MI_ID , obo:GO_ID ;
+	obo:BFO_0000066 obo:BTO_ID . 
