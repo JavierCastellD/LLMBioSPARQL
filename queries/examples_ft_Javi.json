@@ -1,651 +1,638 @@
 [
   {
     "question": "Which proteins are encoded by the EGFR gene in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot"], "relation_graphs": []},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["EGFR"],
+      "output": ["protein"],
+      "relationships": [{"subject": "EGFR", "predicate": "encodes", "object": "protein"}]
     },
     "sparql": ""
   },
   {
     "question": "Which genes are involved in DNA repair in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["DNA repair"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "involved in", "object": "DNA repair"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "If the APOE gene is linked to the development of Alzheimer's, what molecular function do the proteins it encodes have in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go", "omim"], "relation_graphs": ["gene2phen", "prot2mf"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["APOE", "Alzheimer's"],
+      "output": ["molecular function"],
+      "relationships": [
+        {"subject": "APOE", "predicate": "associated with", "object": "Alzheimer's"},
+        {"subject": "APOE", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "has molecular function", "object": "molecular function"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which proteins directly interact with the proteins encoded by the PTEN gene in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot"], "relation_graphs": ["prot2prot"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["PTEN"],
+      "output": ["protein"],
+      "relationships": [
+        {"subject": "PTEN", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "interacts with", "object": "interacting protein"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which transcription factors regulate the expression of the RUNX1 gene in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot"], "relation_graphs": ["tfac2gene"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["RUNX1"],
+      "output": ["transcription factor"],
+      "relationships": [{"subject": "transcription factor", "predicate": "regulates", "object": "RUNX1"}]
     },
     "sparql": ""
   },
   {
     "question": "Which genes are in the same regulatory domain (TAD) as the GATA3 gene in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "tad"], "relation_graphs": []},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["GATA3"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "GATA3", "predicate": "located in", "object": "TAD"},
+        {"subject": "gene", "predicate": "located in", "object": "TAD"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which transcription factors activate the NFKB2 gene in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot"], "relation_graphs": ["tfac2gene"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["NFKB2"],
+      "output": ["transcription factor"],
+      "relationships": [{"subject": "transcription factor", "predicate": "positively regulates", "object": "NFKB2"}]
     },
     "sparql": ""
   },
   {
     "question": "Which proteins interact with the proteins encoded by the TP53 gene in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot"], "relation_graphs": ["prot2prot"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["TP53"],
+      "output": ["protein"],
+      "relationships": [
+        {"subject": "TP53", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "interacts with", "object": "interacting protein"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which proteins are involved in the development of Parkinson's disease in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["prot", "omim"], "relation_graphs": ["gene2phen"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["Parkinson's disease"],
+      "output": ["protein"],
+      "relationships": [{"subject": "protein", "predicate": "associated with", "object": "Parkinson's disease"}]
     },
     "sparql": ""
   },
   {
     "question": "Which proteins are involved in DNA repair and form complexes with FOXL1 in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["prot", "go"], "relation_graphs": ["prot2bp", "prot2prot"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["DNA repair", "FOXL1"],
+      "output": ["protein"],
+      "relationships": [
+        {"subject": "protein", "predicate": "involved in", "object": "DNA repair"},
+        {"subject": "protein", "predicate": "interacts with", "object": "FOXL1"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which proteins are associated with cytokine-mediated signaling pathways in autoimmune diseases in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["prot", "go", "omim"], "relation_graphs": ["prot2bp", "gene2phen"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["cytokine-mediated signaling", "autoimmune diseases"],
+      "output": ["protein"],
+      "relationships": [
+        {"subject": "protein", "predicate": "involved in", "object": "cytokine-mediated signaling"},
+        {"subject": "protein", "predicate": "associated with", "object": "autoimmune diseases"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which proteins have kinase activity in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["prot", "go"], "relation_graphs": ["prot2mf"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["kinase activity"],
+      "output": ["protein"],
+      "relationships": [{"subject": "protein", "predicate": "has molecular function", "object": "kinase activity"}]
     },
     "sparql": ""
   },
   {
     "question": "Which proteins transport iron in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["prot", "go"], "relation_graphs": ["prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["iron"],
+      "output": ["protein"],
+      "relationships": [{"subject": "protein", "predicate": "involved in", "object": "iron transport"}]
     },
     "sparql": ""
   },
   {
     "question": "Which proteins regulate apoptosis and interact with the proteins encoded by the caspase-9 gene in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2bp", "prot2prot"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["apoptosis", "caspase-9"],
+      "output": ["protein"],
+      "relationships": [
+        {"subject": "protein", "predicate": "involved in", "object": "apoptosis"},
+        {"subject": "caspase-9", "predicate": "encodes", "object": "caspase-9 protein"},
+        {"subject": "protein", "predicate": "interacts with", "object": "caspase-9 protein"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which proteins inhibit the activity of the proteins encoded by the VEGFA gene in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot"], "relation_graphs": ["prot2prot", "reg2targ"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["VEGFA"],
+      "output": ["protein"],
+      "relationships": [
+        {"subject": "VEGFA", "predicate": "encodes", "object": "VEGFA protein"},
+        {"subject": "protein", "predicate": "negatively regulates", "object": "VEGFA protein"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which proteins have helicase activity associated with DNA repair in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["prot", "go"], "relation_graphs": ["prot2mf", "prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["helicase activity", "DNA repair"],
+      "output": ["protein"],
+      "relationships": [
+        {"subject": "protein", "predicate": "has molecular function", "object": "helicase activity"},
+        {"subject": "protein", "predicate": "involved in", "object": "DNA repair"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which genes are involved in the Wnt signaling pathway in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["Wnt signaling pathway"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "involved in", "object": "Wnt signaling pathway"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which genes are associated with pulmonary fibrosis and participate in mRNA catabolic processes in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go", "omim"], "relation_graphs": ["gene2phen", "prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["pulmonary fibrosis", "mRNA catabolic processes"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "associated with", "object": "pulmonary fibrosis"},
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "involved in", "object": "mRNA catabolic processes"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which genes in humans are involved in fatty acid beta-oxidation?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["fatty acid beta-oxidation"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "involved in", "object": "fatty acid beta-oxidation"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which proteins activate the MAPK signaling pathway in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["prot", "go"], "relation_graphs": ["prot2bp", "reg2targ"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["MAPK signaling pathway"],
+      "output": ["protein"],
+      "relationships": [{"subject": "protein", "predicate": "positively regulates", "object": "MAPK signaling pathway"}]
     },
     "sparql": ""
   },
   {
     "question": "Which genes are involved in pyrimidine synthesis in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["pyrimidine synthesis"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "involved in", "object": "pyrimidine synthesis"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which proteins regulate calcium homeostasis in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["prot", "go"], "relation_graphs": ["prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["calcium homeostasis"],
+      "output": ["protein"],
+      "relationships": [{"subject": "protein", "predicate": "involved in", "object": "calcium homeostasis"}]
     },
     "sparql": ""
   },
   {
     "question": "Which genes are involved in the regulation of gluconeogenesis in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["gluconeogenesis"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "involved in", "object": "regulation of gluconeogenesis"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which genes are key to collagen biosynthesis in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["collagen biosynthesis"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "involved in", "object": "collagen biosynthesis"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which proteins negatively regulate the innate immune response in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["prot", "go"], "relation_graphs": ["prot2bp", "reg2targ"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["innate immune response"],
+      "output": ["protein"],
+      "relationships": [{"subject": "protein", "predicate": "negatively regulates", "object": "innate immune response"}]
     },
     "sparql": ""
   },
   {
     "question": "What genes are involved in regulating neurotransmitter secretion in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["neurotransmitter secretion"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "involved in", "object": "neurotransmitter secretion"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which proteins are involved in the nerve growth factor (NGF) signaling pathway in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["prot", "go"], "relation_graphs": ["prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["nerve growth factor", "NGF"],
+      "output": ["protein"],
+      "relationships": [{"subject": "protein", "predicate": "involved in", "object": "NGF signaling pathway"}]
     },
     "sparql": ""
   },
   {
     "question": "Which genes regulate the phosphatidylinositol 3-kinase/protein kinase B pathway in type 2 diabetes in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go", "omim"], "relation_graphs": ["prot2bp", "gene2phen"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["phosphatidylinositol 3-kinase/protein kinase B pathway", "type 2 diabetes"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "associated with", "object": "type 2 diabetes"},
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "involved in", "object": "phosphatidylinositol 3-kinase/protein kinase B pathway"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which genes are essential for the insulin receptor signaling pathway in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["insulin receptor signaling pathway"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "involved in", "object": "insulin receptor signaling pathway"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which proteins are involved in the regulation of autophagy in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["prot", "go"], "relation_graphs": ["prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["autophagy"],
+      "output": ["protein"],
+      "relationships": [{"subject": "protein", "predicate": "involved in", "object": "regulation of autophagy"}]
     },
     "sparql": ""
   },
   {
     "question": "Which signaling pathways are associated with breast cancer in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["prot", "go", "omim"], "relation_graphs": ["gene2phen", "prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["breast cancer"],
+      "output": ["signaling pathway"],
+      "relationships": [
+        {"subject": "gene", "predicate": "associated with", "object": "breast cancer"},
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "involved in", "object": "signaling pathway"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which genes regulate the activity of the MMP9 gene and are involved in gastric cancer in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "omim"], "relation_graphs": ["tfac2gene", "gene2phen"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["MMP9", "gastric cancer"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "regulates", "object": "MMP9"},
+        {"subject": "gene", "predicate": "associated with", "object": "gastric cancer"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which genes respond to interleukin-7 and have molecular interactions with SIRT1 in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2bp", "prot2prot"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["interleukin-7", "SIRT1"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "involved in", "object": "interleukin-7 response"},
+        {"subject": "protein", "predicate": "interacts with", "object": "SIRT1"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which proteins have protein-binding activity and are involved in the response to oxidative stress in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["prot", "go"], "relation_graphs": ["prot2mf", "prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["protein-binding activity", "oxidative stress"],
+      "output": ["protein"],
+      "relationships": [
+        {"subject": "protein", "predicate": "has molecular function", "object": "protein-binding activity"},
+        {"subject": "protein", "predicate": "involved in", "object": "response to oxidative stress"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which genes regulate mRNA stability in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["mRNA stability"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "involved in", "object": "regulation of mRNA stability"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which proteins regulate the proteins with RNA polymerase I activity in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["prot", "go"], "relation_graphs": ["prot2mf", "reg2targ"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["RNA polymerase I activity"],
+      "output": ["protein"],
+      "relationships": [
+        {"subject": "target protein", "predicate": "has molecular function", "object": "RNA polymerase I activity"},
+        {"subject": "protein", "predicate": "regulates", "object": "target protein"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which genes are regulated by the TGF gene in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot"], "relation_graphs": ["tfac2gene", "reg2targ"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["TGF"],
+      "output": ["gene"],
+      "relationships": [{"subject": "TGF", "predicate": "regulates", "object": "gene"}]
     },
     "sparql": ""
   },
   {
     "question": "Which genes are involved in folic acid metabolism in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["folic acid metabolism"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "involved in", "object": "folic acid metabolism"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which genes on chromosome 2 encode ligase activity proteins related to DNA repair, and which diseases are associated with these genes in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go", "omim"], "relation_graphs": ["prot2mf", "prot2bp", "gene2phen"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["chromosome 2", "ligase activity", "DNA repair"],
+      "output": ["gene", "disease"],
+      "relationships": [
+        {"subject": "gene", "predicate": "located in", "object": "chromosome 2"},
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "has molecular function", "object": "ligase activity"},
+        {"subject": "protein", "predicate": "involved in", "object": "DNA repair"},
+        {"subject": "gene", "predicate": "associated with", "object": "disease"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which genes on chromosome 11 encode proteins involved in the apoptotic process of B cells located in the cytoplasm or nucleus in humans?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2bp", "prot2cc"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["chromosome 11", "apoptotic process", "B cells", "cytoplasm", "nucleus"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "located in", "object": "chromosome 11"},
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "involved in", "object": "apoptotic process"},
+        {"subject": "protein", "predicate": "part of", "object": "cytoplasm"},
+        {"subject": "protein", "predicate": "part of", "object": "nucleus"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "What are the human genes located on chromosome 19 that encode proteins associated with molecular functions that involve protein binding and biological processes related to DNA damage repair?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2mf", "prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["chromosome 19", "protein binding", "DNA damage repair"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "located in", "object": "chromosome 19"},
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "has molecular function", "object": "protein binding"},
+        {"subject": "protein", "predicate": "involved in", "object": "DNA damage repair"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "What are the human genes located on chromosome X that encode proteins involved in molecular functions with kinase activity and biological processes related to the cellular response to hypoxia?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2mf", "prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["chromosome X", "kinase activity", "cellular response to hypoxia"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "located in", "object": "chromosome X"},
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "has molecular function", "object": "kinase activity"},
+        {"subject": "protein", "predicate": "involved in", "object": "cellular response to hypoxia"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "What are the human genes located on chromosome 1 that encode proteins associated with molecular functions involving signaling and biological processes related to the DNA damage response?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2mf", "prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["chromosome 1", "signaling", "DNA damage response"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "located in", "object": "chromosome 1"},
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "has molecular function", "object": "signaling"},
+        {"subject": "protein", "predicate": "involved in", "object": "DNA damage response"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "What are the human genes located on chromosome 6 that encode proteins involved in biological processes related to DNA repair and are associated with specific diseases?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go", "omim"], "relation_graphs": ["prot2bp", "gene2phen"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["chromosome 6", "DNA repair"],
+      "output": ["gene", "disease"],
+      "relationships": [
+        {"subject": "gene", "predicate": "located in", "object": "chromosome 6"},
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "involved in", "object": "DNA repair"},
+        {"subject": "gene", "predicate": "associated with", "object": "disease"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "What are the human genes located on chromosome 3 that encode proteins associated with molecular functions involving ADP binding and biological processes related to DNA recombination?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2mf", "prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["chromosome 3", "ADP binding", "DNA recombination"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "located in", "object": "chromosome 3"},
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "has molecular function", "object": "ADP binding"},
+        {"subject": "protein", "predicate": "involved in", "object": "DNA recombination"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "What are the human genes located on chromosome 21 that encode proteins associated with molecular functions involving histone binding and biological processes related to DNA repair?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2mf", "prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["chromosome 21", "histone binding", "DNA repair"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "located in", "object": "chromosome 21"},
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "has molecular function", "object": "histone binding"},
+        {"subject": "protein", "predicate": "involved in", "object": "DNA repair"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "What are the human proteins encoded by genes associated with breast cancer?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "omim"], "relation_graphs": ["gene2phen"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["breast cancer"],
+      "output": ["protein"],
+      "relationships": [
+        {"subject": "gene", "predicate": "associated with", "object": "breast cancer"},
+        {"subject": "gene", "predicate": "encodes", "object": "protein"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "What are the human proteins encoded by genes associated with molecular functions related to tumor necrosis and biological processes related to DNA repair?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go"], "relation_graphs": ["prot2mf", "prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["tumor necrosis", "DNA repair"],
+      "output": ["protein"],
+      "relationships": [
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "has molecular function", "object": "tumor necrosis"},
+        {"subject": "protein", "predicate": "involved in", "object": "DNA repair"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "What are the human genes that encode proteins associated with biological processes related to DNA methylation and linked to diseases such as neuropathy?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["gene", "prot", "go", "omim"], "relation_graphs": ["prot2bp", "gene2phen"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["DNA methylation", "neuropathy"],
+      "output": ["gene"],
+      "relationships": [
+        {"subject": "gene", "predicate": "encodes", "object": "protein"},
+        {"subject": "protein", "predicate": "involved in", "object": "DNA methylation"},
+        {"subject": "gene", "predicate": "associated with", "object": "neuropathy"}
+      ]
     },
     "sparql": ""
   },
   {
     "question": "Which human proteins are involved in the amyloid-beta metabolic process?",
-    "graphs": {
-      "entity_graphs": [],
-      "relation_graphs": []
-    },
+    "graphs": {"entity_graphs": ["prot", "go"], "relation_graphs": ["prot2bp"]},
     "extracted": {
-      "entities": [],
-      "output": [],
-      "relationships": []
+      "entities": ["amyloid-beta metabolic process"],
+      "output": ["protein"],
+      "relationships": [{"subject": "protein", "predicate": "involved in", "object": "amyloid-beta metabolic process"}]
     },
     "sparql": ""
   }
