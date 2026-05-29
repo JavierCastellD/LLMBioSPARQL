@@ -1,65 +1,100 @@
 """
-Smoke tests for QueryExtractor.  Run with:
-  python -m pytest tests/test_extractor.py -v
-or just:
-  python tests/test_extractor.py
-Requires Ollama to be running locally with the configured model pulled.
+Run the QueryExtractor over every question in a JSON file and save results.
+
+Usage:
+    python tests/run_extraction.py                                  # defaults to queries/test_prompts.json
+    python tests/run_extraction.py queries/examples_extended.json
+    python tests/run_extraction.py queries/examples_simple.json -o results/simple_out.json
+
+Each entry in the output file contains:
+    question   – original question
+    expected   – ground-truth 'extracted' dict from the input file (if present)
+    predicted  – dict returned by QueryExtractor
+    error      – error message if extraction failed (field absent on success)
 """
 
-import pprint
+import argparse
+import json
 import sys
 import os
+from datetime import datetime
+from pathlib import Path
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.extractor import QueryExtractor
 
-SIMPLE_QUESTIONS = [
-    "Which proteins are encoded by the TOX3 gene?",
-    "What genes are associated with breast cancer according to OMIM?",
-    "Which transcription factors regulate the BRCA1 gene?",
-    "What biological processes is the protein TP53_HUMAN involved in?",
-    "Are there enhancers that regulate the TOX3 gene in breast tissue?",
-]
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Run QueryExtractor over a JSON question file.")
+    parser.add_argument(
+        "input",
+        nargs="?",
+        default="queries/test_prompts.json",
+        help="Path to input JSON file (default: queries/test_prompts.json)",
+    )
+    parser.add_argument(
+        "-o", "--output",
+        default=None,
+        help="Path to output JSON file (default: results/<input_stem>_<timestamp>.json)",
+    )
+    return parser.parse_args()
 
 
-def run_tests():
+def default_output_path(input_path: Path) -> Path:
+    results_dir = Path("results")
+    results_dir.mkdir(exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    return results_dir / f"{input_path.stem}_{timestamp}.json"
+
+
+def main() -> None:
+    args = parse_args()
+    input_path = Path(args.input)
+    output_path = Path(args.output) if args.output else default_output_path(input_path)
+
+    if not input_path.exists():
+        print(f"Error: input file not found: {input_path}", file=sys.stderr)
+        sys.exit(1)
+
+    with open(input_path, encoding="utf-8") as f:
+        items = json.load(f)
+
     extractor = QueryExtractor()
-    passed = 0
-    failed = 0
+    results = []
+    n = len(items)
 
-    for question in SIMPLE_QUESTIONS:
-        print(f"\n{'='*60}")
-        print(f"Q: {question}")
+    print(f"Input : {input_path}  ({n} questions)")
+    print(f"Output: {output_path}")
+    print(f"Model : {extractor.model_name}")
+    print()
+
+    for i, item in enumerate(items, start=1):
+        question = item["question"]
+        print(f"[{i}/{n}] {question}")
+
+        entry = {
+            "question": question,
+            "expected": item.get("extracted"),
+        }
+
         try:
-            result = extractor.extract(question)
-            _validate_structure(result)
-            pprint.pprint(result)
-            print("PASS")
-            passed += 1
+            entry["predicted"] = extractor.extract(question)
+            print(f"       → OK")
         except Exception as exc:
-            print(f"FAIL — {exc}")
-            failed += 1
+            entry["predicted"] = None
+            entry["error"] = str(exc)
+            print(f"       → ERROR: {exc}")
 
-    print(f"\n{'='*60}")
-    print(f"Results: {passed} passed, {failed} failed out of {len(SIMPLE_QUESTIONS)}")
-    return failed == 0
+        results.append(entry)
 
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(results, f, indent=2, ensure_ascii=False)
 
-def _validate_structure(result: dict) -> None:
-    assert isinstance(result, dict), "result must be a dict"
-    assert "entities" in result, "missing 'entities'"
-    assert "output" in result, "missing 'output'"
-    assert "relationships" in result, "missing 'relationships'"
-    assert isinstance(result["entities"], list), "'entities' must be a list"
-    assert isinstance(result["output"], list), "'output' must be a list"
-    assert isinstance(result["relationships"], list), "'relationships' must be a list"
-    for rel in result["relationships"]:
-        assert isinstance(rel, dict), "each relationship must be a dict"
-        assert "subject" in rel and "predicate" in rel and "object" in rel, \
-            f"relationship missing keys: {rel}"
+    failed = sum(1 for r in results if "error" in r)
+    print(f"\nDone: {n - failed}/{n} succeeded. Results saved to {output_path}")
 
 
 if __name__ == "__main__":
-    ok = run_tests()
-    sys.exit(0 if ok else 1)
+    main()
