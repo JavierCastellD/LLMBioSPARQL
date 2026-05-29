@@ -10,3 +10,4 @@ venv/
 dist/
 build/
 .pytest_cache/
+results/
