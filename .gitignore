@@ -13,3 +13,5 @@ build/
 results/
 submits/
 logs/
+~$*
+*.ipynb
