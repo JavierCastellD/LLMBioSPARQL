@@ -1,0 +1,484 @@
+#We have one mutation of interest located in the chr16:52565276 position, and we want to study its possible implications in the regulation of gene expression. 
+#1. Is the mutation located in any enhancer sequence of the network? Returns the label of the sequences and their coordinates.
+# What databases support the sequence? Indicate its label. Is the enhancer related to any disease? 
+# Does the enhancer have any target genes according to the sources? 
+# Which proteins encode the gene?
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX nuccore: <https://www.ncbi.nlm.nih.gov/nuccore/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX sio: <http://semanticscience.org/resource/>
+SELECT DISTINCT ?database_label ?enh_label ?start ?end ?disease ?target_gene ?prot_label
+WHERE {
+	GRAPH <http://rdf.biogateway.eu/graph/crm> {
+        ?enhID rdfs:subClassOf obo:SO_0000727 ;
+      		obo:GENO_0000894 ?start ;
+            obo:GENO_0000895 ?end ;
+            obo:BFO_0000050 ?chr ;
+            skos:prefLabel ?enh_label .
+		
+		?chr skos:prefLabel "chr-16" .
+
+		?enh_inst rdf:type ?enhID ;
+            sio:SIO_000253 ?database .
+    					
+    	?database skos:prefLabel ?database_label
+        FILTER (?start <= 52565276 && ?end >= 52565276)
+  	}
+
+	OPTIONAL {
+		GRAPH <http://rdf.biogateway.eu/graph/crm2phen> {
+			?enhID obo:RO_0002331 ?disease
+		}
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/crm2gene> {
+		?enhID obo:RO_0002429 ?target_gene .
+	}
+
+    GRAPH <http://rdf.biogateway.eu/graph/gene> {
+		?target_gene rdfs:subClassOf sio:SIO_010035 ;
+			skos:prefLabel ?target_gene_label ;
+            sio:SIO_010078 ?prot .
+    }
+
+    GRAPH <http://rdf.biogateway.eu/graph/prot> {
+		?prot skos:prefLabel ?prot_label .
+    }
+}
+
+#2. Are the previous proteins involved in any biological process associated with the disease linked to the enhancer?
+#inmmune response: GO_0006955; angiogenesis: GO_0001525; apoptosis process: GO_0006915; regulation of apoptosis process: GO_0042981; cell population proliferation: GO_0008283; ER-nucleus signaling pathway: GO_0006984
+# Returns the labels of the target gene, its proteins and biological process
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX nuccore: <https://www.ncbi.nlm.nih.gov/nuccore/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX sio: <http://semanticscience.org/resource/>
+SELECT DISTINCT ?target_gene_label ?prot_label ?biological_process_label
+WHERE {
+    GRAPH <http://rdf.biogateway.eu/graph/crm> {
+        ?enhID rdfs:subClassOf obo:SO_0000727 ;
+      		obo:GENO_0000894 ?start ;
+            obo:GENO_0000895 ?end ;
+            obo:BFO_0000050 nuccore:NC_000016.10 .
+    					
+		FILTER (?start <= 52565276 && ?end >= 52565276)
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/crm2gene> {
+		?enhID obo:RO_0002429 ?target_gene .
+	}
+
+    GRAPH <http://rdf.biogateway.eu/graph/gene> {
+		?target_gene rdfs:subClassOf sio:SIO_010035 ;
+            skos:prefLabel ?target_gene_label ;
+            sio:SIO_010078 ?prot .
+    }
+
+    GRAPH <http://rdf.biogateway.eu/graph/prot> {
+        ?prot skos:prefLabel ?prot_label .
+    }
+
+	GRAPH <http://rdf.biogateway.eu/graph/prot2bp> {
+        VALUES ?biological_process {
+            obo:GO_0006955
+            obo:GO_0001525
+            obo:GO_0006915
+            obo:GO_0042981
+			obo:GO_0008283
+			obo:GO_0006984
+        }
+		?prot obo:RO_0002331 ?biological_process
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/go> {
+		?biological_process rdfs:label ?biological_process_label .
+	}
+}
+
+#3. Multiple enhancers can collaborate in the regulation of one gene. What other enhancers can regulate the gene TOX3 in the breast tissue (UBERON_0000310)? We follow three different criteria:
+#3.1. Enhancers provided by databases:
+#(the gene is in the strand "-", so the TSS of the gene is the end position)
+# Returns the enhancer label and its coordinates, as well as the middle position of the sequence, the TSS of the gene, and the distance between the middle position and the TSS.
+# Order the results by distance.
+
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX human_gene: <http://rdf.biogateway.eu/gene/9606/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?enh_label ?enh_start ?enh_end ?enh_middle ?TSS_gene ?distance
+WHERE {
+	GRAPH <http://rdf.biogateway.eu/graph/crm2gene> {
+		?enhID obo:RO_0002429 human_gene:TOX3 .
+	}
+
+    GRAPH <http://rdf.biogateway.eu/graph/gene> {
+        human_gene:TOX3 obo:GENO_0000895 ?TSS_gene ;
+			obo:BFO_0000050 ?chr .
+    }
+
+    GRAPH <http://rdf.biogateway.eu/graph/crm> {
+        ?enhID rdfs:subClassOf obo:SO_0000727 ;
+            skos:prefLabel ?enh_label ;
+			obo:GENO_0000894 ?enh_start ;
+			obo:GENO_0000895 ?enh_end ;
+			obo:BFO_0000050 ?chr .
+
+		?enh_inst rdf:type ?enhID ;
+			obo:TXPO_0003500 obo:UBERON_0000310 .
+    }
+        
+    BIND((?enh_end - ?enh_start) AS ?enh_range)
+    BIND((ROUND(?enh_range/2) + ?enh_start) AS ?enh_middle)
+    BIND(ABS(?TSS_gene - ?enh_middle) AS ?distance)
+}
+ORDER BY ?distance
+
+
+#3.2. Distance of 50 kb between the TSS of the TOX3 gene and the center of the enhancer, because studies have reported that a large part of the typical enhancers are linked to genes within this distance.
+# Returns the enhancer label and its coordinates, as well as the middle position of the sequence, the TSS of the gene, and the distance between the middle position and the TSS.
+# Order the results by distance.
+
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX human_gene: <http://rdf.biogateway.eu/gene/9606/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?enh_label ?enh_start ?enh_end ?enh_middle ?TSS_gene ?distance
+WHERE {
+    GRAPH <http://rdf.biogateway.eu/graph/gene> {
+		human_gene:TOX3 obo:GENO_0000895 ?TSS_gene ;
+			obo:BFO_0000050 ?chr .
+    }
+
+    GRAPH <http://rdf.biogateway.eu/graph/crm> {
+		?enh_ID rdfs:subClassOf obo:SO_0000727 ;
+			skos:prefLabel ?enh_label ;
+			obo:BFO_0000050 ?chr ;
+			obo:GENO_0000894 ?enh_start ;
+			obo:GENO_0000895 ?enh_end .
+
+		?enh_inst rdf:type ?enh_ID ;
+			obo:TXPO_0003500 obo:UBERON_0000310 .
+    }
+        
+	BIND((?enh_end - ?enh_start) AS ?enh_range)
+	BIND((ROUND(?enh_range/2) + ?enh_start) AS ?enh_middle)
+	BIND(ABS(?TSS_gene - ?enh_middle) AS ?distance)
+    FILTER(?distance <= 50000)
+}
+ORDER BY ?distance
+
+
+#3.3. Enhancers located in the same TAD as the TOX3 gene, because these domains act as regulatory modules
+# Returns the enhancer label and its coordinates, as well as the middle position of the sequence, the TSS of the gene, and the distance between the middle position and the TSS.
+# Order the results by distance.
+
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX human_gene: <http://rdf.biogateway.eu/gene/9606/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?enh_label ?enh_start ?enh_end ?enh_middle ?TSS_gene ?distance
+WHERE {
+    GRAPH <http://rdf.biogateway.eu/graph/gene> {
+		human_gene:TOX3 obo:GENO_0000895 ?TSS_gene ;
+			obo:BFO_0000050 ?chr .
+    }
+
+	GRAPH <http://rdf.biogateway.eu/graph/tad> {
+		?TAD_ID rdfs:subClassOf obo:SO_0002304 ;
+			obo:BFO_0000050 ?chr ;
+			obo:GENO_0000894 ?TAD_start ;
+			obo:GENO_0000895 ?TAD_end .
+		
+		?TAD_inst rdf:type ?TAD_ID ;
+			obo:TXPO_0003500 obo:UBERON_0000310 .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/crm> {
+		?enh_ID rdfs:subClassOf obo:SO_0000727 ;
+			skos:prefLabel ?enh_label ;
+			obo:BFO_0000050 ?chr ;
+			obo:GENO_0000894 ?enh_start ;
+			obo:GENO_0000895 ?enh_end .
+
+		?enh_inst rdf:type ?enh_ID ;
+			obo:TXPO_0003500 obo:UBERON_0000310 .
+	}
+
+    BIND (?enh_end - ?enh_start AS ?enh_range)
+    BIND (?enh_range/2 AS ?enh_div)
+    BIND (?enh_div + ?enh_start AS ?enh_middle)
+    BIND (ABS(?TSS_gene - ?enh_middle) AS ?distance)
+
+    FILTER ( ?TAD_start < ?TSS_gene ) .
+    FILTER ( ?TAD_end > ?TSS_gene ) .
+    FILTER ( ?enh_start > ?TAD_start ) .
+    FILTER ( ?enh_end < ?TAD_end ) .
+}
+ORDER BY ?distance
+
+
+#4. If the enhancer is affected by the chr16:52565276 mutation, in addition to the target gene TOX3 provided by the databases, what other genes could be targeted by the same enhancer?
+#We follow different criteria:
+
+# 4.1. Distance of 50 kb
+# Returns the enhancer label, and its coordinates, as well as the middle position of the sequence. Also the label of the database of the enhancer, the label of the taget genes, their TSS, and the distance between the middle position of the enhancer and the TSS.
+# Order the results by distance.
+
+PREFIX human_gene: <http://rdf.biogateway.eu/gene/9606/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX nuccore: <https://www.ncbi.nlm.nih.gov/nuccore/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX sio: <http://semanticscience.org/resource/>
+PREFIX faldo: <http://biohackathon.org/resource/faldo#>
+SELECT DISTINCT ?database_label ?enh_label ?start ?end ?enh_middle ?gene_label ?TSS_gene ?distance
+WHERE {
+	GRAPH <http://rdf.biogateway.eu/graph/crm2gene> {
+		?enhID obo:RO_0002429 human_gene:TOX3 .
+	}
+
+    GRAPH <http://rdf.biogateway.eu/graph/crm> {
+		?enhID rdfs:subClassOf obo:SO_0000727 ;
+      		obo:GENO_0000894 ?start;
+            obo:GENO_0000895 ?end ;
+            obo:BFO_0000050 nuccore:NC_000016.10 ;
+            skos:prefLabel ?enh_label .
+
+		?enh_inst rdf:type ?enhID ;
+            sio:SIO_000253 ?database .
+
+    	?database skos:prefLabel ?database_label .
+        FILTER (?start <= 52565276 && ?end >= 52565276)
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/gene> {
+		{
+		?gene rdfs:subClassOf sio:SIO_010035 ;
+			skos:prefLabel ?gene_label ;
+			obo:BFO_0000050 nuccore:NC_000016.10 ;
+			obo:GENO_0000906 faldo:ForwardStrandPosition ;
+			obo:GENO_0000894 ?TSS_gene .
+		} UNION {
+		?gene rdfs:subClassOf sio:SIO_010035 ;
+			skos:prefLabel ?gene_label ;
+			obo:BFO_0000050 nuccore:NC_000016.10 ;
+			obo:GENO_0000906 faldo:ReverseStrandPosition ;
+			obo:GENO_0000895 ?TSS_gene .
+		}
+  	}
+
+	BIND((?end - ?start) AS ?enh_range)
+    BIND((ROUND(?enh_range/2) + ?start) AS ?enh_middle)
+    BIND(ABS(?TSS_gene - ?enh_middle) AS ?distance)
+	FILTER(?distance <= 50000)
+}
+ORDER BY ?distance
+
+
+# 4.2. Distance of 1 MB
+# Returns the enhancer label, and its coordinates, as well as the middle position of the sequence. Also the label of the database of the enhancer, the label of the taget genes, their TSS, and the distance between the middle position of the enhancer and the TSS.
+# Order the results by distance.
+
+PREFIX human_gene: <http://rdf.biogateway.eu/gene/9606/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX nuccore: <https://www.ncbi.nlm.nih.gov/nuccore/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX sio: <http://semanticscience.org/resource/>
+PREFIX faldo: <http://biohackathon.org/resource/faldo#>
+SELECT DISTINCT ?database_label ?enh_label ?start ?end ?enh_middle ?gene_label ?TSS_gene ?distance
+WHERE {
+	GRAPH <http://rdf.biogateway.eu/graph/crm2gene> {
+		?enhID obo:RO_0002429 human_gene:TOX3 .
+	}
+
+    GRAPH <http://rdf.biogateway.eu/graph/crm> {
+        ?enhID rdfs:subClassOf obo:SO_0000727 ;
+      		obo:GENO_0000894 ?start;
+            obo:GENO_0000895 ?end ;
+            obo:BFO_0000050 nuccore:NC_000016.10 ;
+            skos:prefLabel ?enh_label .
+
+		?enh_inst rdf:type ?enhID ;
+            sio:SIO_000253 ?database .
+
+    	?database skos:prefLabel ?database_label .
+        FILTER (?start <= 52565276 && ?end >= 52565276)
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/gene> {
+		{
+		?gene rdfs:subClassOf sio:SIO_010035 ;
+			skos:prefLabel ?gene_label ;
+			obo:BFO_0000050 nuccore:NC_000016.10 ;
+			obo:GENO_0000906 faldo:ForwardStrandPosition ;
+			obo:GENO_0000894 ?TSS_gene .
+		} UNION {
+		?gene rdfs:subClassOf sio:SIO_010035 ;
+			skos:prefLabel ?gene_label ;
+			obo:BFO_0000050 nuccore:NC_000016.10 ;
+			obo:GENO_0000906 faldo:ReverseStrandPosition ;
+			obo:GENO_0000895 ?TSS_gene .
+		}
+  	}
+
+	BIND((?end - ?start) AS ?enh_range)
+    BIND((ROUND(?enh_range/2) + ?start) AS ?enh_middle)
+    BIND(ABS(?TSS_gene - ?enh_middle) AS ?distance)
+	FILTER(?distance <= 1000000)
+}
+ORDER BY ?distance
+
+#Are any of these genes involved in any biological process associated with the disease associated with the enhancer?
+#inmmune response: GO_0006955; angiogenesis: GO_0001525; apoptosis process: GO_0006915; regulation of apoptosis process: GO_0042981; cell population proliferation: GO_0008283; ER-nucleus signaling pathway: GO_0006984
+# Returns the enhancer label, and its coordinates, as well as the middle position of the sequence. Also the label of the database of the enhancer, the label of the taget genes, their TSS, the distance between the middle position of the enhancer and the TSS, the label of the encoded proteins by the genes and the labels of their biological processes.
+# Order the results by distance.
+
+PREFIX human_gene: <http://rdf.biogateway.eu/gene/9606/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX nuccore: <https://www.ncbi.nlm.nih.gov/nuccore/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX sio: <http://semanticscience.org/resource/>
+PREFIX faldo: <http://biohackathon.org/resource/faldo#>
+SELECT DISTINCT ?database_label ?enh_label ?start ?end ?enh_middle ?gene_label ?TSS_gene ?distance ?prot_label ?biological_process_label
+WHERE {
+	GRAPH <http://rdf.biogateway.eu/graph/crm2gene> {
+		?enhID obo:RO_0002429 human_gene:TOX3 .
+	}
+
+    GRAPH <http://rdf.biogateway.eu/graph/crm> {
+        ?enhID rdfs:subClassOf obo:SO_0000727 ;
+    		obo:GENO_0000894 ?start;
+            obo:GENO_0000895 ?end ;
+            obo:BFO_0000050 nuccore:NC_000016.10 ;
+            skos:prefLabel ?enh_label .
+
+		?enh_inst rdf:type ?enhID ;
+            sio:SIO_000253 ?database .
+
+    	?database skos:prefLabel ?database_label .
+        FILTER (?start <= 52565276 && ?end >= 52565276)
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/gene> {
+		{
+		?gene rdfs:subClassOf sio:SIO_010035 ;
+			skos:prefLabel ?gene_label ;
+			obo:BFO_0000050 nuccore:NC_000016.10 ;
+			obo:GENO_0000906 faldo:ForwardStrandPosition ;
+			obo:GENO_0000894 ?TSS_gene .
+		} UNION {
+		?gene rdfs:subClassOf sio:SIO_010035 ;
+			skos:prefLabel ?gene_label ;
+			obo:BFO_0000050 nuccore:NC_000016.10 ;
+			obo:GENO_0000906 faldo:ReverseStrandPosition ;
+			obo:GENO_0000895 ?TSS_gene .
+		}
+		?gene sio:SIO_010078 ?prot
+  	}
+
+	BIND((?end - ?start) AS ?enh_range)
+    BIND((ROUND(?enh_range/2) + ?start) AS ?enh_middle)
+    BIND(ABS(?TSS_gene - ?enh_middle) AS ?distance)
+	FILTER(?distance <= 1000000)
+
+	GRAPH <http://rdf.biogateway.eu/graph/prot> {
+        ?prot skos:prefLabel ?prot_label .
+    }
+
+	GRAPH <http://rdf.biogateway.eu/graph/prot2bp> {
+		VALUES ?biological_process {
+            obo:GO_0006955
+            obo:GO_0001525
+            obo:GO_0006915
+            obo:GO_0042981
+			obo:GO_0008283
+			obo:GO_0006984
+        }
+		?prot obo:RO_0002331 ?biological_process .
+	}
+	
+	GRAPH <http://rdf.biogateway.eu/graph/go> {
+		?biological_process rdfs:label ?biological_process_label .
+	}
+}
+ORDER BY ?distance
+
+
+#5. What transcription factors (TF) are associated with the enhancers overlapping with the chr16:52565276 mutation or the target genes? 
+#5.1. Enhancer-dbTF
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX nuccore: <https://www.ncbi.nlm.nih.gov/nuccore/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+SELECT *
+WHERE {
+	GRAPH <http://rdf.biogateway.eu/graph/crm> {
+		?enhID rdfs:subClassOf obo:SO_0000727 ;
+      		obo:GENO_0000894 ?start;
+            obo:GENO_0000895 ?end ;
+            obo:BFO_0000050 nuccore:NC_000016.10 .
+    					
+    	FILTER (?start <= 52565276 && ?end >= 52565276)	
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/crm2gene> {
+		?enhID obo:RO_0002429 ?target_gene .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/crm2tfac> {
+		?enhID obo:RO_0002436 ?tf .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/prot> {
+		?tf skos:prefLabel ?tf_label .
+	}
+}
+
+# What transcription factors (TF) are associated with the target genes TOX3? 
+#5.2. dbTF-TOX3 Gene
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX hgene: <http://rdf.biogateway.eu/gene/9606/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+SELECT DISTINCT ?tf ?tf_label
+WHERE {
+	GRAPH <http://rdf.biogateway.eu/graph/tfac2gene> {
+		?int rdf:object hgene:TOX3 ;
+			rdf:subject ?tf .
+	}
+
+    GRAPH <http://rdf.biogateway.eu/graph/prot> {
+		?tf skos:prefLabel ?tf_label
+	}
+}
+
+# How many other genes could be target of these TFs and how many other proteins interact with these TFs?
+#5.3. dbTF-target genes and protein interactions
+
+PREFIX hgene: <http://rdf.biogateway.eu/gene/9606/>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+SELECT COUNT(DISTINCT ?tf) COUNT(DISTINCT ?gene) COUNT(DISTINCT ?prot)
+WHERE {
+	GRAPH <http://rdf.biogateway.eu/graph/tfac2gene> {
+		?tf obo:RO_0002428 hgene:TOX3 ;
+			obo:RO_0002428 ?gene .
+	}
+
+	OPTIONAL {
+		GRAPH <http://rdf.biogateway.eu/graph/prot2prot> {
+			?tf obo:RO_0002436 ?prot .
+		}
+	}
+}

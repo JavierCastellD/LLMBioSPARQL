@@ -1,0 +1,322 @@
+#We are interested in the study of the "breast cancer" phenotype, so we use the network to obtain information about the regulation around this phenotype.
+#1. Using OMIM as reference, which phenotypes are subject to study because they contain "breast cancer" in their preferred or alternative label?
+# Return the ID of the phenotype and its label
+
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+SELECT DISTINCT ?phenotype ?label
+WHERE {
+	GRAPH <http://rdf.biogateway.eu/graph/omim> {
+		{?phenotype skos:prefLabel ?label}
+		UNION
+		{?phenotype skos:altLabel ?label}
+	}
+    FILTER regex(?label, "breast cancer", "i")
+}
+
+
+#2. What genes are involved with these phenotypes? What proteins are encoded by these genes and in what biological processes are these proteins involved?
+# Return the phenotype, and the label of genes, proteins and biological processes
+
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX sio: <http://semanticscience.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?phenotype ?gene_label ?prot_label ?biological_processes_label
+WHERE {
+	GRAPH <http://rdf.biogateway.eu/graph/omim> {
+		{?phenotype skos:prefLabel ?label}
+		UNION
+		{?phenotype skos:altLabel ?label}
+	}
+    FILTER regex(?label, "breast cancer", "i")
+
+	GRAPH <http://rdf.biogateway.eu/graph/gene2phen> {
+		?gene2phen rdf:object ?phenotype ;
+			rdf:subject ?gene .
+	}	
+
+	GRAPH <http://rdf.biogateway.eu/graph/gene> {
+		?gene skos:prefLabel ?gene_label ;
+			sio:SIO_010078 ?prot .
+    }
+
+	GRAPH <http://rdf.biogateway.eu/graph/prot> {
+        ?prot skos:prefLabel ?prot_label .
+    }
+
+	OPTIONAL {
+		GRAPH <http://rdf.biogateway.eu/graph/prot2bp> {
+			?prot2bp rdf:subject ?prot ;
+				rdf:object ?biological_processes .
+		}
+
+		GRAPH <http://rdf.biogateway.eu/graph/go> {
+			?biological_processes rdfs:label ?biological_processes_label .
+		}
+	}
+}
+ORDER BY ?phenotype ?gene_label ?prot_label ?biological_processes_label
+ 
+
+#3.1. What enhancers are involved in the regulation of these genes? Returns the phenotype and the labels of the genes, enhancers and databases of reference.
+#Since we are discussing the "breast cancer" phenotype, have any of these enhancers been identified in any biosample related to breast tissue (obo:UBERON_0000310)? 
+
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX sio: <http://semanticscience.org/resource/>
+SELECT DISTINCT ?phenotype ?gene_label ?enh_label ?database_label
+WHERE {
+	GRAPH <http://rdf.biogateway.eu/graph/omim> {
+		{?phenotype skos:prefLabel ?label}
+		UNION
+		{?phenotype skos:altLabel ?label}
+	}
+    FILTER regex(?label, "breast cancer", "i")
+
+	GRAPH <http://rdf.biogateway.eu/graph/gene2phen> {
+		?gene2phen rdf:object ?phenotype ;
+			rdf:subject ?gene .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/crm2gene> {
+		?crm2gene rdf:subject ?enhID ;
+			rdf:object ?gene .
+		?inst_crm2gene rdf:type ?crm2gene ;
+			obo:TXPO_0003500 obo:UBERON_0000310 .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/crm> {
+		?enhID skos:prefLabel ?enh_label .
+		?inst_enh rdf:type ?enhID ;
+			sio:SIO_000253 ?database .
+		?database skos:prefLabel ?database_label .
+	}
+	
+	GRAPH <http://rdf.biogateway.eu/graph/gene> {
+		?gene skos:prefLabel ?gene_label
+	}
+}
+
+
+#Count of cell lines (CLO ontology as reference):
+
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX sio: <http://semanticscience.org/resource/>
+SELECT COUNT(DISTINCT ?cell_line)
+WHERE {
+	GRAPH <http://rdf.biogateway.eu/graph/omim> {
+		{?phenotype skos:prefLabel ?label}
+		UNION
+		{?phenotype skos:altLabel ?label}
+	}
+    FILTER regex(?label, "breast cancer", "i")
+
+	GRAPH <http://rdf.biogateway.eu/graph/gene2phen> {
+		?gene2phen rdf:object ?phenotype ;
+			rdf:subject ?gene .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/crm2gene> {
+		?crm2gene rdf:subject ?enhID ;
+			rdf:object ?gene .
+		?inst_crm2gene rdf:type ?crm2gene ;
+			obo:TXPO_0003500 obo:UBERON_0000310 ;
+			obo:TXPO_0003500 ?cell_line .
+		FILTER regex(?cell_line, "/CLO_")
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/crm> {
+		?enhID skos:prefLabel ?enh_label .
+		?inst_enh rdf:type ?enhID ;
+			sio:SIO_000253 ?database .
+		?database skos:prefLabel ?database_label .
+	}
+	
+	GRAPH <http://rdf.biogateway.eu/graph/gene> {
+		?gene skos:prefLabel ?gene_label
+	}
+}
+
+
+#3.2. In what biological processes are involved the genes regulated by these enhancers?
+#Returns the labels of the target genes, its encoded proteins an their biological processes
+
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX sio: <http://semanticscience.org/resource/>
+SELECT DISTINCT ?target_gene_label ?prot_label ?biological_processes_label
+WHERE {
+	GRAPH <http://rdf.biogateway.eu/graph/omim> {
+		{?phenotype skos:prefLabel ?label}
+		UNION
+		{?phenotype skos:altLabel ?label}
+	}
+    FILTER regex(?label, "breast cancer", "i")
+
+	GRAPH <http://rdf.biogateway.eu/graph/gene2phen> {
+		?gene2phen rdf:object ?phenotype ;
+			rdf:subject ?gene .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/crm2gene> {
+		?crm2gene rdf:object ?gene ;
+			rdf:subject ?enhID .
+		?inst_crm2gene rdf:type ?crm2gene ;
+			obo:TXPO_0003500 obo:UBERON_0000310 .
+		?enhID obo:RO_0002429 ?target_gene .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/gene> {
+		?target_gene skos:prefLabel ?target_gene_label ;
+			sio:SIO_010078 ?prot .
+        }
+
+	GRAPH <http://rdf.biogateway.eu/graph/prot> {
+        ?prot skos:prefLabel ?prot_label .
+    }
+
+	GRAPH <http://rdf.biogateway.eu/graph/prot2bp> {
+		?prot2bp rdf:subject ?prot ;
+			rdf:object ?biological_processes .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/go> {
+		?biological_processes rdfs:label ?biological_processes_label .
+	}
+}
+ORDER BY ?target_gene_label ?prot_label ?biological_processes_label
+
+#Count of target genes and proteins:
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX sio: <http://semanticscience.org/resource/>
+SELECT COUNT(DISTINCT ?target_gene) COUNT(DISTINCT ?prot)
+WHERE {
+	GRAPH <http://rdf.biogateway.eu/graph/omim> {
+		{?phenotype skos:prefLabel ?label}
+		UNION
+		{?phenotype skos:altLabel ?label}
+	}
+    FILTER regex(?label, "breast cancer", "i")
+
+	GRAPH <http://rdf.biogateway.eu/graph/gene2phen> {
+		?gene2phen rdf:object ?phenotype ;
+			rdf:subject ?gene .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/crm2gene> {
+		?crm2gene rdf:object ?gene ;
+			rdf:subject ?enhID .
+		?inst_crm2gene rdf:type ?crm2gene ;
+			obo:TXPO_0003500 obo:UBERON_0000310 .
+		?enhID obo:RO_0002429 ?target_gene .
+	}
+	
+	GRAPH <http://rdf.biogateway.eu/graph/gene> {
+		?target_gene sio:SIO_010078 ?prot .
+    }
+}
+
+
+#4. What enhancers are linked in the network to breast cancer? What are the target genes and the TFs linked to enhancers?
+#Returns the enhancer label, the target gene and the TF
+
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX sio: <http://semanticscience.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?enh_label ?target_gene ?tf
+WHERE {
+	VALUES ?phenotype {
+		<http://purl.bioontology.org/ontology/OMIM/114480>
+		<http://purl.obolibrary.org/obo/DOID_1612>
+		<https://id.nlm.nih.gov/mesh/D001943>
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/crm2phen> {
+		?enhID obo:RO_0002331 ?phenotype .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/crm> {
+		?enhID skos:prefLabel ?enh_label .
+	}
+	OPTIONAL {
+		?enhID obo:RO_0002429 ?target_gene .
+		?target_gene rdfs:subClassOf sio:SIO_010035 .
+	}
+	OPTIONAL {
+		?enhID obo:RO_0002436 ?tf .
+		?tf rdfs:subClassOf obo:NCIT_C17207 .
+	}
+}
+ORDER BY ?enh_label
+
+#Count:
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX sio: <http://semanticscience.org/resource/>
+SELECT COUNT(DISTINCT ?enhID) COUNT(DISTINCT ?target_gene) COUNT(DISTINCT ?tf)
+WHERE {
+	VALUES ?phenotype {
+		<http://purl.bioontology.org/ontology/OMIM/114480>
+		<http://purl.obolibrary.org/obo/DOID_1612>
+		<https://id.nlm.nih.gov/mesh/D001943>
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/crm2phen> {
+		?enhID obo:RO_0002331 ?phenotype .
+	}
+
+	OPTIONAL {
+		?enhID obo:RO_0002429 ?target_gene .
+		?target_gene rdfs:subClassOf sio:SIO_010035 .
+	}
+	OPTIONAL {
+		?enhID obo:RO_0002436 ?tf .
+		?tf rdfs:subClassOf obo:NCIT_C17207 .
+	}
+}
+
+
+#5. What dbTFs cooperate in the transcription process of these target genes?
+#Returns the count of target genes and TFs
+
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX sio: <http://semanticscience.org/resource/>
+SELECT COUNT(DISTINCT ?target_gene) COUNT(DISTINCT ?tf)
+WHERE {
+	VALUES ?phenotype {
+		<http://purl.bioontology.org/ontology/OMIM/114480>
+		<http://purl.obolibrary.org/obo/DOID_1612>
+		<https://id.nlm.nih.gov/mesh/D001943>
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/crm2phen> {
+		?enhID obo:RO_0002331 ?phenotype .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/crm2gene> {
+		?enhID obo:RO_0002429 ?target_gene .
+	}
+
+	GRAPH <http://rdf.biogateway.eu/graph/tfac2gene> {
+		?int rdf:object ?target_gene ;
+			rdf:subject ?tf .
+	}
+}
