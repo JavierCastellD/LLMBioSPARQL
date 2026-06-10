@@ -1,0 +1,469 @@
+{
+  "nodes": [
+    "biological_process",
+    "cellular_component",
+    "chromosome",
+    "crm",
+    "gene",
+    "genome_assembly",
+    "molecular_function",
+    "organism",
+    "phenotype",
+    "protein",
+    "tad"
+  ],
+  "edges": [
+    {
+      "from": "crm",
+      "to": "chromosome",
+      "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+      "label": "part of",
+      "graph": "crm",
+      "subject_type": "crm",
+      "object_type": "chromosome"
+    },
+    {
+      "from": "chromosome",
+      "to": "crm",
+      "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+      "label": "part of",
+      "graph": "crm",
+      "subject_type": "crm",
+      "object_type": "chromosome"
+    },
+    {
+      "from": "crm",
+      "to": "organism",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+      "label": "in taxon",
+      "graph": "crm",
+      "subject_type": "crm",
+      "object_type": "organism"
+    },
+    {
+      "from": "organism",
+      "to": "crm",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+      "label": "in taxon",
+      "graph": "crm",
+      "subject_type": "crm",
+      "object_type": "organism"
+    },
+    {
+      "from": "crm",
+      "to": "genome_assembly",
+      "predicate": "http://purl.org/dc/terms/hasVersion",
+      "label": "has version",
+      "graph": "crm",
+      "subject_type": "crm",
+      "object_type": "genome_assembly"
+    },
+    {
+      "from": "genome_assembly",
+      "to": "crm",
+      "predicate": "http://purl.org/dc/terms/hasVersion",
+      "label": "has version",
+      "graph": "crm",
+      "subject_type": "crm",
+      "object_type": "genome_assembly"
+    },
+    {
+      "from": "crm",
+      "to": "phenotype",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+      "label": "involved in",
+      "graph": "crm2phen",
+      "subject_type": "crm",
+      "object_type": "phenotype"
+    },
+    {
+      "from": "phenotype",
+      "to": "crm",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+      "label": "involved in",
+      "graph": "crm2phen",
+      "subject_type": "crm",
+      "object_type": "phenotype"
+    },
+    {
+      "from": "crm",
+      "to": "gene",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002429",
+      "label": "involved in positive regulation of",
+      "graph": "crm2gene",
+      "subject_type": "crm",
+      "object_type": "gene"
+    },
+    {
+      "from": "gene",
+      "to": "crm",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002429",
+      "label": "involved in positive regulation of",
+      "graph": "crm2gene",
+      "subject_type": "crm",
+      "object_type": "gene"
+    },
+    {
+      "from": "crm",
+      "to": "protein",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002436",
+      "label": "molecularly interacts with",
+      "graph": "crm2tfac",
+      "subject_type": "crm",
+      "object_type": "protein"
+    },
+    {
+      "from": "protein",
+      "to": "crm",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002436",
+      "label": "molecularly interacts with",
+      "graph": "crm2tfac",
+      "subject_type": "crm",
+      "object_type": "protein"
+    },
+    {
+      "from": "tad",
+      "to": "chromosome",
+      "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+      "label": "part of",
+      "graph": "tad",
+      "subject_type": "tad",
+      "object_type": "chromosome"
+    },
+    {
+      "from": "chromosome",
+      "to": "tad",
+      "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+      "label": "part of",
+      "graph": "tad",
+      "subject_type": "tad",
+      "object_type": "chromosome"
+    },
+    {
+      "from": "tad",
+      "to": "organism",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+      "label": "in taxon",
+      "graph": "tad",
+      "subject_type": "tad",
+      "object_type": "organism"
+    },
+    {
+      "from": "organism",
+      "to": "tad",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+      "label": "in taxon",
+      "graph": "tad",
+      "subject_type": "tad",
+      "object_type": "organism"
+    },
+    {
+      "from": "tad",
+      "to": "genome_assembly",
+      "predicate": "http://purl.org/dc/terms/hasVersion",
+      "label": "has version",
+      "graph": "tad",
+      "subject_type": "tad",
+      "object_type": "genome_assembly"
+    },
+    {
+      "from": "genome_assembly",
+      "to": "tad",
+      "predicate": "http://purl.org/dc/terms/hasVersion",
+      "label": "has version",
+      "graph": "tad",
+      "subject_type": "tad",
+      "object_type": "genome_assembly"
+    },
+    {
+      "from": "gene",
+      "to": "chromosome",
+      "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+      "label": "part of",
+      "graph": "gene",
+      "subject_type": "gene",
+      "object_type": "chromosome"
+    },
+    {
+      "from": "chromosome",
+      "to": "gene",
+      "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+      "label": "part of",
+      "graph": "gene",
+      "subject_type": "gene",
+      "object_type": "chromosome"
+    },
+    {
+      "from": "gene",
+      "to": "organism",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+      "label": "in taxon",
+      "graph": "gene",
+      "subject_type": "gene",
+      "object_type": "organism"
+    },
+    {
+      "from": "organism",
+      "to": "gene",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+      "label": "in taxon",
+      "graph": "gene",
+      "subject_type": "gene",
+      "object_type": "organism"
+    },
+    {
+      "from": "gene",
+      "to": "genome_assembly",
+      "predicate": "http://purl.org/dc/terms/hasVersion",
+      "label": "has version",
+      "graph": "gene",
+      "subject_type": "gene",
+      "object_type": "genome_assembly"
+    },
+    {
+      "from": "genome_assembly",
+      "to": "gene",
+      "predicate": "http://purl.org/dc/terms/hasVersion",
+      "label": "has version",
+      "graph": "gene",
+      "subject_type": "gene",
+      "object_type": "genome_assembly"
+    },
+    {
+      "from": "gene",
+      "to": "protein",
+      "predicate": "http://semanticscience.org/resource/SIO_010078",
+      "label": "encodes",
+      "graph": "gene",
+      "subject_type": "gene",
+      "object_type": "protein"
+    },
+    {
+      "from": "protein",
+      "to": "gene",
+      "predicate": "http://semanticscience.org/resource/SIO_010078",
+      "label": "encodes",
+      "graph": "gene",
+      "subject_type": "gene",
+      "object_type": "protein"
+    },
+    {
+      "from": "gene",
+      "to": "phenotype",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+      "label": "involved in",
+      "graph": "gene2phen",
+      "subject_type": "gene",
+      "object_type": "phenotype"
+    },
+    {
+      "from": "phenotype",
+      "to": "gene",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+      "label": "involved in",
+      "graph": "gene2phen",
+      "subject_type": "gene",
+      "object_type": "phenotype"
+    },
+    {
+      "from": "phenotype",
+      "to": "phenotype",
+      "predicate": "http://purl.bioontology.org/ontology/OMIM/has_phenotype",
+      "label": "Has phenotype",
+      "graph": "omim",
+      "subject_type": "phenotype",
+      "object_type": "phenotype"
+    },
+    {
+      "from": "protein",
+      "to": "organism",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+      "label": "in taxon",
+      "graph": "prot",
+      "subject_type": "protein",
+      "object_type": "organism"
+    },
+    {
+      "from": "organism",
+      "to": "protein",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+      "label": "in taxon",
+      "graph": "prot",
+      "subject_type": "protein",
+      "object_type": "organism"
+    },
+    {
+      "from": "protein",
+      "to": "biological_process",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+      "label": "involved in",
+      "graph": "prot2bp",
+      "subject_type": "protein",
+      "object_type": "biological_process"
+    },
+    {
+      "from": "biological_process",
+      "to": "protein",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+      "label": "involved in",
+      "graph": "prot2bp",
+      "subject_type": "protein",
+      "object_type": "biological_process"
+    },
+    {
+      "from": "protein",
+      "to": "cellular_component",
+      "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+      "label": "part of",
+      "graph": "prot2cc",
+      "subject_type": "protein",
+      "object_type": "cellular_component"
+    },
+    {
+      "from": "cellular_component",
+      "to": "protein",
+      "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+      "label": "part of",
+      "graph": "prot2cc",
+      "subject_type": "protein",
+      "object_type": "cellular_component"
+    },
+    {
+      "from": "protein",
+      "to": "molecular_function",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002327",
+      "label": "enables",
+      "graph": "prot2mf",
+      "subject_type": "protein",
+      "object_type": "molecular_function"
+    },
+    {
+      "from": "molecular_function",
+      "to": "protein",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002327",
+      "label": "enables",
+      "graph": "prot2mf",
+      "subject_type": "protein",
+      "object_type": "molecular_function"
+    },
+    {
+      "from": "protein",
+      "to": "protein",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002436",
+      "label": "molecularly interacts with",
+      "graph": "prot2prot",
+      "subject_type": "protein",
+      "object_type": "protein"
+    },
+    {
+      "from": "protein",
+      "to": "gene",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002428",
+      "label": "involved in regulation of",
+      "graph": "tfac2gene",
+      "subject_type": "protein",
+      "object_type": "gene"
+    },
+    {
+      "from": "gene",
+      "to": "protein",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002428",
+      "label": "involved in regulation of",
+      "graph": "tfac2gene",
+      "subject_type": "protein",
+      "object_type": "gene"
+    },
+    {
+      "from": "protein",
+      "to": "gene",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002429",
+      "label": "involved in positive regulation of",
+      "graph": "tfac2gene",
+      "subject_type": "protein",
+      "object_type": "gene"
+    },
+    {
+      "from": "gene",
+      "to": "protein",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002429",
+      "label": "involved in positive regulation of",
+      "graph": "tfac2gene",
+      "subject_type": "protein",
+      "object_type": "gene"
+    },
+    {
+      "from": "protein",
+      "to": "gene",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002430",
+      "label": "involved in negative regulation of",
+      "graph": "tfac2gene",
+      "subject_type": "protein",
+      "object_type": "gene"
+    },
+    {
+      "from": "gene",
+      "to": "protein",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002430",
+      "label": "involved in negative regulation of",
+      "graph": "tfac2gene",
+      "subject_type": "protein",
+      "object_type": "gene"
+    },
+    {
+      "from": "protein",
+      "to": "protein",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002428",
+      "label": "involved in regulation of",
+      "graph": "reg2targ",
+      "subject_type": "protein",
+      "object_type": "protein"
+    },
+    {
+      "from": "protein",
+      "to": "protein",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002429",
+      "label": "involved in positive regulation of",
+      "graph": "reg2targ",
+      "subject_type": "protein",
+      "object_type": "protein"
+    },
+    {
+      "from": "protein",
+      "to": "protein",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002430",
+      "label": "involved in negative regulation of",
+      "graph": "reg2targ",
+      "subject_type": "protein",
+      "object_type": "protein"
+    },
+    {
+      "from": "protein",
+      "to": "protein",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0002578",
+      "label": "directly regulates",
+      "graph": "reg2targ",
+      "subject_type": "protein",
+      "object_type": "protein"
+    },
+    {
+      "from": "protein",
+      "to": "protein",
+      "predicate": "http://purl.obolibrary.org/obo/RO_0012012",
+      "label": "indirectly regulates",
+      "graph": "reg2targ",
+      "subject_type": "protein",
+      "object_type": "protein"
+    },
+    {
+      "from": "protein",
+      "to": "protein",
+      "predicate": "http://semanticscience.org/resource/SIO_000558",
+      "label": "is orthologous to",
+      "graph": "ortho",
+      "subject_type": "protein",
+      "object_type": "protein"
+    }
+  ],
+  "graph_base_iri": "http://rdf.biogateway.eu/graph/",
+  "source_hash": "fe60c264b2947ad793ef0fa157bbbd8b92a0036b1a4754194b298a66a9527bb1"
+}
