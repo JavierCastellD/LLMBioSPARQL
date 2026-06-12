@@ -9,6 +9,10 @@ OLLAMA_THINK = False
 # How many times to retry if the model returns malformed JSON
 EXTRACTOR_MAX_RETRIES = 3
 
+# Name of the prompt template (under src/concept_extraction/prompts/, without
+# the ".txt" extension) used for concept extraction.
+CONCEPT_EXTRACTION_PROMPT = "concept_extraction"
+
 # --- Entity linker ---------------------------------------------------------
 
 # BioGateway SPARQL endpoint. SSL verification is disabled because the server

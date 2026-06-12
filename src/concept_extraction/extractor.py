@@ -10,7 +10,7 @@ from typing import Any
 
 import ollama
 
-from ..config import EXTRACTOR_MAX_RETRIES, OLLAMA_BASE_URL, OLLAMA_MODEL, OLLAMA_THINK
+from ..config import CONCEPT_EXTRACTION_PROMPT, EXTRACTOR_MAX_RETRIES, OLLAMA_BASE_URL, OLLAMA_MODEL, OLLAMA_THINK
 from ..pathmap.builder import VALID_OBJECT_TYPES
 from ..pathmap.planner import RELATION_NAMES
 from .prompts_loader import render_prompt
@@ -155,7 +155,7 @@ def _repair_prompt(original_prompt: str, previous_response: str, errors: list[st
 def build_prompt(question: str) -> str:
     """Render the concept-extraction prompt for "question"."""
     return render_prompt(
-        "concept_extraction",
+        CONCEPT_EXTRACTION_PROMPT,
         ENTITY_TYPES="\n".join(f"- {t}" for t in sorted(VALID_OBJECT_TYPES)),
         RELATION_NAMES="\n".join(f"- {r}" for r in RELATION_NAMES),
         QUESTION=question,

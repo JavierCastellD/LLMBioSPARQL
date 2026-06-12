@@ -72,7 +72,7 @@ Q: Which transcription factors regulate the EGFR gene?
 {"nodes":{"OUTPUT":{"type":"protein"},"n1":{"type":"gene","span":"EGFR"}},"triples":[{"subject":"OUTPUT","relation":"regulates","object":"n1"}]}
 
 Q: What diseases is the BRCA1 gene associated with?
-{"nodes":{"OUTPUT":{"type":"phenotype"},"n1":{"type":"gene","span":"BRCA1"}},"triples":[{"subject":"n1","relation":"associated with","object":"OUTPUT"}]}
+{"nodes":{"OUTPUT":{"type":"phenotype"},"n1":{"type":"gene","span":"BRCA1"}},"triples":[{"subject":"n1","relation":"involved in","object":"OUTPUT"}]}
 
 Q: What molecular functions does the protein TBX5_HUMAN have?
 {"nodes":{"OUTPUT":{"type":"molecular function"},"n1":{"type":"protein","span":"TBX5_HUMAN"}},"triples":[{"subject":"n1","relation":"enables","object":"OUTPUT"}]}
