@@ -1,6 +1,11 @@
 OLLAMA_BASE_URL = "http://localhost:11434"
 OLLAMA_MODEL = "qwen2.5:7b"
 
+# Whether to enable "thinking"/reasoning traces for models that support it
+# (e.g. Qwen3). Disabled by default since the reasoning trace can take
+# several minutes and is not needed for this extraction task.
+OLLAMA_THINK = False
+
 # How many times to retry if the model returns malformed JSON
 EXTRACTOR_MAX_RETRIES = 3
 

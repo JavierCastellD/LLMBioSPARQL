@@ -10,7 +10,7 @@ from typing import Any
 
 import ollama
 
-from ..config import EXTRACTOR_MAX_RETRIES, OLLAMA_BASE_URL, OLLAMA_MODEL
+from ..config import EXTRACTOR_MAX_RETRIES, OLLAMA_BASE_URL, OLLAMA_MODEL, OLLAMA_THINK
 from ..pathmap.builder import VALID_OBJECT_TYPES
 from ..pathmap.planner import RELATION_NAMES
 from .prompts_loader import render_prompt
@@ -202,6 +202,7 @@ class ConceptExtractor:
         response = self._client.generate(
             model=self._model,
             prompt=prompt,
+            think=OLLAMA_THINK,
             options={"temperature": self._temperature},
         )
         return response["response"]
