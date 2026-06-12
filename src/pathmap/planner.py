@@ -1,12 +1,11 @@
-"""Path planner: BFS over pathmap.json to find traversal paths between entity types.
+"""Relation-aware path planner: resolves typed relation triples (from concept
+extraction) to predicate paths over pathmap.json.
 
 Run validation:  python -m src.pathmap.planner
 """
 from __future__ import annotations
 
 import json
-import warnings
-from collections import deque
 from pathlib import Path
 from typing import Any
 
@@ -14,12 +13,62 @@ from .builder import ALIASES, normalize
 
 HOP_LIMIT = 6
 
-# Cap on how many equally-short alternative paths are returned per constraint.
-# The graph has several node pairs connected by multiple parallel edges with
-# different predicates (e.g. gene<->protein via "encodes" AND three tfac2gene
-# regulation predicates), so without a cap a multi-hop tie could combine these
-# combinatorially. 20 is generous for an 11-node graph but keeps results bounded.
+# Cap on how many alternative paths are returned per triple. The graph has several
+# node pairs connected by multiple parallel edges with different predicates (e.g.
+# gene<->protein via "encodes" AND three tfac2gene regulation predicates), so
+# without a cap a multi-hop bridge could combine these combinatorially. 20 is
+# generous for an 11-node graph but keeps results bounded.
 MAX_ALTERNATIVES = 20
+
+
+# These are aliases onto labels that already exist in pathmap.json (14 labels total)
+RELATION_VOCAB = {
+    # unique-resolving (one label)
+    "encodes":            ["encodes"],
+    "encoded by":         ["encodes"],
+    "interacts with":     ["molecularly interacts with"],
+    "forms complex with": ["molecularly interacts with"],
+    "in taxon":           ["in taxon"],
+    "found in organism":  ["in taxon"],
+    "located on":         ["part of"],
+    "part of":            ["part of"],
+    "enables":            ["enables"],
+    "has function":       ["enables"],
+    "involved in":        ["involved in"],
+    "associated with":    ["involved in", "Has phenotype"],
+    "has version":        ["has version"],
+    "orthologous to":     ["is orthologous to"],
+    # coarse (several labels; planner returns all)
+    "regulates": [
+        "involved in regulation of",
+        "involved in positive regulation of",
+        "involved in negative regulation of",
+        "directly regulates",
+        "indirectly regulates",
+    ],
+    "activates": ["involved in positive regulation of", "directly regulates"],
+    "represses": ["involved in negative regulation of"],
+    "has phenotype": ["Has phenotype"],
+}
+
+# List of allowed relation names for the extraction step to import.
+RELATION_NAMES = sorted(RELATION_VOCAB)
+
+
+def resolve_relation(name: str) -> list[str] | None:
+    """Resolve a relation name (as emitted by concept extraction) to the
+    set of path-map "label"s it matches.
+
+    Parameters:
+        name (str): The coarse relation name (case-insensitive, surrounding
+            whitespace is ignored).
+
+    Returns:
+        list[str] | None: The list of path-map labels this relation resolves
+        to, or None if name is not a recognized relation.
+    """
+    return RELATION_VOCAB.get(name.strip().lower())
+
 
 # Auxiliary functions
 
@@ -34,10 +83,10 @@ def _format_path(seg: list[dict]) -> str:
     """Render a single path (list of edges) as 'node -[label]-> node -> ...'.
 
     The chain of nodes follows each edge's traversal "from"/"to" (guaranteed
-    connected, since that's how _all_shortest_paths built the path), but the
-    arrow for each hop is drawn using the "reverse" flag: "-[label]->" when
-    "from"/"to" matches "subject_type"/"object_type", or "<-[label]-" when
-    the hop traverses the predicate backwards (object -> subject).
+    connected, since that's how the path was built), but the arrow for each
+    hop is drawn using the "reverse" flag: "-[label]->" when "from"/"to"
+    matches "subject_type"/"object_type", or "<-[label]-" when the hop
+    traverses the predicate backwards (object -> subject).
     """
     parts = [seg[0]["from"]]
     for e in seg:
@@ -46,27 +95,18 @@ def _format_path(seg: list[dict]) -> str:
     return " ".join(parts)
 
 
-def print_plan(path_plan: dict[str, Any]) -> None:
-    """Print a human-readable summary of a path plan.
+def print_resolved(result: dict[str, Any]) -> None:
+    """Print a human-readable summary of a resolve_relations() result."""
+    for entry in result["resolved"]:
+        print(f"  {entry['subject']} --[{entry['relation']}]--> {entry['object']}"
+              f"  ({entry['subject_type']} -> {entry['object_type']}, predicates={entry['predicates']})")
+        for i, seg in enumerate(entry["segments"]):
+            tag = f"[{i + 1}] " if len(entry["segments"]) > 1 else ""
+            print(f"      {tag}{_format_path(seg)}")
+    for entry in result["no_path"]:
+        print(f"  NO PATH: {entry['subject']} --[{entry['relation']}]--> {entry['object']}"
+              f"  ({entry['reason']})")
 
-    "segments[orig]" is a list of equally-short alternative paths (see
-    PathPlanner._all_shortest_paths); when there is more than one, each is
-    printed on its own line, numbered.
-    """
-    print(f"Nodes: {path_plan['nodes']}")
-    for orig, alt_paths in path_plan["segments"].items():
-        if not alt_paths:
-            continue
-        # Drop empty paths (output type == constraint type itself: nothing to traverse).
-        non_empty = [seg for seg in alt_paths if seg]
-        if not non_empty:
-            continue
-        if len(non_empty) == 1:
-            print(f"  {orig}: {_format_path(non_empty[0])}")
-        else:
-            print(f"  {orig}: ({len(non_empty)} equally-short alternatives)")
-            for i, seg in enumerate(non_empty, start=1):
-                print(f"    [{i}] {_format_path(seg)}")
 
 class PathPlanner:
     """Load pathmap.json and answer path queries."""
@@ -106,209 +146,217 @@ class PathPlanner:
             "graph": self._graph_base_iri + edge["graph"],
         }
 
-    def plan(self, output: str, constraints: list[str], hop_limit: int = HOP_LIMIT) -> dict[str, Any]:
-        """Method that returns a dictionary representing the path plan to the output type considering
-        the constraints. For each constraint, ALL shortest paths from the output node are found
-        (see PathPlanner._all_shortest_paths) -- ties are not resolved arbitrarily, every equally-short
-        alternative is kept. All per-constraint paths (across all alternatives) are merged into a single
-        node set and deduplicated edge/triple lists.
+    def _simple_paths_of_length(self, start: str, goal: str, length: int) -> list[list[dict]]:
+        """Method that finds all simple paths of exactly "length" edges from start to goal. There are no
+        repeated nodes, except for goal.
 
         Parameters:
-            output (str): The target output type for which the path plan is to be generated.
-            constraints (list[str]): A list of constraint types that need to be connected to the output type.
-            hop_limit (int): The maximum number of hops to consider when searching for paths. Defaults to HOP_LIMIT.
+            start (str): The starting node of the search.
+            goal (str): The target node of the search.
+            length (int): The exact number of edges the returned paths must have.
+                Must be >= 1 (a 0-length path carries no relation).
 
         Returns:
-            dict[str, Any]: A dictionary containing the output type, resolved constraints, nodes, edges, segments for each constraint,
-            and any constraints for which no path was found. It contains the following keys:
-                - "output_type": The resolved output node type.
-                - "constraints": A list of resolved constraint node types.
-                - "nodes": A sorted list of all unique nodes involved in any alternative path for any constraint.
-                - "edges": A list of unique edges involved in any alternative path, where each edge is represented as a dictionary
-                  with keys "from", "to", "predicate", "label", "graph", "subject_type", "object_type", and "reverse" (True if
-                  "from"/"to" are flipped relative to "subject_type"/"object_type" for this hop -- see
-                  PathPlanner._all_shortest_paths).
-                - "triples": A deduplicated list of SPARQL-ready triple patterns derived from "edges" (across all alternatives),
-                  intended for an LLM (or template) to turn directly into a query. Each item is a dict with keys "subject",
-                  "predicate", "predicate_label", "object", and "graph" (a full named-graph IRI). "subject"/"object" are entity-type
-                  node ids that double as SPARQL variable names (e.g. "?gene"); the correct triple is always
-                  "GRAPH <graph> { ?<subject> <predicate> ?<object> . }" -- no direction reasoning ("reverse"/"from"/"to") is
-                  needed when using this list. NOTE: when a constraint has multiple alternative paths (e.g. several distinct
-                  predicates between the same two types), "triples"/"edges" include ALL of them -- pick the one(s) matching the
-                  question's semantics rather than including every alternative in the final SPARQL query.
-                - "segments": A dictionary mapping each original constraint to a list of equally-short alternative paths (each a
-                  list of edges, in order from output to constraint), or None if no path was found within hop_limit. Usually a
-                  single-element list; more than one element means there was a tie (see PathPlanner._all_shortest_paths).
-                - "no_path": A list of original constraints for which no path was found to the output type.
+            list[list[dict]]: Up to MAX_ALTERNATIVES paths, each a list of "length"
+            edge dictionaries (in order from start to goal, each annotated with
+            "reverse": True if "from"/"to" are flipped relative to
+            "subject_type"/"object_type" for this hop).
         """
-        if not self._is_known_type(output):
-            warnings.warn(
-                f"plan(): output type {output!r} is not a recognized entity type "
-                f"(see VALID_OBJECT_TYPES in builder.py); no paths can be found.",
-                stacklevel=2,
-            )
+        results = []
+        # Each stack entry is (node, depth, path-so-far, visited-so-far).
+        stack = [(start, 0, [], {start})]
 
-        output_node = _resolve(output)
+        while stack and len(results) < MAX_ALTERNATIVES:
+            node, depth, path, visited = stack.pop()
 
-        all_nodes = {output_node}
+            if depth == length:
+                if node == goal:
+                    results.append(path)
+                continue
+
+            for neighbour, eidx in reversed(self._adj.get(node, [])):
+                is_final_step = depth + 1 == length
+                if neighbour in visited and not (is_final_step and neighbour == goal):
+                    continue
+                edge = self._edges[eidx]
+                next_path = path + [{**edge, "reverse": edge["from"] != edge["subject_type"]}]
+                next_visited = visited if neighbour in visited else visited | {neighbour}
+                stack.append((neighbour, depth + 1, next_path, next_visited))
+
+        return results
+
+    def _relation_paths(self, start: str, goal: str, allowed_predicates: list[str], hop_limit: int) -> list[list[dict]]:
+        """Method that finds the shortest path from start to goal whose TERMINAL edge's "label" is in allowed_predicates.
+
+        Tries path lengths up to hop_limit and returns the alternatives at the first length where at least one path's
+        last edge matches.
+
+        Parameters:
+            start (str): The subject node's resolved type.
+            goal (str): The object node's resolved type.
+            allowed_predicates (list[str]): The path-map labels resolve_relation()
+                returned for this triple's relation.
+            hop_limit (int): The maximum path length (in edges) to consider.
+
+        Returns:
+            list[list[dict]]: Up to MAX_ALTERNATIVES alternative paths (each a list of edge dicts, in order from start to goal), 
+            or [] if no path of length <= hop_limit has a matching terminal label.
+        """
+        for length in range(1, hop_limit + 1):
+            candidates = self._simple_paths_of_length(start, goal, length)
+            matched = [p for p in candidates if p[-1]["label"] in allowed_predicates]
+            if matched:
+                return matched
+        return []
+
+    def resolve_relations(self, nodes: dict[str, dict], triples: list[dict]) -> dict[str, Any]:
+        """Method that performs relation path resolution from concept-extraction output: a set of typed nodes 
+        and a list of relation triples over them.
+
+        For each triple, the relation name is resolved to its allowed path-map labels, then the shortest path 
+        between the subject's and object's resolved types whose terminal edge label is one of those is found. 
+        There might be multiple paths, which are returned.
+
+        Parameters:
+            nodes (dict[str, dict]): Maps node id -> {"type": <entity type>, "span": <optional>}. Entity types are as 
+                                     emitted by concept extraction.
+            triples (list[dict]): Each item is {"subject": <node id>, "relation": <relation name>, "object": <node id>}.
+
+        Returns:
+            dict[str, Any]: A dictionary with the following keys:
+                - "nodes": A sorted list of all unique resolved entity-type nodes involved in any matched path, across all triples.
+                - "edges": A list of unique edges (across all matched paths for all triples), each a dict with keys "from", "to", 
+                           "predicate", "label", "graph", "subject_type", "object_type", and "reverse".
+                - "triples": A deduplicated list of SPARQL-ready triple patterns, across all matched paths for all triples.
+                - "resolved": A list with one entry per input triple that resolved to at least one path, each a dict with 
+                              keys "subject", "relation", "object", "subject_type"/"object_type" (resolved types), "predicates" (the
+                              allowed path-map labels for "relation"), "segments" (the alternative matched paths, and "bridged" 
+                              (True if any segment has more than one hop).
+                - "no_path": A list of dicts, one per input triple that could not be resolved, each with keys "subject", 
+                             "relation", "object", and "reason".
+        """
+        all_nodes = set()
         all_edges = []
         seen_edge_keys = set()
         all_triples = []
         seen_triple_keys = set()
-        segments = {}
+        resolved = []
         no_path = []
 
-        for orig in constraints:
-            if not self._is_known_type(orig):
-                warnings.warn(
-                    f"plan(): constraint {orig!r} is not a recognized entity type "
-                    f"(see VALID_OBJECT_TYPES in builder.py); it will get no_path.",
-                    stacklevel=2,
-                )
+        
+        for triple in triples:
+            subj_id, rel_name, obj_id = triple["subject"], triple["relation"], triple["object"]
 
-            target = _resolve(orig)
-
-            # Find ALL shortest paths from output to target (handles ties explicitly).
-            # If output == target, this returns [[]] (a single, trivial empty path).
-            alt_paths = self._all_shortest_paths(output_node, target, hop_limit)
-            # If no path is found, we add the original constraint to the no_path list and set its segment to None
-            if alt_paths is None:
-                no_path.append(orig)
-                segments[orig] = None
+            # Resolve the relation name to path-map labels
+            allowed_predicates = resolve_relation(rel_name)
+            if allowed_predicates is None:
+                no_path.append({**triple, "reason": "unknown relation"})
                 continue
 
-            # If (a) path(s) is/are found, we add them to the segments and update the
-            # all_nodes, all_edges and all_triples collections with edges from EVERY alternative.
-            segments[orig] = alt_paths
-            for path_edges in alt_paths:
-                for e in path_edges:
+            subj_node = nodes.get(subj_id)
+            obj_node = nodes.get(obj_id)
+            if subj_node is None or obj_node is None:
+                no_path.append({**triple, "reason": "unknown node id"})
+                continue
+
+            # Resolve the subject's and object's types, and check they're known in the path map
+            subj_type = _resolve(subj_node["type"])
+            obj_type = _resolve(obj_node["type"])
+            if subj_type not in self._known_nodes or obj_type not in self._known_nodes:
+                no_path.append({**triple, "reason": "unrecognized entity type"})
+                continue
+
+            # Obtains all possible paths from subj_type to obj_type whose terminal edge matches one of the allowed predicates
+            segments = self._relation_paths(subj_type, obj_type, allowed_predicates, HOP_LIMIT)
+            if not segments:
+                no_path.append({
+                    **triple,
+                    "reason": f"no path from {subj_type!r} to {obj_type!r} matches "
+                              f"predicate(s) {allowed_predicates!r} within {HOP_LIMIT} hops",
+                })
+                continue
+
+            # Adds the resolved triple
+            resolved.append({
+                "subject": subj_id,
+                "relation": rel_name,
+                "object": obj_id,
+                "subject_type": subj_type,
+                "object_type": obj_type,
+                "predicates": allowed_predicates,
+                "segments": segments,
+                "bridged": any(len(seg) > 1 for seg in segments) # This means that an intermediary node was needed to connect subject and object
+            })
+
+
+            for seg in segments:
+                for e in seg:
                     all_nodes.add(e["from"])
                     all_nodes.add(e["to"])
-                    key = (e["from"], e["to"], e["predicate"], e["graph"])
-                    if key not in seen_edge_keys:
-                        seen_edge_keys.add(key)
+                    edge_key = (e["from"], e["to"], e["predicate"], e["graph"])
+                    if edge_key not in seen_edge_keys:
+                        seen_edge_keys.add(edge_key)
                         all_edges.append(e)
 
-                    # Triples are keyed on the true (subject, predicate, object, graph) so a
-                    # forward and a reverse traversal of the same edge collapse to one triple.
                     triple_key = (e["subject_type"], e["predicate"], e["object_type"], e["graph"])
                     if triple_key not in seen_triple_keys:
                         seen_triple_keys.add(triple_key)
                         all_triples.append(self._edge_to_triple(e))
 
         return {
-            "output_type": output_node,
-            "constraints": [_resolve(c) for c in constraints],
             "nodes": sorted(all_nodes),
             "edges": all_edges,
             "triples": all_triples,
-            "segments": segments,
+            "resolved": resolved,
             "no_path": no_path,
         }
-
-    def _bfs_distances(self, start: str, hop_limit: int) -> dict[str, int]:
-        """Method that performs a breadth-first search (BFS) to find the minimum hop-distance
-        from start to every node reachable within hop_limit.
-
-        Parallel edges between the same pair of nodes don't affect distance (they're all
-        the same number of hops), so this BFS works over nodes, not edges.
-
-        Parameters:
-            start (str): The starting node of the search.
-            hop_limit (int): The maximum number of hops to explore.
-
-        Returns:
-            dict[str, int]: Maps each node reachable from start (within hop_limit hops, inclusive)
-            to its minimum hop-distance from start. start itself maps to 0.
-        """
-        dist = {start: 0}
-        queue = deque([start])
-
-        while queue:
-            node = queue.popleft()
-            if dist[node] >= hop_limit:
-                continue
-            for neighbour, _ in self._adj.get(node, []):
-                if neighbour not in dist:
-                    dist[neighbour] = dist[node] + 1
-                    queue.append(neighbour)
-
-        return dist
-
-    def _all_shortest_paths(self, start: str, goal: str, hop_limit: int) -> list[list[dict]] | None:
-        """Method that finds ALL shortest paths from start to goal, handling ties.
-
-        The graph is a multigraph: a node pair can be connected by several edges with
-        different predicates (e.g. gene<->protein via "encodes" and three tfac2gene
-        regulation predicates). When more than one path of the minimum length exists --
-        whether because of such parallel edges or because multiple distinct intermediate
-        nodes lead to the goal in the same number of hops -- ALL of them are returned
-        (up to MAX_ALTERNATIVES), so the caller can pick the one matching the question's
-        semantics instead of getting an arbitrary one silently.
-
-        Parameters:
-            start (str): The starting node of the search.
-            goal (str): The target node of the search.
-            hop_limit (int): The maximum number of hops to consider.
-
-        Returns:
-            list[list[dict]] | None: A list of alternative paths, each a list of edge dictionaries
-            (in order from start to goal, each annotated with "reverse" -- see plan()'s docstring),
-            or None if goal is unreachable from start within hop_limit. If start == goal, returns
-            [[]] (a single, empty-path alternative).
-        """
-        dist = self._bfs_distances(start, hop_limit)
-        if goal not in dist:
-            return None
-
-        target_len = dist[goal]
-        results: list[list[dict]] = []
-        path: list[dict] = []
-
-        def dfs(node: str, depth: int) -> None:
-            if len(results) >= MAX_ALTERNATIVES:
-                return
-            if depth == target_len:
-                if node == goal:
-                    results.append(list(path))
-                return
-            for neighbour, eidx in self._adj.get(node, []):
-                # Only follow edges that make progress towards goal along a shortest path.
-                if dist.get(neighbour) != depth + 1:
-                    continue
-                edge = self._edges[eidx]
-                path.append({**edge, "reverse": edge["from"] != edge["subject_type"]})
-                dfs(neighbour, depth + 1)
-                path.pop()
-                if len(results) >= MAX_ALTERNATIVES:
-                    return
-
-        dfs(start, 0)
-        return results
-
-    def _is_known_type(self, type_str: str) -> bool:
-        """Method that checks whether type_str resolves (via alias + normalize) to a node that
-        actually exists in the loaded path map.
-        
-        Parameters:
-            type_str (str): The input type string to check.
-        
-        Returns:
-            bool: True if the resolved type string is a known node in the path map, False otherwise.
-        """
-        return _resolve(type_str) in self._known_nodes
 
 
 if __name__ == "__main__":
 
-    # Demo: Show the full merged path for the main validation query
     planner = PathPlanner()
-    r = planner.plan(output="gene", constraints=["organism", "biological_process"])
-    print("\n--- Demo plan(gene, [organism, biological_process]) ---")
-    print_plan(r)
 
-    # Demo: a query whose output sits on the "object" side of its only edge to
-    # the constraint, exercising the "reverse" traversal flag.
-    r2 = planner.plan(output="protein", constraints=["gene"])
-    print("\n--- Demo plan(protein, [gene]) ---")
-    print_plan(r2)
+    # --- Task 1 validation ---------------------------------------------------
+
+    print("\n=== Task 1 validation ===")
+
+    # 1) RELATION_VOCAB sanity check: every label in RELATION_VOCAB's values exists
+    #    in pathmap.json's labels, and every map label is reachable by at least one relation.
+    map_labels = {e["label"] for e in planner._edges}
+    vocab_labels = {label for labels in RELATION_VOCAB.values() for label in labels}
+    missing_from_map = vocab_labels - map_labels
+    missing_from_vocab = map_labels - vocab_labels
+    print(f"  RELATION_VOCAB labels not in pathmap: {missing_from_map or 'none'}")
+    print(f"  pathmap labels not covered by RELATION_VOCAB: {missing_from_vocab or 'none'}")
+
+    # 2) "Which genes are involved in DNA repair in humans?"
+    nodes_dna = {
+        "OUTPUT": {"type": "gene"},
+        "n1": {"type": "biological process", "span": "DNA repair"},
+        "n2": {"type": "organism", "span": "humans"},
+    }
+    triples_dna = [
+        {"subject": "OUTPUT", "relation": "involved in", "object": "n1"},
+        {"subject": "OUTPUT", "relation": "in taxon", "object": "n2"},
+    ]
+    res_dna = planner.resolve_relations(nodes_dna, triples_dna)
+    print("\n--- DNA repair in humans ---")
+    print_resolved(res_dna)
+
+    # 3) "Which proteins are involved in DNA repair and form complexes with FOXL1 in humans?"
+    nodes_foxl1 = {
+        "OUTPUT": {"type": "protein"},
+        "n1": {"type": "biological process", "span": "DNA repair"},
+        "x1": {"type": "protein"},
+        "n2": {"type": "gene", "span": "FOXL1"},
+        "n3": {"type": "organism", "span": "humans"},
+    }
+    triples_foxl1 = [
+        {"subject": "OUTPUT", "relation": "involved in", "object": "n1"},
+        {"subject": "OUTPUT", "relation": "interacts with", "object": "x1"},
+        {"subject": "x1", "relation": "encoded by", "object": "n2"},
+        {"subject": "OUTPUT", "relation": "in taxon", "object": "n3"},
+    ]
+    res_foxl1 = planner.resolve_relations(nodes_foxl1, triples_foxl1)
+    print("\n--- FOXL1 complexes ---")
+    print_resolved(res_foxl1)
