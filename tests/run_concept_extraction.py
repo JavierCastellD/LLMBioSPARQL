@@ -34,7 +34,7 @@ def main() -> None:
     for i, item in enumerate(questions, start=1):
         question = item["question"]
         print(f"[{i}/{len(questions)}] {question}")
-        results.append({"question": question, "result": extractor.extract(question)})
+        results.append({"question": question, "extractor": extractor.extract(question)})
 
     args.output.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"Wrote {len(results)} results to {args.output}")
