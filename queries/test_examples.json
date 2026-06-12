@@ -35,63 +35,8 @@
     "extractor": ""
   },
   {
-    "question": "Which genes are associated with Marfan syndrome?",
-    "sparql": "SELECT DISTINCT ?uri_gene ?gene_label WHERE { ?disease <http://www.w3.org/2004/02/skos/core#prefLabel> \"Marfan syndrome\". ?uri_gene <http://purl.obolibrary.org/obo/RO_0002331> ?disease; <http://www.w3.org/2004/02/skos/core#prefLabel> ?gene_label. }",
-    "extractor": ""
-  },
-  {
-    "question": "What biological processes is the TP53 protein involved in?",
-    "sparql": "SELECT DISTINCT ?bp ?bp_label WHERE { ?prot <http://www.w3.org/2004/02/skos/core#prefLabel> \"TP53\"; <http://purl.obolibrary.org/obo/RO_0002331> ?bp . ?bp <http://www.w3.org/2000/01/rdf-schema#label> ?bp_label. }",
-    "extractor": ""
-  },
-  {
-    "question": "Which proteins interact with Q99593?",
-    "sparql": "SELECT DISTINCT ?prot ?prot_label WHERE { <http://uniprot.org/uniprot/Q99593> <http://purl.obolibrary.org/obo/RO_0002436> ?prot . ?prot <http://www.w3.org/2004/02/skos/core#prefLabel> ?prot_label. }",
-    "extractor": ""
-  },
-  {
-    "question": "What enhancers are associated with the TOX3 gene?",
-    "sparql": "SELECT DISTINCT ?enhancer ?enh_label WHERE { ?enhancer <http://purl.obolibrary.org/obo/RO_0002429> ?uri_gene . ?uri_gene <http://www.w3.org/2004/02/skos/core#prefLabel> \"TOX3\". ?enhancer <http://www.w3.org/2004/02/skos/core#prefLabel> ?enh_label. }",
-    "extractor": ""
-  },
-  {
-    "question": "What diseases are linked to the enhancer CRMHS00000003515?",
-    "sparql": "SELECT DISTINCT ?disease WHERE { <http://rdf.biogateway.eu/crm/9606/CRMHS00000003515> <http://purl.obolibrary.org/obo/RO_0002331> ?disease . }",
-    "extractor": ""
-  },
-  {
-    "question": "What is the preferred label of the protein Q99593?",
-    "sparql": "SELECT DISTINCT ?label WHERE { <http://uniprot.org/uniprot/Q99593> <http://www.w3.org/2004/02/skos/core#prefLabel> ?label. }",
-    "extractor": ""
-  },
-  {
-    "question": "Which genes does the transcription factor P04637 positively regulate?",
-    "sparql": "SELECT DISTINCT ?gene ?gene_label WHERE { <http://uniprot.org/uniprot/P04637> <http://purl.obolibrary.org/obo/RO_0002429> ?gene . ?gene <http://www.w3.org/2004/02/skos/core#prefLabel> ?gene_label. }",
-    "extractor": ""
-  },
-  {
-    "question": "Which genes does the transcription factor P04637 negatively regulate?",
-    "sparql": "SELECT DISTINCT ?gene ?gene_label WHERE { <http://uniprot.org/uniprot/P04637> <http://purl.obolibrary.org/obo/RO_0002430> ?gene . ?gene <http://www.w3.org/2004/02/skos/core#prefLabel> ?gene_label. }",
-    "extractor": ""
-  },
-  {
-    "question": "What cellular components is the protein P53_HUMAN part of?",
-    "sparql": "SELECT DISTINCT ?cc ?cc_label WHERE { ?prot <http://www.w3.org/2004/02/skos/core#prefLabel> \"P53_HUMAN\"; <http://purl.obolibrary.org/obo/BFO_0000050> ?cc . ?cc <http://www.w3.org/2000/01/rdf-schema#label> ?cc_label. }",
-    "extractor": ""
-  },
-  {
-    "question": "What is the source database of the enhancer CRMHS00000003515?",
-    "sparql": "SELECT DISTINCT ?db ?db_label WHERE { ?inst <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdf.biogateway.eu/crm/9606/CRMHS00000003515>; <http://semanticscience.org/resource/SIO_000253> ?db . ?db <http://www.w3.org/2004/02/skos/core#prefLabel> ?db_label. }",
-    "extractor": ""
-  },
-  {
     "question": "If the APOE gene is linked to the development of Alzheimer's, what molecular function do the proteins it encodes have in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?definition_molecular_function \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n\tskos:prefLabel \"APOE\";\n        sio:SIO_010078 ?protein;\n\tobo:RO_0002162 ?taxon.\n  \t}\nGRAPH <http://rdf.biogateway.eu/graph/gene2phen> {\n\t?uri_gen obo:RO_0002331 ?disease.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/omim> {\n\t?disease skos:prefLabel ?name_disease;\n        skos:altLabel ?alternative_name_disease.\n\tFILTER(REGEX(?name_disease, \"ALZHEIMER\", \"i\")|| REGEX(?alternative_name_disease,\"ALZHEIMER\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n\t?protein obo:RO_0002327 ?molecular_function\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n\t?molecular_function rdfs:label ?definition_molecular_function\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
-  },
-  {
-    "question": "Which transcription factors regulate the expression of the RUNX1 gene in humans?",
-    "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_protein \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n\tskos:prefLabel \"RUNX1\";\n    obo:RO_0002162 ?taxon.\n  \t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\nGRAPH <http://rdf.biogateway.eu/graph/tfac2gene> {\n\t?protein_transcriptional_regulation obo:RO_0002428  ?uri_gen\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein_transcriptional_regulation rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    skos:prefLabel ?name_protein.\n\t}\n}",
     "extractor": ""
   },
   {
@@ -110,33 +55,13 @@
     "extractor": ""
   },
   {
-    "question": "Which proteins are involved in the development of Parkinson's disease in humans?",
-    "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_protein\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene2phen> {\n    ?uri_gen_disease obo:RO_0002331 ?disease.\n  }\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen_disease rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n\tsio:SIO_010078 ?encoded_protein;\n\tobo:RO_0002162 ?taxon.\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?encoded_protein rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    skos:prefLabel ?name_protein.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/omim> {\n   ?disease skos:prefLabel ?name_disease;\n   skos:altLabel ?alternative_name_disease.\n\tFILTER(REGEX(?name_disease,\"parkinson\",\"i\") || REGEX(?alternative_name_disease,\"parkinson\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    ?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
-  },
-  {
     "question": "Which proteins are associated with cytokine-mediated signaling pathways in autoimmune diseases in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?protein_name \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n?gene rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n          sio:SIO_010078 ?protein;\n          obo:RO_0002162 ?taxon.\n}\n  GRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n    ?protein obo:RO_0002331 ?biological_process.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/prot> {\n    ?protein rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    skos:prefLabel ?protein_name;\n    obo:RO_0002162 ?taxon.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/go> {\n    ?biological_process rdfs:label ?biological_process_name;\n\towl:hasExactSynonym ?synonym_name_biological_process.\n    FILTER(REGEX(?biological_process_name, \"cytokine-mediated signaling pathway\", \"i\") || REGEX(?synonym_name_biological_process, \"cytokine-mediated signaling pathway\", \"i\"))\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/gene2phen> {\n    ?gene obo:RO_0002331 ?disease.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/omim> {\n    ?disease skos:prefLabel ?disease_name;\n    skos:altLabel ?alternative_disease_name.\n    FILTER(REGEX(?disease_name, \"autoimmune\", \"i\") || REGEX(?alternative_disease_name,\"autoimmune\",\"i\"))\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    ?taxon rdfs:label \"Homo sapiens\".\n  }\n}",
     "extractor": ""
   },
   {
-    "question": "Which proteins have kinase activity in humans?",
-    "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT  ?name_protein\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n\t?protein obo:RO_0002327 ?molecular_function.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n\t?molecular_function rdfs:label ?name_molecular_function;\n\towl:hasExactSynonym ?synonym_name_molecular_function.\n\tFILTER(REGEX(?name_molecular_function,\"kinase activity\",\"i\") || REGEX(?synonym_name_molecular_function,\"kinase activity\",\"i\"))\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n\t    obo:RO_0002162 ?taxon;\n    \tskos:prefLabel ?name_protein.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
-  },
-  {
     "question": "Which proteins transport iron in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_protein_interaction\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n?protein_interaction obo:RO_0002327 ?molecular_function.\n}\n\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n?molecular_function rdfs:label ?name_molecular_function;\nowl:hasExactSynonym ?synonym_name_molecular_function.\nFILTER(REGEX(?name_molecular_function,\"transporter.*iron|iron.*transporter\",\"i\") || REGEX(?synonym_name_molecular_function, \"transporter.*iron|iron.*transporter\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein_interaction rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n        obo:RO_0002162 ?taxon;\n    \tskos:prefLabel ?name_protein_interaction.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
-  },
-  {
-    "question": "Which proteins regulate apoptosis and interact with the proteins encoded by the caspase-9 gene in humans?",
-    "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_protein_interaction\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel \"CASP9\";\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein_interaction rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    \tskos:prefLabel ?name_protein_interaction.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot2prot> {\n\t?protein_interaction obo:RO_0002436 ?protein\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n\t?protein_interaction obo:RO_0002331 ?biologic_process\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n\t?biologic_process rdfs:label ?name_biologic_process;\n\towl:hasExactSynonym ?synonym_name_biologic_process.\n\tFILTER(REGEX(?name_biologic_process,\"apoptotic\",\"i\") || REGEX (?synonym_name_biologic_process,\"apoptotic\",\"i\"))\n\t}\n}",
-    "extractor": ""
-  },
-  {
-    "question": "Which proteins inhibit the activity of the proteins encoded by the VEGFA gene in humans?",
-    "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_protein ?name_protein_negative_regulation\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel \"VEGFA\";\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    \tskos:prefLabel ?name_protein.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/reg2targ> {\n?protein_negative_regulation obo:RO_0002430 ?protein\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein_negative_regulation rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    \tskos:prefLabel ?name_protein_negative_regulation.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
     "extractor": ""
   },
   {
