@@ -13,32 +13,45 @@ from .builder import ALIASES, normalize
 
 HOP_LIMIT = 6
 
-# Cap on how many alternative paths are returned per triple. The graph has several
-# node pairs connected by multiple parallel edges with different predicates (e.g.
-# gene<->protein via "encodes" AND three tfac2gene regulation predicates), so
-# without a cap a multi-hop bridge could combine these combinatorially. 20 is
-# generous for an 11-node graph but keeps results bounded.
+# Cap on how many alternative paths are returned per triple
 MAX_ALTERNATIVES = 20
 
+# RELATION_VOCAB maps relation NAMES that concept extraction may emit to the
+# path-map edge labels they resolve to
+_REAL_LABELS = [
+    "directly regulates",
+    "enables",
+    "encodes",
+    "has version",
+    "in taxon",
+    "indirectly regulates",
+    "involved in",
+    "involved in negative regulation of",
+    "involved in positive regulation of",
+    "involved in regulation of",
+    "is orthologous to",
+    "molecularly interacts with",
+    "part of",
+]
 
-# These are aliases onto labels that already exist in pathmap.json (14 labels total)
-RELATION_VOCAB = {
-    # unique-resolving (one label)
-    "encodes":            ["encodes"],
+RELATION_VOCAB = {lab: [lab] for lab in _REAL_LABELS}
+
+# 1:1 synonyms
+RELATION_VOCAB.update({
     "encoded by":         ["encodes"],
     "interacts with":     ["molecularly interacts with"],
     "forms complex with": ["molecularly interacts with"],
-    "in taxon":           ["in taxon"],
+    "in organism":        ["in taxon"],
     "found in organism":  ["in taxon"],
     "located on":         ["part of"],
-    "part of":            ["part of"],
-    "enables":            ["enables"],
-    "has function":       ["enables"],
-    "involved in":        ["involved in"],
-    "associated with":    ["involved in", "Has phenotype"],
-    "has version":        ["has version"],
+    "located in":         ["part of"],
     "orthologous to":     ["is orthologous to"],
-    # coarse (several labels; planner returns all)
+    "has function":       ["enables"],
+    "has phenotype":      ["Has phenotype"],
+})
+
+# coarse names
+RELATION_VOCAB.update({
     "regulates": [
         "involved in regulation of",
         "involved in positive regulation of",
@@ -48,12 +61,10 @@ RELATION_VOCAB = {
     ],
     "activates": ["involved in positive regulation of", "directly regulates"],
     "represses": ["involved in negative regulation of"],
-    "has phenotype": ["Has phenotype"],
-}
+})
 
 # List of allowed relation names for the extraction step to import.
 RELATION_NAMES = sorted(RELATION_VOCAB)
-
 
 def resolve_relation(name: str) -> list[str] | None:
     """Resolve a relation name (as emitted by concept extraction) to the
