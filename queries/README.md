@@ -33,7 +33,7 @@ Each JSON file shares the same schema:
 ### `examples_ft_Javi.json`
 ~50 questions used by **Javier Granda** in his master's thesis to fine-tune a Llama model. These questions are more complex and biomedically richer than the simple set. The `extracted` and `sparql` fields are intentionally empty — the corresponding ground-truth SPARQL queries are not available.
 
-### `test_prompts.json`
+### `test_examples.json`
 Held-out evaluation set. Contains all entries from `examples_simple.json` and `examples_extended.json` that are **not** part of the system prompt, so they were never seen by the model during prompting. Use this file to measure extraction quality without in-context contamination. 16 entries total (5 from simple, 11 from extended).
 
 ---

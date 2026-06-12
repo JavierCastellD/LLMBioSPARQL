@@ -15,3 +15,5 @@ submits/
 logs/
 ~$*
 *.ipynb
+docs/
+\.*
