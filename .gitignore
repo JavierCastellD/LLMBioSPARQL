@@ -17,3 +17,4 @@ logs/
 *.ipynb
 docs/
 \.*
+*.zip
