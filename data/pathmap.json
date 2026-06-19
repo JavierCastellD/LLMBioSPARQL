@@ -269,7 +269,7 @@
       "from": "phenotype",
       "to": "phenotype",
       "predicate": "http://purl.bioontology.org/ontology/OMIM/has_phenotype",
-      "label": "Has phenotype",
+      "label": "has phenotype",
       "graph": "omim",
       "subject_type": "phenotype",
       "object_type": "phenotype"

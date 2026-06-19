@@ -114,10 +114,10 @@ def _make_edge(
     graph: str, subject_type: str, object_type: str,
 ) -> dict:
     return {
-        "from": frm,
-        "to": to,
+        "from": frm.lower(),
+        "to": to.lower(),
         "predicate": predicate,
-        "label": label,
+        "label": label.lower(),
         "graph": graph,
         "subject_type": subject_type,
         "object_type": object_type,
