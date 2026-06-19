@@ -32,6 +32,7 @@ _REAL_LABELS = [
     "is orthologous to",
     "molecularly interacts with",
     "part of",
+    "has phenotype",
 ]
 
 RELATION_VOCAB = {lab: [lab] for lab in _REAL_LABELS}
@@ -45,22 +46,19 @@ RELATION_VOCAB.update({
     "found in organism":  ["in taxon"],
     "located on":         ["part of"],
     "located in":         ["part of"],
-    "orthologous to":     ["is orthologous to"],
-    "has function":       ["enables"],
-    "has phenotype":      ["Has phenotype"],
+    "has function":       ["enables"]
 })
 
 # coarse names
 RELATION_VOCAB.update({
     "regulates": [
+        "involved in",
         "involved in regulation of",
         "involved in positive regulation of",
         "involved in negative regulation of",
         "directly regulates",
         "indirectly regulates",
-    ],
-    "activates": ["involved in positive regulation of", "directly regulates"],
-    "represses": ["involved in negative regulation of"],
+    ]
 })
 
 # List of allowed relation names for the extraction step to import.
@@ -158,8 +156,12 @@ class PathPlanner:
         }
 
     def _simple_paths_of_length(self, start: str, goal: str, length: int) -> list[list[dict]]:
-        """Method that finds all simple paths of exactly "length" edges from start to goal. There are no
-        repeated nodes, except for goal.
+        """Method that finds all simple paths of exactly "length" edges from start to goal.
+
+        A node may be visited at most twice, but only if the two entry edges carry
+        different labels (e.g. entering protein via "encodes" and again via
+        "molecularly interacts with"). The goal may additionally be revisited on the
+        final step regardless of its entry labels, to handle same-type start==goal queries.
 
         Parameters:
             start (str): The starting node of the search.
@@ -175,7 +177,9 @@ class PathPlanner:
         """
         results = []
         # Each stack entry is (node, depth, path-so-far, visited-so-far).
-        stack = [(start, 0, [], {start})]
+        # visited maps each node to the frozenset of edge labels used to enter it
+        # (empty frozenset for the start node, which has no entry edge).
+        stack = [(start, 0, [], {start: frozenset()})]
 
         while stack and len(results) < MAX_ALTERNATIVES:
             node, depth, path, visited = stack.pop()
@@ -186,12 +190,24 @@ class PathPlanner:
                 continue
 
             for neighbour, eidx in reversed(self._adj.get(node, [])):
-                is_final_step = depth + 1 == length
-                if neighbour in visited and not (is_final_step and neighbour == goal):
-                    continue
                 edge = self._edges[eidx]
+                edge_label = edge["label"]
+                is_final_step = depth + 1 == length
+
+                if neighbour in visited:
+                    entry_labels = visited[neighbour]
+                    can_revisit = (is_final_step and neighbour == goal) or (
+                        len(entry_labels) == 1 and edge_label not in entry_labels
+                    )
+                    if not can_revisit:
+                        continue
+
                 next_path = path + [{**edge, "reverse": edge["from"] != edge["subject_type"]}]
-                next_visited = visited if neighbour in visited else visited | {neighbour}
+                next_visited = dict(visited)
+                if neighbour not in visited:
+                    next_visited[neighbour] = frozenset({edge_label})
+                elif len(visited[neighbour]) == 1 and edge_label not in visited[neighbour]:
+                    next_visited[neighbour] = visited[neighbour] | {edge_label}
                 stack.append((neighbour, depth + 1, next_path, next_visited))
 
         return results
@@ -200,7 +216,9 @@ class PathPlanner:
         """Method that finds the shortest path from start to goal whose TERMINAL edge's "label" is in allowed_predicates.
 
         Tries path lengths up to hop_limit and returns the alternatives at the first length where at least one path's
-        last edge matches.
+        last edge matches. If no such path is found, falls back once: retries the same length range but matches on the
+        second-to-last edge instead (paths of length >= 2 only), to handle cases where the relation sits one hop before
+        the target (e.g. gene -[encodes]-> protein -[molecularly interacts with]-> protein <-[encodes]- gene).
 
         Parameters:
             start (str): The subject node's resolved type.
@@ -210,14 +228,21 @@ class PathPlanner:
             hop_limit (int): The maximum path length (in edges) to consider.
 
         Returns:
-            list[list[dict]]: Up to MAX_ALTERNATIVES alternative paths (each a list of edge dicts, in order from start to goal), 
-            or [] if no path of length <= hop_limit has a matching terminal label.
+            list[list[dict]]: Up to MAX_ALTERNATIVES alternative paths (each a list of edge dicts, in order from start to goal),
+            or [] if no path of length <= hop_limit has a matching terminal or second-to-last label.
         """
         for length in range(1, hop_limit + 1):
             candidates = self._simple_paths_of_length(start, goal, length)
             matched = [p for p in candidates if p[-1]["label"] in allowed_predicates]
             if matched:
                 return matched
+
+        for length in range(2, hop_limit + 1):
+            candidates = self._simple_paths_of_length(start, goal, length)
+            matched = [p for p in candidates if p[-2]["label"] in allowed_predicates]
+            if matched:
+                return matched
+
         return []
 
     def resolve_relations(self, nodes: dict[str, dict], triples: list[dict]) -> dict[str, Any]:
