@@ -2,241 +2,1734 @@
   {
     "question": "In which organisms is the Fbxl6 gene found? Provide the taxon and its synonym.",
     "sparql": "SELECT DISTINCT ?name ?synonym WHERE { GRAPH <http://rdf.biogateway.eu/graph/gene> { ?uri_gen <http://www.w3.org/2004/02/skos/core#prefLabel> \"Fbxl6\"; <http://purl.obolibrary.org/obo/RO_0002162> ?taxon. } GRAPH <http://rdf.biogateway.eu/graph/taxon> { ?taxon <http://www.w3.org/2000/01/rdf-schema#label> ?name; <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> ?synonym. } }",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "organism"
+        },
+        "n1": {
+          "type": "gene",
+          "span": "Fbxl6"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n1",
+          "relation": "in taxon",
+          "object": "OUTPUT"
+        }
+      ]
+    }
   },
   {
     "question": "What is the definition of the Fzd1 gene?",
     "sparql": "SELECT DISTINCT ?def WHERE { ?uri <http://www.w3.org/2004/02/skos/core#prefLabel> \"Fzd1\"; <http://www.w3.org/2004/02/skos/core#definition> ?def. }",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene",
+          "span": "Fzd1"
+        }
+      },
+      "triples": []
+    }
   },
   {
     "question": "What are the close matches to the GLA gene?",
     "sparql": "SELECT DISTINCT ?uri_gene ?match WHERE { ?uri_gene <http://www.w3.org/2004/02/skos/core#prefLabel> \"GLA\"; <http://www.w3.org/2004/02/skos/core#closeMatch> ?match. }",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene",
+          "span": "GLA"
+        }
+      },
+      "triples": []
+    }
   },
   {
     "question": "Tell me the start and end positions of the GLA gene.",
     "sparql": "SELECT DISTINCT ?uri_gene ?start ?end WHERE { ?uri_gene <http://www.w3.org/2004/02/skos/core#prefLabel> \"GLA\"; <http://purl.obolibrary.org/obo/GENO_0000894> ?start; <http://purl.obolibrary.org/obo/GENO_0000895> ?end . }",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene",
+          "span": "GLA"
+        }
+      },
+      "triples": []
+    }
   },
   {
     "question": "Tell me the start position of the GLA gene.",
     "sparql": "SELECT DISTINCT ?uri_gene ?start WHERE { ?uri_gene <http://www.w3.org/2004/02/skos/core#prefLabel> \"GLA\"; <http://purl.obolibrary.org/obo/GENO_0000894> ?start. }",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene",
+          "span": "GLA"
+        }
+      },
+      "triples": []
+    }
   },
   {
     "question": "Tell me the end position of the GLA gene.",
     "sparql": "SELECT DISTINCT ?uri_gene ?end WHERE { ?uri_gene <http://www.w3.org/2004/02/skos/core#prefLabel> \"GLA\"; <http://purl.obolibrary.org/obo/GENO_0000895> ?end . }",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene",
+          "span": "GLA"
+        }
+      },
+      "triples": []
+    }
   },
   {
     "question": "On which chromosome is the GLA gene located?",
     "sparql": "SELECT DISTINCT ?uri_gene ?chr ?name_chr WHERE { ?uri_gene <http://www.w3.org/2004/02/skos/core#prefLabel> \"GLA\"; <http://purl.obolibrary.org/obo/BFO_0000050> ?chr . ?chr <http://www.w3.org/2004/02/skos/core#prefLabel> ?name_chr. }",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "chromosome"
+        },
+        "n1": {
+          "type": "gene",
+          "span": "GLA"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n1",
+          "relation": "located on",
+          "object": "OUTPUT"
+        }
+      ]
+    }
   },
   {
     "question": "If the APOE gene is linked to the development of Alzheimer's, what molecular function do the proteins it encodes have in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?definition_molecular_function \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n\tskos:prefLabel \"APOE\";\n        sio:SIO_010078 ?protein;\n\tobo:RO_0002162 ?taxon.\n  \t}\nGRAPH <http://rdf.biogateway.eu/graph/gene2phen> {\n\t?uri_gen obo:RO_0002331 ?disease.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/omim> {\n\t?disease skos:prefLabel ?name_disease;\n        skos:altLabel ?alternative_name_disease.\n\tFILTER(REGEX(?name_disease, \"ALZHEIMER\", \"i\")|| REGEX(?alternative_name_disease,\"ALZHEIMER\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n\t?protein obo:RO_0002327 ?molecular_function\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n\t?molecular_function rdfs:label ?definition_molecular_function\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "molecular function"
+        },
+        "n1": {
+          "type": "gene",
+          "span": "APOE"
+        },
+        "n2": {
+          "type": "phenotype",
+          "span": "Alzheimer's"
+        },
+        "n3": {
+          "type": "organism",
+          "span": "humans"
+        },
+        "x1": {
+          "type": "protein"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n1",
+          "relation": "encodes",
+          "object": "x1"
+        },
+        {
+          "subject": "x1",
+          "relation": "enables",
+          "object": "OUTPUT"
+        },
+        {
+          "subject": "n1",
+          "relation": "involved in",
+          "object": "n2"
+        },
+        {
+          "subject": "n1",
+          "relation": "in taxon",
+          "object": "n3"
+        }
+      ]
+    }
   },
   {
     "question": "Which genes are in the same regulatory domain (TAD) as the GATA3 gene in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gene_tad\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n    ?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n             skos:prefLabel \"GATA3\";\n             obo:BFO_0000050 ?chromosome;\n             obo:GENO_0000894 ?start_position_gene;\n             obo:GENO_0000895 ?end_position_gene;\n             obo:RO_0002162 ?taxon.\n  }\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    ?taxon rdfs:label \"Homo sapiens\".\n  }\nGRAPH <http://rdf.biogateway.eu/graph/tad> {\n\t?uri_tad rdfs:subClassOf <http://purl.obolibrary.org/obo/SO_0002304> ;\n\t\tobo:BFO_0000050 ?chromosome ;\n\t\tobo:GENO_0000894 ?start_position_tad;\n        obo:GENO_0000895 ?end_position_tad .\n}\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n    ?uri_gen_tad rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n                 obo:BFO_0000050 ?chromosome;\n                 obo:GENO_0000894 ?start_position_gene_tad;\n                 obo:GENO_0000895 ?end_position_gene_tad;\n                 skos:prefLabel ?name_gene_tad.\n    \n}\nFILTER(?start_position_gene_tad >= ?start_position_tad && ?end_position_gene_tad <= ?end_position_tad)\nFILTER(?start_position_tad <= ?start_position_gene && ?end_position_tad >= ?end_position_gene)\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "gene",
+          "span": "GATA3"
+        },
+        "n2": {
+          "type": "tad"
+        },
+        "n3": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "located in",
+          "object": "n2"
+        },
+        {
+          "subject": "n1",
+          "relation": "located in",
+          "object": "n2"
+        },
+        {
+          "subject": "n1",
+          "relation": "in taxon",
+          "object": "n3"
+        }
+      ]
+    }
   },
   {
     "question": "Which transcription factors activate the NFKB2 gene in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_protein\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n    \t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n    \tskos:prefLabel \"NFKB2\"; \n     \tobo:RO_0002162 ?taxon.\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\nGRAPH <http://rdf.biogateway.eu/graph/tfac2gene> {\n\t    ?protein_transcriptional_regulation obo:RO_0002429  ?uri_gen\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein_transcriptional_regulation rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    \tskos:prefLabel ?name_protein.\n\t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "gene",
+          "span": "NFKB2"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "activates",
+          "object": "n1"
+        },
+        {
+          "subject": "n1",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "Which proteins interact with the proteins encoded by the TP53 gene in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_protein_interaction\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n    ?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     skos:prefLabel \"TP53\";\n     sio:SIO_010078 ?protein_encoded;\n     obo:RO_0002162 ?taxon.\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n\nGRAPH <http://rdf.biogateway.eu/graph/prot2prot> {\n\t?protein_interaction obo:RO_0002436 ?protein_encoded \n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein_interaction rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    \tskos:prefLabel ?name_protein_interaction.\n\t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "protein"
+        },
+        "x1": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "gene",
+          "span": "TP53"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "interacts with",
+          "object": "x1"
+        },
+        {
+          "subject": "x1",
+          "relation": "encoded by",
+          "object": "n1"
+        },
+        {
+          "subject": "n1",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "Which proteins are associated with cytokine-mediated signaling pathways in autoimmune diseases in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?protein_name \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n?gene rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n          sio:SIO_010078 ?protein;\n          obo:RO_0002162 ?taxon.\n}\n  GRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n    ?protein obo:RO_0002331 ?biological_process.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/prot> {\n    ?protein rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    skos:prefLabel ?protein_name;\n    obo:RO_0002162 ?taxon.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/go> {\n    ?biological_process rdfs:label ?biological_process_name;\n\towl:hasExactSynonym ?synonym_name_biological_process.\n    FILTER(REGEX(?biological_process_name, \"cytokine-mediated signaling pathway\", \"i\") || REGEX(?synonym_name_biological_process, \"cytokine-mediated signaling pathway\", \"i\"))\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/gene2phen> {\n    ?gene obo:RO_0002331 ?disease.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/omim> {\n    ?disease skos:prefLabel ?disease_name;\n    skos:altLabel ?alternative_disease_name.\n    FILTER(REGEX(?disease_name, \"autoimmune\", \"i\") || REGEX(?alternative_disease_name,\"autoimmune\",\"i\"))\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    ?taxon rdfs:label \"Homo sapiens\".\n  }\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "biological process",
+          "span": "cytokine-mediated signaling pathways"
+        },
+        "n2": {
+          "type": "phenotype",
+          "span": "autoimmune diseases"
+        },
+        "n3": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "n1",
+          "relation": "involved in",
+          "object": "n2"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n3"
+        }
+      ]
+    }
   },
   {
     "question": "Which proteins transport iron in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_protein_interaction\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n?protein_interaction obo:RO_0002327 ?molecular_function.\n}\n\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n?molecular_function rdfs:label ?name_molecular_function;\nowl:hasExactSynonym ?synonym_name_molecular_function.\nFILTER(REGEX(?name_molecular_function,\"transporter.*iron|iron.*transporter\",\"i\") || REGEX(?synonym_name_molecular_function, \"transporter.*iron|iron.*transporter\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein_interaction rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n        obo:RO_0002162 ?taxon;\n    \tskos:prefLabel ?name_protein_interaction.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "molecular function",
+          "span": "iron transport"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "enables",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "Which proteins have helicase activity associated with DNA repair in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_protein \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n    \t?protein obo:RO_0002331 ?process_biologic\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n\t?protein obo:RO_0002327 ?molecular_function\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    \tskos:prefLabel ?name_protein;\n       \tobo:RO_0002162 ?taxon.\n  \t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n    \t?process_biologic rdfs:label ?name_process_biologic;\n\t\towl:hasExactSynonym ?synonym_name_process_biologic.\n\t\t?molecular_function rdfs:label ?name_molecular_function;\n\t\towl:hasExactSynonym ?synonym_name_molecular_function.\n\t\tFILTER(REGEX(?name_molecular_function,\"helicase activity\",\"i\") || REGEX(?synonym_name_molecular_function,\"helicase activity\",\"i\"))\n   \t    FILTER(REGEX(?name_process_biologic, \"DNA repair\", \"i\") || REGEX(?synonym_name_process_biologic,\"DNA repair\",\"i\"))\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "molecular function",
+          "span": "helicase activity"
+        },
+        "n2": {
+          "type": "biological process",
+          "span": "DNA repair"
+        },
+        "n3": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "enables",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n2"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n3"
+        }
+      ]
+    }
   },
   {
     "question": "Which genes are involved in the Wnt signaling pathway in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen ?name_process_biologic\nWHERE {\n  GRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n    \t?protein obo:RO_0002331 ?process_biologic.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n       \tobo:RO_0002162 ?taxon.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n    \tsio:SIO_010078 ?protein;\n        skos:prefLabel ?name_gen.\n}\n  GRAPH <http://rdf.biogateway.eu/graph/go> {\n    \t?process_biologic rdfs:label ?name_process_biologic;\n\t\towl:hasExactSynonym ?synonym_name_process_biologic.\n   \t    FILTER(REGEX(?name_process_biologic, \"Wnt signaling path\", \"i\") || REGEX(?synonym_name_process_biologic,\"Wnt signaling path\",\"i\"))\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  }\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "biological process",
+          "span": "Wnt signaling pathway"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "Which genes are associated with pulmonary fibrosis and participate in mRNA catabolic processes in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT  DISTINCT ?name_gen \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene2phen> {\n\t?uri_gen obo:RO_0002331 ?disease.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/omim> {\n\t?disease skos:prefLabel ?definition_disease;\n\tskos:altLabel ?synonym_definition_disease.\n\tFILTER(REGEX(?definition_disease,\"pulmonary fibrosis\" , \"i\") || REGEX (?synonym_definition_disease, \"pulmonary fibrosis\",\"i\"))\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n\t?protein obo:RO_0002331 ?biologic_process_protein\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n\t?biologic_process_protein rdfs:label ?definition_biologic_process;\n\towl:hasExactSynonym ?synonym_definition_biologic_process\n\tFILTER(REGEX(?definition_biologic_process,\"mRNA catabolic process\",\"i\") || REGEX(?synonym_definition_biologic_process,\"mRNA catabolic process\",\"i\"))\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "phenotype",
+          "span": "pulmonary fibrosis"
+        },
+        "n2": {
+          "type": "biological process",
+          "span": "mRNA catabolic processes"
+        },
+        "n3": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n2"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n3"
+        }
+      ]
+    }
   },
   {
     "question": "Which genes in humans are involved in fatty acid beta-oxidation?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n\t?protein obo:RO_0002331 ?biologic_process_protein\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n\t?biologic_process_protein rdfs:label ?name_biologic_process;\n\towl:hasExactSynonym ?synonym_name_biologic_process.\n\tFILTER(REGEX(?name_biologic_process,\"fatty acid beta-oxidation\",\"i\") || REGEX (?synonym_name_biologic_process,\"fatty acid beta-oxidation\",\"i\"))\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "biological process",
+          "span": "fatty acid beta-oxidation"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "Which proteins activate the MAPK signaling pathway in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_protein \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n\t?protein obo:RO_0002331 ?biologic_process_protein\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n\t?biologic_process_protein rdfs:label ?name_biologic_process;\n    owl:hasExactSynonym ?synonym_name_biologic_process\n\tFILTER(REGEX(?name_biologic_process, \"MAPK.*signaling|signaling.*MAPK\", \"i\") || REGEX(?synonym_name_biologic_process,\"MAPK.*signaling|signaling.*MAPK\",\"i\"))\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    \tskos:prefLabel ?name_protein;\n        obo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "biological process",
+          "span": "MAPK signaling pathway"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "Which genes are involved in pyrimidine synthesis in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n\t?protein obo:RO_0002331 ?biologic_process_protein\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n\t?biologic_process_protein rdfs:label ?name_biologic_process;\n\towl:hasExactSynonym ?synonym_name_biologic_process\n\tFILTER(REGEX(?name_biologic_process,\"pyrimidine.*synthesis|synthesis.*pyrimidine\", \"i\") || REGEX(?synonym_name_biologic_process,\"pyrimidine.*synthesis|synthesis.*pyrimidine\", \"i\"))\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "biological process",
+          "span": "pyrimidine synthesis"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "Which proteins regulate calcium homeostasis in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT  ?name_protein\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n\t?protein obo:RO_0002331 ?biologic_process_protein\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n\t?biologic_process_protein rdfs:label ?name_biologic_process;\n\towl:hasExactSynonym ?synonym_name_biologic_process.\n\tFILTER(REGEX(?name_biologic_process,\"calcium.*homeostasis|homeostasis.*calcium\", \"i\") || REGEX(?synonym_name_biologic_process,\"calcium.*homeostasis|homeostasis.*calcium\", \"i\"))\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    \tskos:prefLabel ?name_protein;\n        obo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "biological process",
+          "span": "calcium homeostasis"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "Which genes are involved in the regulation of gluconeogenesis in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT  DISTINCT ?name_gen\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n\t?protein obo:RO_0002331 ?biologic_process_protein\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n\t?biologic_process_protein rdfs:label ?name_biologic_process;\n        owl:hasExactSynonym ?synonym_name_biologic_process.\n\tFILTER(REGEX(?name_biologic_process, \"regulation.*gluconeogenesis|gluconeogenesis.*regulation\", \"i\") || REGEX(?synonym_name_biologic_process, \"regulation.*gluconeogenesis|gluconeogenesis.*regulation\", \"i\"))\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "biological process",
+          "span": "regulation of gluconeogenesis"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "Which genes are key to collagen biosynthesis in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT  DISTINCT ?name_gen \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n\t?protein obo:RO_0002331 ?biologic_process_protein\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n\t?biologic_process_protein rdfs:label ?name_biologic_process;\n        owl:hasExactSynonym ?synonym_name_biologic_process\n\tFILTER(REGEX(?name_biologic_process, \"collagen.*biosynthesis|biosynthesis.*collagen\", \"i\") || REGEX(?synonym_name_biologic_process, \"collagen.*biosynthesis|biosynthesis.*collagen\", \"i\"))\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "biological process",
+          "span": "collagen biosynthesis"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "Which proteins negatively regulate the innate immune response in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT  DISTINCT ?name_protein \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n\t?protein obo:RO_0002331 ?biologic_process_protein\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n\t?biologic_process_protein rdfs:label ?name_biologic_process;\n\towl:hasExactSynonym ?synonym_name_biologic_process\n\tFILTER(REGEX(?name_biologic_process, \"negative.*regulation.*innate.*immune.*response\", \"i\") || REGEX(?synonym_name_biologic_process, \"negative.*regulation.*innate.*immune.*response\", \"i\"))\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    \tskos:prefLabel ?name_protein;\n        obo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "biological process",
+          "span": "negatively regulate the innate immune response"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "What genes are involved in regulating neurotransmitter secretion in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n\t?protein obo:RO_0002331 ?biologic_process_protein\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n\t?biologic_process_protein rdfs:label ?name_biologic_process;\n\towl:hasExactSynonym ?synonym_name_biologic_process\n\tFILTER(REGEX(?name_biologic_process, \"regulation.*neurotransmitter.*secretion\", \"i\") || REGEX (?synonym_name_biologic_process, \"regulation.*neurotransmitter.*secretion\", \"i\"))\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "biological process",
+          "span": "regulating neurotransmitter secretion"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "Which proteins are involved in the nerve growth factor (NGF) signaling pathway in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT  DISTINCT ?name_protein\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n\t?protein obo:RO_0002331 ?biologic_process_protein\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n\t?biologic_process_protein rdfs:label ?name_biologic_process;\n\towl:hasExactSynonym ?synonym_name_biologic_process\n\tFILTER(REGEX(?name_biologic_process, \"nerve growth factor signaling pathway\", \"i\") || REGEX(?synonym_name_biologic_process, \"nerve growth factor signaling pathway\", \"i\") )\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    \tskos:prefLabel ?name_protein;\n        obo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "biological process",
+          "span": "nerve growth factor (NGF) signaling pathway"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "Which genes regulate the phosphatidylinositol 3-kinase/protein kinase B pathway in type 2 diabetes in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n\t?protein obo:RO_0002331 ?biologic_process_protein\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n\t?biologic_process_protein rdfs:label ?name_biologic_process;\n\towl:hasExactSynonym ?synonym_name_biologic_process\n        FILTER(REGEX(?name_biologic_process, \"regulation.*phosphatidylinositol 3-kinase/protein kinase B.\", \"i\") || REGEX(?synonym_name_biologic_process, \"regulation.*phosphatidylinositol 3-kinase/protein kinase B.\", \"i\"))\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/gene2phen> {\n       ?uri_gen obo:RO_0002331 ?disease\n}\nGRAPH <http://rdf.biogateway.eu/graph/omim> {\n       ?disease skos:prefLabel ?name_disease;\n\t   skos:altLabel ?alternative_name_disease\n       FILTER(REGEX(?name_disease,\"TYPE 2 DIABETES MELLITUS\",\"i\") || REGEX(?alternative_name_disease,\"TYPE 2 DIABETES MELLITUS\",\"i\") )\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "biological process",
+          "span": "phosphatidylinositol 3-kinase/protein kinase B pathway"
+        },
+        "n2": {
+          "type": "phenotype",
+          "span": "type 2 diabetes"
+        },
+        "n3": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "regulates",
+          "object": "n1"
+        },
+        {
+          "subject": "n1",
+          "relation": "involved in",
+          "object": "n2"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n3"
+        }
+      ]
+    }
   },
   {
     "question": "Which genes are essential for the insulin receptor signaling pathway in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT  DISTINCT ?name_gen  \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n\t?protein obo:RO_0002331 ?biologic_process_protein\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n\t?biologic_process_protein rdfs:label ?name_biologic_process;\n\towl:hasExactSynonym ?synonym_name_biologic_process\n        FILTER(REGEX(?name_biologic_process, \"insulin receptor signaling pathway\", \"i\") || REGEX(?synonym_name_biologic_process, \"insulin receptor signaling pathway\", \"i\"))\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "biological process",
+          "span": "insulin receptor signaling pathway"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "Which proteins are involved in the regulation of autophagy in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_protein \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n\t?protein obo:RO_0002331 ?biologic_process_protein\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n\t?biologic_process_protein rdfs:label ?name_biologic_process;\n\towl:hasExactSynonym ?synonym_name_biologic_process\n        FILTER(REGEX(?name_biologic_process, \"regulation.*autophagy\", \"i\")||REGEX(?synonym_name_biologic_process, \"regulation.*autophagy\", \"i\"))\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    \tskos:prefLabel ?name_protein;\n        obo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "biological process",
+          "span": "regulation of autophagy"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "Which signaling pathways are associated with breast cancer in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_biologic_process \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n\t?protein obo:RO_0002331 ?biologic_process_protein\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n\t?biologic_process_protein rdfs:label ?name_biologic_process;\n\towl:hasExactSynonym ?synonym_name_biologic_process\n        FILTER(REGEX(?name_biologic_process, \"signaling pathway\", \"i\")||REGEX(?synonym_name_biologic_process, \"signaling pathway\", \"i\"))\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/gene2phen> {\n       ?uri_gen obo:RO_0002331 ?disease\n}\nGRAPH <http://rdf.biogateway.eu/graph/omim> {\n       ?disease skos:prefLabel ?name_disease;\n\t\tskos:altLabel ?alternative_name_disease.\n       FILTER(REGEX(?name_disease,\"breast cancer\",\"i\")||REGEX(?alternative_name_disease,\"breast cancer\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "biological process"
+        },
+        "n1": {
+          "type": "phenotype",
+          "span": "breast cancer"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "Which genes regulate the activity of the MMP9 gene and are involved in gastric cancer in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gene_regulatory \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/tfac2gene> {\n       ?regulatory_protein obo:RO_0002428 ?gene.\n}\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?gene rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n\tskos:prefLabel \"MMP9\";\n    obo:RO_0002162 ?taxon.\n    ?gene_regulatory rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n    sio:SIO_010078 ?regulatory_protein;\n    skos:prefLabel ?name_gene_regulatory.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/gene2phen> {\n        ?gene_regulatory obo:RO_0002331 ?disease_gene_regulatory.\n}\nGRAPH <http://rdf.biogateway.eu/graph/omim> {\n        ?disease_gene_regulatory skos:prefLabel ?name_disease_gene_regulatory;\n\t\tskos:altLabel ?alternative_name_disease_gene_regulatory.\n        FILTER(REGEX(?name_disease_gene_regulatory,\"gastric cancer\",\"i\")||REGEX(?alternative_name_disease_gene_regulatory,\"gastric cancer\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    ?taxon rdfs:label \"Homo sapiens\".\n  }\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes" : {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "gene",
+          "span": "MMP9"
+        },
+        "n2": {
+          "type": "phenotype",
+          "span": "gastric cancer"
+        },
+        "n3": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "regulates",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n2"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n3"
+        }
+      ]
+    }
   },
   {
     "question": "Which genes respond to interleukin-7 and have molecular interactions with SIRT1 in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen_interaction\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n        ?protein_interaction obo:RO_0002331 ?molecular_function_protein_interaction.\n}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n       ?molecular_function_protein_interaction rdfs:label ?name_molecular_function_protein_interaction;\n\t   owl:hasExactSynonym ?synonym_name_molecular_function_protein_interaction\n       FILTER(REGEX(?name_molecular_function_protein_interaction,\"cellular response to interleukin-7\",\"i\")||REGEX(?synonym_name_molecular_function_protein_interaction,\"cellular response to interleukin-7\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot2prot> {\n       ?protein obo:RO_0002436 ?protein_interaction\n}\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel \"SIRT1\";\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon.\n        ?uri_gen_interaction rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n        sio:SIO_010078 ?protein_interaction;\n        skos:prefLabel ?name_gen_interaction.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    ?taxon rdfs:label \"Homo sapiens\".\n\t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "biological process", 
+          "span": "respond to interleukin-7"
+        },
+        "n2": {
+          "type": "gene", 
+          "span": "SIRT1"
+        },
+        "n3": {
+          "type": "organism", 
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "molecularly interacts with",
+          "object": "n2"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n3"
+        }
+      ]
+    }
   },
   {
     "question": "Which proteins have protein-binding activity and are involved in the response to oxidative stress in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?protein_name\nWHERE {\n  GRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n    ?protein obo:RO_0002331 ?biological_process.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n    ?protein obo:RO_0002327 ?molecular_function.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/go> {\n    ?molecular_function rdfs:label ?name_molecular_function;\n    owl:hasExactSynonym ?synonym_name_molecular_function.\n    ?biological_process rdfs:label ?name_biologic_process;\n    owl:hasExactSynonym ?synonym_name_biologic_process\n    FILTER(REGEX(?name_molecular_function, \"protein binding\", \"i\")||REGEX(?synonym_name_molecular_function, \"protein binding\", \"i\"))\n    FILTER(REGEX(?name_biologic_process, \"response to oxidative stress\", \"i\")||REGEX(?synonym_name_biologic_process, \"response to oxidative stress\", \"i\"))\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/prot> {\n    ?protein rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n             skos:prefLabel ?protein_name;\n             obo:RO_0002162 ?taxon.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    ?taxon rdfs:label \"Homo sapiens\".\n  }\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "molecular function",
+          "span": "protein-binding activity"
+        },
+        "n2": {
+          "type": "biological process",
+          "span": "response to oxidative stress"
+        },
+        "n3": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "enables",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n2"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n3"
+        }
+      ]
+    }
   },
   {
     "question": "Which genes regulate mRNA stability in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?gene_name\nWHERE {\n  GRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n    ?protein obo:RO_0002331 ?biological_process.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/go> {\n    ?biological_process rdfs:label ?name_biologic_process;\n\towl:hasExactSynonym ?synonym_name_biologic_process.\n    FILTER(REGEX(?name_biologic_process, \"mRNA stability\", \"i\")||REGEX(?synonym_name_biologic_process, \"mRNA stability\", \"i\"))\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/gene> {\n    ?gene rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n          skos:prefLabel ?gene_name;\n          sio:SIO_010078 ?protein;\n          obo:RO_0002162 ?taxon.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    ?taxon rdfs:label \"Homo sapiens\".\n  }\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "biological process",
+          "span": "mRNA stability"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "regulates",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "Which proteins regulate the proteins with RNA polymerase I activity in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT  ?name_regulatory_protein\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/reg2targ> {\n       ?regulatory_protein obo:RO_0002428 ?regulated_protein.\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n       ?regulated_protein obo:RO_0002327 ?molecular_function_regulated_protein\n}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n       ?molecular_function_regulated_protein rdfs:label ?name_molecular_function_regulated_protein;\n\t   owl:hasExactSynonym ?synonym_name_molecular_function_regulated_protein.\n       FILTER(REGEX(?name_molecular_function_regulated_protein,\"RNA polymerase I activity\",\"i\")||REGEX(?synonym_name_molecular_function_regulated_protein,\"RNA polymerase I activity\",\"i\"))\n}\n  GRAPH <http://rdf.biogateway.eu/graph/prot> {\n    ?regulatory_protein rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n             skos:prefLabel ?name_regulatory_protein;\n             obo:RO_0002162 ?taxon.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    ?taxon rdfs:label \"Homo sapiens\".\n  }\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "protein"
+        },
+        "x1": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "molecular function",
+          "span": "RNA polymerase I activity"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "regulates",
+          "object": "x1"
+        },
+        {
+          "subject": "x1",
+          "relation": "enables",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
-    "question": "Which genes are regulated by the TGF gene in humans?",
+    "question": "Which genes are regulated by the TFG gene in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT  ?name_regulated_gene\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/reg2targ> {\n ?encoded_protein  obo:RO_0002428  ?regulated_protein\n}\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n        ?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n        skos:prefLabel \"TFG\";\n        sio:SIO_010078 ?encoded_protein;\n        obo:RO_0002162 ?taxon.\n        ?uri_regulated_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n        skos:prefLabel ?name_regulated_gene;\n        sio:SIO_010078 ?regulated_protein.    \n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    ?taxon rdfs:label \"Homo sapiens\".\n\t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "gene",
+          "span": "TGF"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n1",
+          "relation": "involved in regulation of",
+          "object": "OUTPUT"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "Which genes are involved in folic acid metabolism in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n        ?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n        skos:prefLabel ?name_gen;\n        sio:SIO_010078 ?encoded_protein;\n        obo:RO_0002162 ?taxon.    \n}\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n       ?encoded_protein obo:RO_0002331 ?biologic_process_encoded_protein.\n}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n     ?biologic_process_encoded_protein rdfs:label ?name_biologic_process_encoded_protein;\n\t owl:hasExactSynonym ?synonym_name_biologic_process_encoded_protein.\n     FILTER(REGEX(?name_biologic_process_encoded_protein,\"folic acid metabolic process\",\"i\")||REGEX(?synonym_name_biologic_process_encoded_protein,\"folic acid metabolic process\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    ?taxon rdfs:label \"Homo sapiens\".\n\t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "biological process",
+          "span": "folic acid metabolism"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   },
   {
     "question": "Which genes on chromosome 2 encode ligase activity proteins related to DNA repair, and which diseases are associated with these genes in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen ?name_disease\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon;\n        obo:BFO_0000050 ?chromosome.\n        ?chromosome skos:prefLabel \"chr-2\".\n\t}\nGRAPH<http://rdf.biogateway.eu/graph/gene2phen> {\n        ?uri_gen obo:RO_0002331 ?disease\n}\nGRAPH <http://rdf.biogateway.eu/graph/omim> {\n       ?disease skos:prefLabel ?name_disease\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n     ?protein obo:RO_0002327 ?molecular_function.\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n       ?protein obo:RO_0002331 ?biologic_process\n}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n      ?molecular_function rdfs:label ?name_molecular_function;\n      owl:hasExactSynonym ?synonym_name_molecular_function.\n      ?biologic_process rdfs:label ?name_biologic_process;\n      owl:hasExactSynonym ?synonym_name_biologic_process.\n       FILTER(REGEX(?name_molecular_function,\"ligase activity\",\"i\")||REGEX(?synonym_name_molecular_function,\"ligase activity\",\"i\"))\n       FILTER(REGEX(?name_biologic_process,\"DNA repair\",\"i\")||REGEX(?synonym_name_biologic_process,\"DNA repair\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "chromosome",
+          "span": "chromosome 2"
+        },
+        "x1": {
+          "type": "protein"
+        },
+        "n2": {
+          "type": "molecular function",
+          "span": "ligase activity"
+        },
+        "n3": {
+          "type": "biological process",
+          "span": "DNA repair"
+        },
+        "x2": {
+          "type": "phenotype"
+        },
+        "n4": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "located on",
+          "object": "n1"
+        },
+        {
+          "subject": "x1",
+          "relation": "encoded by",
+          "object": "OUTPUT"
+        },
+        {
+          "subject": "x1",
+          "relation": "enables",
+          "object": "n2"
+        },
+        {
+          "subject": "x1",
+          "relation": "involved in",
+          "object": "n3"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "x2"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n4"
+        }
+      ]
+    }
   },
   {
     "question": "Which genes on chromosome 11 encode proteins involved in the apoptotic process of B cells located in the cytoplasm or nucleus in humans?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen ?name_biologic_process\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon;\n        obo:BFO_0000050 ?chromosome.\n        ?chromosome skos:prefLabel \"chr-11\".\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n       ?protein obo:RO_0002331 ?biological_process\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot2cc> {\n\t?protein obo:BFO_0000050 ?cellular_component\n}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n      ?biologic_process rdfs:label ?name_biologic_process;\n\t  owl:hasExactSynonym ?synonym_name_biologic_process.\n     ?cellular_component rdfs:label ?name_cellular_component;\n\t owl:hasExactSynonym ?synonym_name_cellular_component.\n    FILTER(REGEX(?name_biologic_process,\"B cell apoptotic process\",\"i\")||REGEX(?synonym_name_biologic_process,\"B cell apoptotic process\",\"i\"))\n    FILTER(REGEX(?name_cellular_component,\"cytoplasm|nucleus\",\"i\")||REGEX(?synonym_name_cellular_component,\"cytoplasm|nucleus\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "chromosome",
+          "span": "chromosome 11"
+        },
+        "x1": {
+          "type": "protein"
+        },
+        "n2": {
+          "type": "biological process",
+          "span": "apoptotic process of B cells"
+        },
+        "n3": {
+          "type": "cellular component",
+          "span": "cytoplasm or nucleus"
+        },
+        "n4": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "located on",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "encodes",
+          "object": "x1"
+        },
+        {
+          "subject": "x1",
+          "relation": "involved in",
+          "object": "n2"
+        },
+        {
+          "subject": "x1",
+          "relation": "located in",
+          "object": "n3"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n4"
+        }
+      ]
+    }
   },
   {
     "question": "What are the human genes located on chromosome 19 that encode proteins associated with molecular functions that involve protein binding and biological processes related to DNA damage repair?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon;\n        obo:BFO_0000050 ?chromosome.\n        ?chromosome skos:prefLabel \"chr-19\".\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n       ?protein obo:RO_0002331 ?biological_process\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n     ?protein obo:RO_0002327 ?molecular_function.\n}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n      ?molecular_function rdfs:label ?name_molecular_function;\n\t  owl:hasExactSynonym ?synonym_name_molecular_function.\n      ?biological_process rdfs:label ?name_biologic_process;\n\t  owl:hasExactSynonym ?synonym_name_biologic_process.\n      FILTER(REGEX(?name_molecular_function,\"protein binding\",\"i\")||REGEX(?synonym_name_molecular_function,\"protein binding\",\"i\"))\n      FILTER(REGEX(?name_biologic_process,\"DNA.*damage|damage.*DNA\",\"i\")||REGEX(?synonym_name_biologic_process,\"DNA.*damage|damage.*DNA\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "organism",
+          "span": "human"
+        },
+        "n2": {
+          "type": "chromosome",
+          "span": "chromosome 19"
+        },
+        "x1": {
+          "type": "protein"
+        },
+        "n3": {
+          "type": "molecular function",
+          "span": "protein binding"
+        },
+        "n4": {
+          "type": "biological process",
+          "span": "DNA damage repair"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "located on",
+          "object": "n2"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "encodes",
+          "object": "x1"
+        },
+        {
+          "subject": "x1",
+          "relation": "enables",
+          "object": "n3"
+        },
+        {
+          "subject": "x1",
+          "relation": "involved in",
+          "object": "n4"
+        }
+      ]
+    }
   },
   {
     "question": "What are the human genes located on chromosome X that encode proteins involved in molecular functions with kinase activity and biological processes related to the cellular response to hypoxia?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon;\n        obo:BFO_0000050 ?chromosome.\n        ?chromosome skos:prefLabel \"chr-X\".\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n       ?protein obo:RO_0002331 ?biological_process\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n     ?protein obo:RO_0002327 ?molecular_function.\n}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n      ?molecular_function rdfs:label ?name_molecular_function.\n      ?biological_process rdfs:label ?name_biologic_process.\n      FILTER(REGEX(?name_molecular_function,\"kinase activity\",\"i\")||REGEX(?name_molecular_function,\"kinase activity\",\"i\"))\n      FILTER(REGEX(?name_biologic_process,\"cellular response to hypoxia\",\"i\")||REGEX(?name_biologic_process,\"cellular response to hypoxia\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "organism",
+          "span": "humans"
+        },
+        "n2": {
+          "type": "chromosome",
+          "span": "chromosome X"
+        },
+        "x1": {
+          "type": "protein"
+        },
+        "n3": {
+          "type": "molecular function",
+          "span": "kinase activity"
+        },
+        "n4": {
+          "type": "biological process",
+          "span": "cellular response to hypoxia"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "located on",
+          "object": "n2"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "encodes",
+          "object": "x1"
+        },
+        {
+          "subject": "x1",
+          "relation": "enables",
+          "object": "n3"
+        },
+        {
+          "subject": "x1",
+          "relation": "involved in",
+          "object": "n4"
+        }
+      ]
+    }
   },
   {
-    "question": "What are the human genes located on chromosome 1 that encode proteins associated with molecular functions involving signaling and biological processes related to the DNA damage response?",
+    "question": "What are the human genes located on chromosome 1 that encode proteins associated with signaling and DNA damage response?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon;\n        obo:BFO_0000050 ?chromosome.\n        ?chromosome skos:prefLabel \"chr-1\".\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n       ?protein obo:RO_0002331 ?biologic_process\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n     ?protein obo:RO_0002327 ?molecular_function.\n}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n      ?molecular_function rdfs:label ?name_molecular_function;\n      owl:hasExactSynonym ?synonym_name_molecular_function.\n      ?biologic_process rdfs:label ?name_biologic_process;\n      owl:hasExactSynonym ?synonym_name_biologic_process.\n      FILTER(REGEX(?name_molecular_function,\"signaling\",\"i\")||REGEX(?synonym_name_molecular_function,\"signaling\",\"i\"))\n      FILTER(REGEX(?name_biologic_process,\"DNA damage response\",\"i\")||REGEX(?synonym_name_biologic_process,\"DNA damage response\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "organism",
+          "span": "human"
+        },
+        "n2": {
+          "type": "chromosome",
+          "span": "chromosome 1"
+        },
+        "x1": {
+          "type": "protein"
+        },
+        "n3": {
+          "type": "molecular function",
+          "span": "signaling"
+        },
+        "n4": {
+          "type": "biological process",
+          "span": "DNA damage response"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "located on",
+          "object": "n2"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "encodes",
+          "object": "x1"
+        },
+        {
+          "subject": "x1",
+          "relation": "enables",
+          "object": "n3"
+        },
+        {
+          "subject": "x1",
+          "relation": "involved in",
+          "object": "n4"
+        }
+      ]
+    }
   },
   {
-    "question": "What are the human genes located on chromosome 6 that encode proteins involved in biological processes related to DNA repair and are associated with specific diseases?",
+    "question": "What are the human genes located on chromosome 6 that encode proteins related to DNA repair and are associated with specific diseases?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon;\n        obo:BFO_0000050 ?chromosome.\n        ?chromosome skos:prefLabel \"chr-6\".\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n       ?protein obo:RO_0002331 ?biologic_process\n}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n      ?biologic_process rdfs:label ?name_biologic_process;\n\t  owl:hasExactSynonym ?synonym_name_biologic_process.\n      FILTER(REGEX(?name_biologic_process,\"DNA repair\",\"i\")||REGEX(?synonym_name_biologic_process,\"DNA repair\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/gene2phen> {\n        ?uri_gen obo:RO_0002331 ?disease. \n}\nGRAPH <http://rdf.biogateway.eu/graph/omim> {\n       ?disease skos:prefLabel ?name_disease\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "chromosome",
+          "span": "chromosome 6"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        },
+        "x1": {
+          "type": "protein"
+        },
+        "n3": {
+          "type": "biological process",
+          "span": "DNA repair"
+        },
+        "x2": {
+          "type": "phenotype"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "located on",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        },
+        {
+          "subject": "x1",
+          "relation": "encoded by",
+          "object": "OUTPUT"
+        },
+        {
+          "subject": "x1",
+          "relation": "involved in",
+          "object": "n3"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "x2"
+        }
+      ]
+    }
   },
   {
-    "question": "What are the human genes located on chromosome 3 that encode proteins associated with molecular functions involving ADP binding and biological processes related to DNA recombination?",
+    "question": "What are the human genes located on chromosome 3 associated with ADP binding and related to DNA recombination?", 
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen \nWHERE {\n  GRAPH <http://rdf.biogateway.eu/graph/gene> {\n    ?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n          skos:prefLabel ?name_gen;\n          sio:SIO_010078 ?protein;\n          obo:RO_0002162 ?taxon;\n          obo:BFO_0000050 ?chromosome.\n          ?chromosome skos:prefLabel \"chr-3\".\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n    ?protein obo:RO_0002331 ?biologic_process.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n    ?protein obo:RO_0002327 ?molecular_function.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/go> {\n    ?biologic_process rdfs:label ?name_biologic_process;\n    owl:hasExactSynonym ?synonym_name_biologic_process.\n    ?molecular_function rdfs:label ?name_molecular_function;\n    owl:hasExactSynonym ?synonym_name_molecular_function.\n    FILTER(REGEX(?name_molecular_function, \"ADP binding\", \"i\")|| REGEX(?synonym_name_molecular_function, \"ADP binding\", \"i\"))\n    FILTER(REGEX(?name_biologic_process, \"DNA recombination\", \"i\") ||REGEX(?synonym_name_biologic_process, \"DNA recombination\", \"i\"))\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    ?taxon rdfs:label \"Homo sapiens\".\n  }\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "organism",
+          "span": "humans"
+        },
+        "n2": {
+          "type": "chromosome",
+          "span": "chromosome 3"
+        },
+        "n3": {
+          "type": "molecular function",
+          "span": "ADP binding"
+        },
+        "n4": {
+          "type": "biological process",
+          "span": "DNA recombination"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "located on",
+          "object": "n2"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "enables",
+          "object": "n3"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n4"
+        }
+      ]
+    }
   },
   {
-    "question": "What are the human genes located on chromosome 21 that encode proteins associated with molecular functions involving histone binding and biological processes related to DNA repair?",
+    "question": "What are the human genes on chromosome 21 that encode proteins associated with histone binding and DNA repair?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon;\n        obo:BFO_0000050 ?chromosome.\n        ?chromosome skos:prefLabel \"chr-21\".\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n       ?protein obo:RO_0002331 ?biologic_process\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n     ?protein obo:RO_0002327 ?molecular_function.\n}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n      ?biologic_process rdfs:label ?name_biologic_process;\n\t  owl:hasExactSynonym ?synonym_name_biologic_process\n      ?molecular_function rdfs:label ?name_molecular_function;\n\t  owl:hasExactSynonym ?synonym_name_molecular_function\n      FILTER(REGEX(?name_molecular_function,\"histone binding\",\"i\")||REGEX(?synonym_name_molecular_function,\"histone binding\",\"i\"))\n      FILTER(REGEX(?name_biologic_process,\"DNA repair\",\"i\")||REGEX(?synonym_name_biologic_process,\"DNA repair\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "organism",
+          "span": "human"
+        },
+        "n2": {
+          "type": "chromosome",
+          "span": "chromosome 21"
+        },
+        "x1": {
+          "type": "protein"
+        },
+        "x2": {
+          "type": "molecular function",
+          "span": "histone binding"
+        },
+        "n3": {
+          "type": "biological process",
+          "span": "DNA repair"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "located on",
+          "object": "n2"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "encodes",
+          "object": "x1"
+        },
+        {
+          "subject": "x1",
+          "relation": "enables",
+          "object": "x2"
+        },
+        {
+          "subject": "x1",
+          "relation": "involved in",
+          "object": "n3"
+        }
+      ]
+    }
   },
   {
     "question": "What are the human proteins encoded by genes associated with breast cancer?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_protein\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    \tskos:prefLabel ?name_protein.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/gene2phen> {\n        ?uri_gen obo:RO_0002331 ?disease\n}\nGRAPH <http://rdf.biogateway.eu/graph/omim> {\n       ?disease skos:prefLabel ?name_disease;\n       skos:altLabel ?alternative_name_disease\n       FILTER(REGEX(?name_disease,\"breast cancer\",\"i\")||REGEX(?alternative_name_disease,\"breast cancer\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "organism",
+          "span": "human"
+        },
+        "n2": {
+          "type": "phenotype",
+          "span": "breast cancer"
+        },
+        "x1": {
+          "type": "gene"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "encoded by",
+          "object": "x1"
+        },
+        {
+          "subject": "x1",
+          "relation": "involved in",
+          "object": "n2"
+        },
+        {
+          "subject": "x1",
+          "relation": "in taxon",
+          "object": "n1"
+        }
+      ]
+    }
   },
   {
     "question": "What are the human proteins encoded by genes associated with molecular functions related to tumor necrosis and biological processes related to DNA repair?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_protein \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    \tskos:prefLabel ?name_protein.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n       ?protein obo:RO_0002327 ?molecular_function\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n       ?protein obo:RO_0002331 ?biologic_process\n}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n      ?biologic_process rdfs:label ?name_biologic_process;\n      owl:hasExactSynonym ?synonym_name_biologic_process.\n      ?molecular_function rdfs:label ?name_molecular_function;\n      owl:hasExactSynonym ?synonym_name_molecular_function.\n      FILTER(REGEX(?name_molecular_function,\"tumor.*necrosis|necrosis.*tumor\",\"i\")||REGEX(?synonym_name_molecular_function,\"tumor.*necrosis|necrosis.*tumor\",\"i\"))\n      FILTER(REGEX(?name_biologic_process,\"DNA repair\",\"i\")||REGEX(?synonym_name_biologic_process,\"DNA repair\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "organism",
+          "span": "human"
+        },
+        "n2": {
+          "type": "gene"
+        },
+        "n3": {
+          "type": "molecular function",
+          "span": "tumor necrosis"
+        },
+        "n4": {
+          "type": "biological process",
+          "span": "DNA repair"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n2",
+          "relation": "in taxon",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "encoded by",
+          "object": "n2"
+        },
+        {
+          "subject": "n2",
+          "relation": "enables",
+          "object": "n3"
+        },
+        {
+          "subject": "n2",
+          "relation": "involved in",
+          "object": "n4"
+        }
+      ]
+    }
   },
   {
     "question": "What are the human genes that encode proteins associated with biological processes related to DNA methylation and linked to diseases such as neuropathy?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen ?name_protein\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n\t?protein rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    \tskos:prefLabel ?name_protein.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n       ?protein obo:RO_0002331 ?biologic_process\n}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n      ?biologic_process rdfs:label ?name_biologic_process;\n      owl:hasExactSynonym ?synonym_name_biologic_process.\n      FILTER(REGEX(?name_biologic_process,\"DNA methylation\",\"i\")||REGEX(?synonym_name_biologic_process,\"DNA methylation\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/gene2phen> {\n        ?uri_gen obo:RO_0002331 ?disease\n}\nGRAPH <http://rdf.biogateway.eu/graph/omim> {\n       ?disease skos:prefLabel ?name_disease;\n       skos:altLabel ?alternative_name_disease.\n       FILTER(REGEX(?name_disease,\"neuropathy\",\"i\")||REGEX(?alternative_name_disease,\"neuropathy\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "protein"
+        },
+        "n2": {
+          "type": "biological process",
+          "span": "DNA methylation"
+        },
+        "n3": {
+          "type": "phenotype",
+          "span": "neuropathy"
+        },
+        "n4": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "encodes",
+          "object": "n1"
+        },
+        {
+          "subject": "n1",
+          "relation": "involved in",
+          "object": "n2"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n3"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n4"
+        }
+      ]
+    }
   },
   {
     "question": "Which human proteins are involved in the amyloid-beta metabolic process?",
     "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_protein\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon.\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot> {\n        ?protein rdfs:subClassOf <http://semanticscience.org/resource/SIO_010043>;\n    \tskos:prefLabel ?name_protein.\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n        ?protein obo:RO_0002331 ?biologic_process.\n}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n        ?biologic_process rdfs:label ?name_biologic_process;\n        owl:hasExactSynonym ?synonym_name_biologic_process.\n        FILTER(REGEX(?name_biologic_process,\"amyloid-beta metabolic process\",\"i\")||REGEX(?synonym_name_biologic_process,\"amyloid-beta metabolic process\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
-    "extractor": ""
+    "extractor": {
+      "nodes": {
+        "OUTPUT": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "biological process",
+          "span": "amyloid-beta metabolic process"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "humans"
+        }
+      },
+      "triples": [
+        {
+          "subject": "OUTPUT",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "OUTPUT",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    }
   }
 ]
