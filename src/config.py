@@ -27,5 +27,9 @@ SPARQL_TIMEOUT = 60  # seconds
 # Named graphs live under this base; e.g. the "gene" hint -> .../graph/gene
 BIOGATEWAY_GRAPH_BASE = "http://rdf.biogateway.eu/graph/"
 
-# Max tool-calling iterations in the linker's LLM loop before giving up.
-LINKER_MAX_ITERATIONS = 5
+# Max reformulation attempts per zero-result span before marking it unresolved.
+LINKER_MAX_ITERATIONS = 3
+
+# When True, a single SPARQL match triggers an extra LLM call to confirm it is
+# the intended entity before binding.  False (default) binds automatically.
+LLM_CONFIRM_SINGLE_MATCH = False
