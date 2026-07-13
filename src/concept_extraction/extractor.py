@@ -3,17 +3,17 @@ relation triples (see docs/pipeline_concept_extraction_planner_spec.md, Task 2).
 """
 from __future__ import annotations
 
-import json
-import re
 from collections import deque
+from pathlib import Path
 from typing import Any
 
-import ollama
-
-from ..config import CONCEPT_EXTRACTION_PROMPT, EXTRACTOR_MAX_RETRIES, OLLAMA_BASE_URL, OLLAMA_MODEL, OLLAMA_THINK
+from ..config import CONCEPT_EXTRACTION_PROMPT, EXTRACTOR_MAX_RETRIES
 from ..pathmap.builder import VALID_OBJECT_TYPES
 from ..pathmap.planner import RELATION_NAMES
-from .prompts_loader import render_prompt
+from ..utils.llm import LLMCallable, OllamaLLM, llm_call_with_retry
+from ..utils.prompts_loader import render_prompt
+
+_PROMPTS_DIR = Path(__file__).resolve().parent / "prompts"
 
 # Allowed entity types for a node's "type". Mirrors the builder's
 # VALID_OBJECT_TYPES, plus "disease" (the planner aliases it to "phenotype")
@@ -21,39 +21,17 @@ from .prompts_loader import render_prompt
 ENTITY_TYPES = VALID_OBJECT_TYPES | {"disease"}
 
 
-def _extract_json(text: str) -> Any | None:
-    """Parse "text" as JSON, tolerating code fences and surrounding prose.
+def _connected_to_output(nodes: dict, triples: list[dict]) -> set[str]:
+    """Return the set of node ids reachable from OUTPUT via triples, treated as an undirected graph.
 
     Parameters:
-        text (str): The raw LLM completion.
+        nodes (dict):
+            Mapping of node id to node descriptor dict.
+        triples (list[dict]):
+            List of triple dicts, each with "subject", "relation", and "object" keys.
 
     Returns:
-        Any | None: The parsed JSON value, or None if no JSON object could be
-        recovered from "text".
-    """
-    text = text.strip()
-
-    fence_match = re.search(r"```(?:json)?\s*(.*?)\s*```", text, re.DOTALL)
-    if fence_match:
-        text = fence_match.group(1).strip()
-
-    try:
-        return json.loads(text)
-    except json.JSONDecodeError:
-        pass
-
-    start, end = text.find("{"), text.rfind("}")
-    if start == -1 or end == -1 or end <= start:
-        return None
-    try:
-        return json.loads(text[start:end + 1])
-    except json.JSONDecodeError:
-        return None
-
-
-def _connected_to_output(nodes: dict, triples: list[dict]) -> set[str]:
-    """Return the set of node ids reachable from "OUTPUT" via "triples", treated
-    as an undirected graph.
+        Set of node ids connected to OUTPUT, including OUTPUT itself.
     """
     adjacency: dict[str, set[str]] = {node_id: set() for node_id in nodes}
     for triple in triples:
@@ -77,10 +55,11 @@ def _validate(parsed: Any) -> list[str]:
     """Validate a parsed concept-extraction response.
 
     Parameters:
-        parsed (Any): The JSON value returned by _extract_json (possibly None).
+        parsed (Any):
+            The JSON value returned by extract_json (possibly None).
 
     Returns:
-        list[str]: Human-readable problems found, or [] if "parsed" is valid.
+        A list of human-readable problems found, or an empty list if the response is valid.
     """
     if not isinstance(parsed, dict):
         return ["response is not a JSON object"]
@@ -141,21 +120,19 @@ def _validate(parsed: Any) -> list[str]:
     return errors
 
 
-def _repair_prompt(original_prompt: str, previous_response: str, errors: list[str]) -> str:
-    """Build a follow-up prompt asking the model to fix a previous invalid response."""
-    issues = "\n".join(f"- {e}" for e in errors)
-    return (
-        f"{original_prompt}\n\n"
-        f"Your previous answer was:\n{previous_response}\n\n"
-        f"That answer is INVALID for these reasons:\n{issues}\n\n"
-        f"Output ONLY a corrected JSON object that fixes these issues."
-    )
+def build_extraction_prompt(question: str) -> str:
+    """Render the concept-extraction prompt template for a given question.
 
+    Parameters:
+        question (str):
+            The natural-language question to embed in the prompt.
 
-def build_prompt(question: str) -> str:
-    """Render the concept-extraction prompt for "question"."""
+    Returns:
+        The fully rendered prompt string ready to send to the LLM.
+    """
     return render_prompt(
         CONCEPT_EXTRACTION_PROMPT,
+        prompts_dir=_PROMPTS_DIR,
         ENTITY_TYPES="\n".join(f"- {t}" for t in sorted(VALID_OBJECT_TYPES)),
         RELATION_NAMES="\n".join(f"- {r}" for r in RELATION_NAMES),
         QUESTION=question,
@@ -163,47 +140,37 @@ def build_prompt(question: str) -> str:
 
 
 class ConceptExtractor:
-    """Extracts typed nodes and relation triples from a natural-language question
-    via an LLM, backed by a local Ollama server.
+    """Extracts typed nodes and relation triples from a natural-language question via an LLM.
+
+    Attributes:
+        llm_client (LLMCallable):
+            Callable that takes a prompt string and returns the model's response.
+            Defaults to an OllamaLLM instance.
     """
 
-    def __init__(self, model: str = OLLAMA_MODEL, base_url: str = OLLAMA_BASE_URL, temperature: float = 0.0) -> None:
-        self._client = ollama.Client(host=base_url)
-        self._model = model
-        self._temperature = temperature
+    def __init__(self, llm_client: LLMCallable | None = None) -> None:
+        """Initializes the attributes of the class.
+
+        Parameters:
+            llm_client (LLMCallable):
+                Callable (prompt: str) -> str. Defaults to OllamaLLM.
+        """
+        self._llm = llm_client or OllamaLLM()
 
     def extract(self, question: str) -> dict[str, Any]:
         """Extract typed nodes and relation triples from a natural-language question.
 
         Parameters:
-            question (str): The natural-language question.
+            question (str):
+                The natural-language question to extract concepts from.
 
         Returns:
-            dict[str, Any]: On success, {"nodes": ..., "triples": ...} as described in
-            docs/pipeline_concept_extraction_planner_spec.md (Task 2). On failure
-            (after EXTRACTOR_MAX_RETRIES attempts), a structured error:
-            {"error": "extraction_failed", "details": [...], "raw": <last response>}.
+            On success, a dict with "nodes" and "triples" keys as described in
+            docs/pipeline_concept_extraction_planner_spec.md (Task 2).
+            On failure after EXTRACTOR_MAX_RETRIES attempts, {"error": "extraction_failed"}.
         """
-        prompt = build_prompt(question)
-
-        raw = self._complete(prompt)
-        for attempt in range(EXTRACTOR_MAX_RETRIES):
-            parsed = _extract_json(raw)
-            errors = _validate(parsed)
-            if not errors:
-                return parsed
-            if attempt == EXTRACTOR_MAX_RETRIES - 1:
-                return {"error": "extraction_failed", "details": errors, "raw": raw}
-            raw = self._complete(_repair_prompt(prompt, raw, errors))
-
-        raise AssertionError("unreachable")  # EXTRACTOR_MAX_RETRIES >= 1
-
-    def _complete(self, prompt: str) -> str:
-        response = self._client.generate(
-            model=self._model,
-            prompt=prompt,
-            think=OLLAMA_THINK,
-            options={"temperature": self._temperature},
-        )
-        return response["response"]
-
+        prompt = build_extraction_prompt(question)
+        result = llm_call_with_retry(self._llm, prompt, _validate, EXTRACTOR_MAX_RETRIES)
+        if result is None:
+            return {"error": "extraction_failed"}
+        return result
