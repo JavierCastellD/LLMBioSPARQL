@@ -14,9 +14,14 @@ EXTRACTOR_MAX_RETRIES = 3
 
 # Name of the prompt template (under src/concept_extraction/prompts/, without
 # the ".txt" extension) used for concept extraction.
-CONCEPT_EXTRACTION_PROMPT = "concept_extraction"
+CONCEPT_EXTRACTION_PROMPT = "concept_extraction_v3"
 
 # --- Entity linker ---------------------------------------------------------
+
+# Names of the prompt templates (under src/entity_linker/prompts/, without the
+# ".txt" extension) used for the two LLM calls in the entity linker.
+LINKER_PROPOSAL_PROMPT = "linker_proposal"
+LINKER_REFORMULATION_PROMPT = "linker_reformulation"
 
 # BioGateway SPARQL endpoint. SSL verification is disabled because the server
 # certificate does not validate against the default CA bundle.

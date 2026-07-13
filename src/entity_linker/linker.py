@@ -13,6 +13,8 @@ from pathlib import Path
 
 from ..config import (
     LINKER_MAX_ITERATIONS,
+    LINKER_PROPOSAL_PROMPT,
+    LINKER_REFORMULATION_PROMPT,
     LLM_CONFIRM_SINGLE_MATCH,
 )
 from ..utils.llm import LLMCallable, OllamaLLM, extract_json, llm_call_with_retry
@@ -49,7 +51,7 @@ def build_proposal_prompt(spans_payload: list[dict]) -> str:
         The fully rendered prompt string ready to send to the LLM.
     """
     return render_prompt(
-        "linker_proposal",
+        LINKER_PROPOSAL_PROMPT,
         prompts_dir=_PROMPTS_DIR,
         SPANS_JSON=json.dumps(spans_payload, indent=2),
     )
@@ -71,7 +73,7 @@ def build_reformulation_prompt(node: dict, prev_proposal: dict, menu: list[str])
         The fully rendered prompt string ready to send to the LLM.
     """
     return render_prompt(
-        "linker_reformulation",
+        LINKER_REFORMULATION_PROMPT,
         prompts_dir=_PROMPTS_DIR,
         SPAN=node["span"],
         TYPE=node["type"],
