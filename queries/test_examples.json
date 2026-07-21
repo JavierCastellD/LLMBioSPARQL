@@ -39,6 +39,22 @@
           "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "organism"
+        }
+      ],
+      "output": {
+        "attributes": [
+          {
+            "on": "n0",
+            "attribute": "synonym"
+          }
+        ]
+      }
     }
   },
   {
@@ -72,6 +88,23 @@
           "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene",
+          "span": "Fzd1"
+        }
+      ],
+      "output": {
+        "attributes": [
+          {
+            "on": "n0",
+            "attribute": "definition"
+          }
+        ]
+      }
     }
   },
   {
@@ -105,6 +138,23 @@
           "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene",
+          "span": "GLA"
+        }
+      ],
+      "output": {
+        "attributes": [
+          {
+            "on": "n0",
+            "attribute": "close match"
+          }
+        ]
+      }
     }
   },
   {
@@ -138,6 +188,27 @@
           "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene",
+          "span": "GLA"
+        }
+      ],
+      "output": {
+        "attributes": [
+          {
+            "on": "n0",
+            "attribute": "start position"
+          },
+          {
+            "on": "n0",
+            "attribute": "end position"
+          }
+        ]
+      }
     }
   },
   {
@@ -171,6 +242,23 @@
           "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene",
+          "span": "GLA"
+        }
+      ],
+      "output": {
+        "attributes": [
+          {
+            "on": "n0",
+            "attribute": "start position"
+          }
+        ]
+      }
     }
   },
   {
@@ -204,6 +292,23 @@
           "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene",
+          "span": "GLA"
+        }
+      ],
+      "output": {
+        "attributes": [
+          {
+            "on": "n0",
+            "attribute": "end position"
+          }
+        ]
+      }
     }
   },
   {
@@ -246,6 +351,17 @@
           "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "chromosome"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -340,6 +456,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "molecular function"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -411,6 +538,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -474,6 +612,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -545,6 +694,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -611,7 +771,7 @@
         {
           "span": "cytokine-mediated signaling pathways",
           "mode": "filter",
-          "term": "cytokine-mediated signaling pathways",
+          "term": "cytokine-mediated signaling pathway",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -634,6 +794,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -686,7 +857,7 @@
         {
           "span": "iron transport",
           "mode": "filter",
-          "term": "iron transport",
+          "term": "transporter.*iron|iron.*transporter",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -700,6 +871,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -789,6 +971,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -841,7 +1034,7 @@
         {
           "span": "Wnt signaling pathway",
           "mode": "filter",
-          "term": "Wnt signaling pathway",
+          "term": "Wnt signaling path",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -855,6 +1048,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -930,7 +1134,7 @@
         {
           "span": "mRNA catabolic processes",
           "mode": "filter",
-          "term": "mRNA catabolic processes",
+          "term": "mRNA catabolic process",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -944,6 +1148,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -1010,6 +1225,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -1062,7 +1288,7 @@
         {
           "span": "MAPK signaling pathway",
           "mode": "filter",
-          "term": "MAPK signaling pathway",
+          "term": "MAPK.*signaling|signaling.*MAPK",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -1076,6 +1302,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -1128,7 +1365,7 @@
         {
           "span": "pyrimidine synthesis",
           "mode": "filter",
-          "term": "pyrimidine synthesis",
+          "term": "pyrimidine.*synthesis|synthesis.*pyrimidine",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -1142,6 +1379,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -1194,7 +1442,7 @@
         {
           "span": "calcium homeostasis",
           "mode": "filter",
-          "term": "calcium homeostasis",
+          "term": "calcium.*homeostasis|homeostasis.*calcium",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -1208,6 +1456,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -1260,7 +1519,7 @@
         {
           "span": "regulation of gluconeogenesis",
           "mode": "filter",
-          "term": "regulation of gluconeogenesis",
+          "term": "regulation.*gluconeogenesis|gluconeogenesis.*regulation",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -1274,6 +1533,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -1326,7 +1596,7 @@
         {
           "span": "collagen biosynthesis",
           "mode": "filter",
-          "term": "collagen biosynthesis",
+          "term": "collagen.*biosynthesis|biosynthesis.*collagen",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -1340,6 +1610,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -1392,7 +1673,7 @@
         {
           "span": "negatively regulate the innate immune response",
           "mode": "filter",
-          "term": "negatively regulate the innate immune response",
+          "term": "negative.*regulation.*innate.*immune.*response",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -1406,6 +1687,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -1458,7 +1750,7 @@
         {
           "span": "regulating neurotransmitter secretion",
           "mode": "filter",
-          "term": "regulating neurotransmitter secretion",
+          "term": "regulation.*neurotransmitter.*secretion",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -1472,6 +1764,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -1524,7 +1827,7 @@
         {
           "span": "nerve growth factor (NGF) signaling pathway",
           "mode": "filter",
-          "term": "nerve growth factor (NGF) signaling pathway",
+          "term": "nerve growth factor signaling pathway",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -1538,6 +1841,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -1604,7 +1918,7 @@
         {
           "span": "phosphatidylinositol 3-kinase/protein kinase B pathway",
           "mode": "filter",
-          "term": "phosphatidylinositol 3-kinase/protein kinase B pathway",
+          "term": "regulation.*phosphatidylinositol 3-kinase/protein kinase B.",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -1613,7 +1927,7 @@
         {
           "span": "type 2 diabetes",
           "mode": "filter",
-          "term": "type 2 diabetes",
+          "term": "TYPE 2 DIABETES MELLITUS",
           "predicates": [
             "http://www.w3.org/2004/02/skos/core#prefLabel",
             "http://www.w3.org/2004/02/skos/core#altLabel"
@@ -1627,6 +1941,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -1693,6 +2018,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -1745,7 +2081,7 @@
         {
           "span": "regulation of autophagy",
           "mode": "filter",
-          "term": "regulation of autophagy",
+          "term": "regulation.*autophagy",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -1759,6 +2095,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -1825,6 +2172,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "biological process"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -1911,6 +2269,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -1977,7 +2346,7 @@
         {
           "span": "respond to interleukin-7",
           "mode": "filter",
-          "term": "respond to interleukin-7",
+          "term": "cellular response to interleukin-7",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -1997,6 +2366,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -2063,7 +2443,7 @@
         {
           "span": "protein-binding activity",
           "mode": "filter",
-          "term": "protein-binding activity",
+          "term": "protein binding",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -2086,6 +2466,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -2152,6 +2543,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -2226,6 +2628,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -2241,7 +2654,7 @@
         },
         "n1": {
           "type": "gene",
-          "span": "TGF"
+          "span": "TFG"
         },
         "n2": {
           "type": "organism",
@@ -2265,7 +2678,7 @@
       "input": [
         {
           "node_id": "n1",
-          "span": "TGF",
+          "span": "TFG",
           "type": "gene"
         },
         {
@@ -2276,9 +2689,9 @@
       ],
       "output": [
         {
-          "span": "TGF",
+          "span": "TFG",
           "mode": "many",
-          "term": "TGF",
+          "term": "TFG",
           "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
         },
         {
@@ -2289,6 +2702,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -2341,7 +2765,7 @@
         {
           "span": "folic acid metabolism",
           "mode": "filter",
-          "term": "folic acid metabolism",
+          "term": "folic acid metabolic process",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -2355,6 +2779,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -2482,6 +2917,21 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        },
+        {
+          "node_id": "x2",
+          "type": "phenotype"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -2577,7 +3027,7 @@
         {
           "span": "apoptotic process of B cells",
           "mode": "filter",
-          "term": "apoptotic process of B cells",
+          "term": "B cell apoptotic process",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -2586,7 +3036,7 @@
         {
           "span": "cytoplasm or nucleus",
           "mode": "filter",
-          "term": "cytoplasm or nucleus",
+          "term": "cytoplasm|nucleus",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -2600,6 +3050,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -2711,13 +3172,24 @@
         {
           "span": "DNA damage repair",
           "mode": "filter",
-          "term": "DNA damage repair",
+          "term": "DNA.*damage|damage.*DNA",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
           ]
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -2836,6 +3308,17 @@
           ]
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -2954,6 +3437,17 @@
           ]
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -3057,6 +3551,17 @@
           ]
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -3167,6 +3672,17 @@
           ]
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -3285,6 +3801,17 @@
           ]
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -3359,6 +3886,17 @@
           ]
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -3440,7 +3978,7 @@
         {
           "span": "tumor necrosis",
           "mode": "filter",
-          "term": "tumor necrosis",
+          "term": "tumor.*necrosis|necrosis.*tumor",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -3456,6 +3994,17 @@
           ]
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -3553,6 +4102,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   },
   {
@@ -3619,6 +4179,17 @@
           "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
         }
       ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
     }
   }
 ]
