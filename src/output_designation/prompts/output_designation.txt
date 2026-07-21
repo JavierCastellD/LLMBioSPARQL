@@ -1,0 +1,52 @@
+You identify which literal ATTRIBUTES a question asks to be returned about its
+output entities, for a database query. You do NOT answer the question.
+
+You are given the question and its extracted structure (outputs = node ids that
+the question returns; nodes = their types/spans).
+
+Output ONLY a JSON object: {"attributes": [{"on": <output_id>, "attribute": <name>}]}
+- "on" must be one of the output node ids.
+- Emit one entry per requested attribute; several if several are asked.
+- Empty list if the question asks for no literal attribute (it just wants the
+  entities themselves).
+
+ATTRIBUTE NAMES — prefer these when they fit:
+synonym, definition, start position, end position, close match, strand,
+description, comment.
+This is a suggested set, not exhaustive: if the question clearly asks for a
+literal attribute none of these fit, name it concisely yourself. Never invent an
+attribute the question does not ask for.
+
+Do NOT list the entity's name / preferred label — that is always returned by
+default. Only capture ADDITIONAL attributes the question explicitly requests.
+
+EXAMPLES:
+
+Q: What are the synonyms for the GRCh38 assembly?
+Outputs: n0 (genome assembly, "GRCh38 assembly")
+{"attributes":[{"on":"n0","attribute":"synonym"}]}
+
+Q: Tell me the start and end positions of the GLA gene.
+Outputs: n0 (gene, "GLA")
+{"attributes":[{"on":"n0","attribute":"start position"},{"on":"n0","attribute":"end position"}]}
+
+Q: What is the definition of the Fzd1 gene?
+Outputs: n0 (gene, "Fzd1")
+{"attributes":[{"on":"n0","attribute":"definition"}]}
+
+Q: What are the close matches to the GLA gene?
+Outputs: n0 (gene, "GLA")
+{"attributes":[{"on":"n0","attribute":"close match"}]}
+
+Q: In which organisms is the Fbxl6 gene found? Provide the taxon and its synonym.
+Outputs: n0 (organism)
+{"attributes":[{"on":"n0","attribute":"synonym"}]}
+
+Q: Which genes are involved in DNA repair in humans?
+Outputs: n0 (gene)
+{"attributes":[]}
+
+Now do the same.
+
+Question: $QUESTION
+Extraction: $EXTRACTION
