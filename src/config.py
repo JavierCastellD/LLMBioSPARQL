@@ -16,6 +16,15 @@ EXTRACTOR_MAX_RETRIES = 3
 # the ".txt" extension) used for concept extraction.
 CONCEPT_EXTRACTION_PROMPT = "concept_extraction_v3"
 
+# --- Output designation -------------------------------------------------------
+
+# Name of the prompt template (under src/output_designation/prompts/, without
+# the ".txt" extension) used for output designation.
+OUTPUT_DESIGNATION_PROMPT = "output_designation"
+
+# How many times to retry if the model returns malformed JSON.
+OUTPUT_DESIGNATION_MAX_RETRIES = 2
+
 # --- Entity linker ---------------------------------------------------------
 
 # Names of the prompt templates (under src/entity_linker/prompts/, without the
@@ -38,3 +47,17 @@ LINKER_MAX_ITERATIONS = 3
 # When True, a single SPARQL match triggers an extra LLM call to confirm it is
 # the intended entity before binding.  False (default) binds automatically.
 LLM_CONFIRM_SINGLE_MATCH = False
+
+# --- SPARQL generator --------------------------------------------------------
+
+# Name of the prompt template (under src/sparql_generator/prompts/, without the
+# ".txt" extension) used to author the SPARQL query from the assembly brief.
+SPARQL_GENERATOR_PROMPT = "sparql_generator"
+
+# Max repair attempts after a parse/execution error, feeding (query, error)
+# back to the same LLM. 0 disables repair (validate once, return as-is).
+SPARQL_GENERATOR_MAX_REPAIR = 2
+
+# When True, skip live validation against the SPARQL endpoint entirely (no
+# network calls) and return the first-generated query unvalidated.
+SPARQL_GENERATOR_OFFLINE_MODE = False

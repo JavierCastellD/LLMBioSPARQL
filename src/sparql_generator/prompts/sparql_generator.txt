@@ -1,0 +1,245 @@
+You author a SPARQL query for the BioGateway knowledge graph from a JSON
+"brief" prepared by code. The brief hands you every predicate, graph, and IRI
+you may use, as explicit values to COPY, never recall from memory. You must
+not emit any predicate, graph, or IRI that is not present in the brief's
+"edges", "grounding", "projection", or "prefixes"/"graph_iri_pattern" fields.
+
+The brief is a relation skeleton plus resolved facts, NOT a finished query.
+You own the structure: assemble the given edges into GRAPH blocks, and ADD
+triples the skeleton lacks (entity anchors, name projections, attribute
+triples, joins). DROP any brief element that is not needed to answer this
+question (e.g. a grounding for a node no edge or output references).
+
+Your responsibilities, every time:
+
+1. ASSEMBLE the "edges" into GRAPH blocks (one block per distinct graph),
+   joining on shared variables. Orient every edge exactly as given
+   (subject -> object); never flip it. Variable names are cosmetic — name
+   them however is clearest.
+
+2. RECONCILE against outputs/projection (critical, do this even though the
+   skeleton usually omits it): for every id in "outputs", make sure its name
+   projection ("projection.outputs[id].name_predicate" applied to that node,
+   bound to a fresh variable) and, if present, its class anchor
+   ("rdfs:subClassOf projection.outputs[id].class_anchor") triples appear
+   somewhere in the query — generate them if the skeleton's edges don't
+   already include them — and add that name variable to SELECT. For every
+   entry in "projection.attributes", make sure its triple (that entry's
+   "predicate" applied to the "on" node, bound to a fresh variable) appears,
+   generating it if missing, and add that variable to SELECT too. This is
+   your main "fill in what the skeleton is missing" duty — the skeleton
+   models relations between entities, it usually does NOT include the output
+   or attribute triples.
+
+3. MATERIALIZE every entry in "grounding" inside its own graph's GRAPH block:
+   - mode "bind" or "many": add `?var {label_predicate} "{term}" .`
+   - mode "filter": bind each of "predicates" to its own variable on the same
+     subject, and add one FILTER with a REGEX disjunct per predicate:
+     `FILTER( REGEX(?v1,"{term}","i") || REGEX(?v2,"{term}","i") )`.
+
+4. ADD any other structurally necessary triple not in the brief (anchors,
+   joins, intermediate variables for bridge hops). DROP any brief element
+   (typically a stray "grounding" entry) that nothing in "edges" or
+   "projection" actually connects to — leave a short comment noting what you
+   dropped and why.
+
+5. NEVER invent a predicate, graph, or IRI. If something the question needs
+   is genuinely absent from the brief, omit it and leave a `# NOTE:` comment
+   rather than making one up.
+
+6. Wrap every GRAPH's IRI using "graph_iri_pattern" with the graph's short
+   name substituted in. Emit `PREFIX` lines only for prefixes you actually
+   used, taken verbatim from "prefixes". Finish with `SELECT DISTINCT` of
+   every projected variable (all output names + all attribute variables).
+
+Output ONLY the SPARQL query — no prose, no JSON, no markdown fences.
+
+EXAMPLES
+
+--- Example (a): resource path with a bridge, a filter, and a bind ---
+
+Brief:
+{
+  "question": "Which genes are involved in DNA repair in humans?",
+  "outputs": ["n0"],
+  "nodes": {"n0": {"type": "gene"}, "n1": {"type": "biological process", "span": "DNA repair"}, "n2": {"type": "organism", "span": "humans"}},
+  "edges": [
+    {"subject": "n0", "predicate": "sio:SIO_010078", "object": "x1", "subject_graph": "gene", "note": "gene to biological_process bridge via 'encodes'"},
+    {"subject": "x1", "predicate": "obo:RO_0002331", "object": "n1", "subject_graph": "prot2bp", "note": "gene to biological_process bridge via 'involved in'"},
+    {"subject": "n0", "predicate": "obo:RO_0002162", "object": "n2", "subject_graph": "gene"}
+  ],
+  "grounding": {
+    "n1": {"mode": "filter", "graph": "go", "term": "DNA repair", "predicates": ["rdfs:label", "owl:hasExactSynonym"]},
+    "n2": {"mode": "bind", "graph": "taxon", "term": "Homo sapiens", "label_predicate": "rdfs:label"}
+  },
+  "projection": {
+    "outputs": {"n0": {"graph": "gene", "name_predicate": "skos:prefLabel", "class_anchor": "sio:SIO_010035"}},
+    "attributes": []
+  },
+  "prefixes": {"rdfs": "http://www.w3.org/2000/01/rdf-schema#", "obo": "http://purl.obolibrary.org/obo/", "skos": "http://www.w3.org/2004/02/skos/core#", "sio": "http://semanticscience.org/resource/", "owl": "http://www.geneontology.org/formats/oboInOwl#"},
+  "graph_iri_pattern": "http://rdf.biogateway.eu/graph/{graph}"
+}
+
+Authored SPARQL:
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX obo:  <http://purl.obolibrary.org/obo/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX sio:  <http://semanticscience.org/resource/>
+PREFIX owl:  <http://www.geneontology.org/formats/oboInOwl#>
+SELECT DISTINCT ?name_gen
+WHERE {
+  GRAPH <http://rdf.biogateway.eu/graph/prot2bp> {
+      ?protein obo:RO_0002331 ?process .
+  }
+  GRAPH <http://rdf.biogateway.eu/graph/go> {
+      ?process rdfs:label ?name_proc ; owl:hasExactSynonym ?syn_proc .
+      FILTER( REGEX(?name_proc,"DNA repair","i") || REGEX(?syn_proc,"DNA repair","i") )
+  }
+  GRAPH <http://rdf.biogateway.eu/graph/gene> {
+      ?uri_gen rdfs:subClassOf sio:SIO_010035 ;   # anchor: GENERATED (not in skeleton)
+               sio:SIO_010078 ?protein ;
+               skos:prefLabel ?name_gen ;          # projection: GENERATED
+               obo:RO_0002162 ?taxon .
+  }
+  GRAPH <http://rdf.biogateway.eu/graph/taxon> {
+      ?taxon rdfs:label "Homo sapiens" .           # bind grounding
+  }
+}
+
+--- Example (b): attribute-only query, no relation path ---
+
+Brief:
+{
+  "question": "What are the synonyms for the GRCh38 assembly?",
+  "outputs": ["n0"],
+  "nodes": {"n0": {"type": "genome assembly", "span": "GRCh38 assembly"}},
+  "edges": [],
+  "grounding": {"n0": {"mode": "bind", "graph": "gene", "term": "GRCh38", "label_predicate": "skos:prefLabel"}},
+  "projection": {
+    "outputs": {"n0": {"graph": "gene", "name_predicate": "skos:prefLabel"}},
+    "attributes": [{"on": "n0", "predicate": "skos:altLabel", "label": "synonym"}]
+  },
+  "prefixes": {"skos": "http://www.w3.org/2004/02/skos/core#"},
+  "graph_iri_pattern": "http://rdf.biogateway.eu/graph/{graph}"
+}
+
+Authored SPARQL:
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+SELECT DISTINCT ?name_n0 ?synonym_n0
+WHERE {
+  GRAPH <http://rdf.biogateway.eu/graph/gene> {
+      ?n0 skos:prefLabel "GRCh38" .        # bind grounding
+      BIND("GRCh38" AS ?name_n0)           # projection: GENERATED (same predicate as grounding, so reuse the literal)
+      ?n0 skos:altLabel ?synonym_n0 .      # attribute: GENERATED (synonym)
+  }
+}
+
+--- Example (c): multi-output query ---
+
+Brief:
+{
+  "question": "Which genes are associated with melanoma, and what proteins do they encode, in humans?",
+  "outputs": ["n0", "n1"],
+  "nodes": {"n0": {"type": "gene"}, "n1": {"type": "protein"}, "n2": {"type": "phenotype", "span": "melanoma"}, "n3": {"type": "organism", "span": "humans"}},
+  "edges": [
+    {"subject": "n0", "predicate": "obo:RO_0002331", "object": "n2", "subject_graph": "gene2phen"},
+    {"subject": "n0", "predicate": "sio:SIO_010078", "object": "n1", "subject_graph": "gene"},
+    {"subject": "n0", "predicate": "obo:RO_0002162", "object": "n3", "subject_graph": "gene"}
+  ],
+  "grounding": {
+    "n2": {"mode": "filter", "graph": "omim", "term": "melanoma", "predicates": ["skos:prefLabel", "skos:altLabel"]},
+    "n3": {"mode": "bind", "graph": "taxon", "term": "Homo sapiens", "label_predicate": "rdfs:label"}
+  },
+  "projection": {
+    "outputs": {
+      "n0": {"graph": "gene", "name_predicate": "skos:prefLabel", "class_anchor": "sio:SIO_010035"},
+      "n1": {"graph": "prot", "name_predicate": "skos:prefLabel", "class_anchor": "sio:SIO_010043"}
+    },
+    "attributes": []
+  },
+  "prefixes": {"rdfs": "http://www.w3.org/2000/01/rdf-schema#", "obo": "http://purl.obolibrary.org/obo/", "skos": "http://www.w3.org/2004/02/skos/core#", "sio": "http://semanticscience.org/resource/"},
+  "graph_iri_pattern": "http://rdf.biogateway.eu/graph/{graph}"
+}
+
+Authored SPARQL:
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX obo:  <http://purl.obolibrary.org/obo/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX sio:  <http://semanticscience.org/resource/>
+SELECT DISTINCT ?name_n0 ?name_n1
+WHERE {
+  GRAPH <http://rdf.biogateway.eu/graph/gene2phen> {
+      ?n0 obo:RO_0002331 ?disease .
+  }
+  GRAPH <http://rdf.biogateway.eu/graph/omim> {
+      ?disease skos:prefLabel ?name_disease ; skos:altLabel ?syn_disease .
+      FILTER( REGEX(?name_disease,"melanoma","i") || REGEX(?syn_disease,"melanoma","i") )
+  }
+  GRAPH <http://rdf.biogateway.eu/graph/gene> {
+      ?n0 rdfs:subClassOf sio:SIO_010035 ;   # anchor: GENERATED
+          skos:prefLabel ?name_n0 ;           # projection: GENERATED
+          sio:SIO_010078 ?n1 ;
+          obo:RO_0002162 ?taxon .
+  }
+  GRAPH <http://rdf.biogateway.eu/graph/prot> {
+      ?n1 rdfs:subClassOf sio:SIO_010043 ;   # anchor: GENERATED
+          skos:prefLabel ?name_n1 .           # projection: GENERATED
+  }
+  GRAPH <http://rdf.biogateway.eu/graph/taxon> {
+      ?taxon rdfs:label "Homo sapiens" .      # bind grounding
+  }
+}
+
+--- Example (d): a grounding must be dropped ---
+
+Brief:
+{
+  "question": "Which genes are involved in DNA repair in humans?",
+  "outputs": ["n0"],
+  "nodes": {"n0": {"type": "gene"}, "n1": {"type": "biological process", "span": "DNA repair"}, "n2": {"type": "organism", "span": "humans"}},
+  "edges": [
+    {"subject": "n0", "predicate": "obo:RO_0002331", "object": "n1", "subject_graph": "gene2bp"},
+    {"subject": "n0", "predicate": "obo:RO_0002162", "object": "n2", "subject_graph": "gene"}
+  ],
+  "grounding": {
+    "n1": {"mode": "filter", "graph": "go", "term": "DNA repair", "predicates": ["rdfs:label", "owl:hasExactSynonym"]},
+    "n2": {"mode": "bind", "graph": "taxon", "term": "Homo sapiens", "label_predicate": "rdfs:label"},
+    "n3": {"mode": "bind", "graph": "taxon", "term": "Mus musculus", "label_predicate": "rdfs:label"}
+  },
+  "projection": {
+    "outputs": {"n0": {"graph": "gene", "name_predicate": "skos:prefLabel", "class_anchor": "sio:SIO_010035"}},
+    "attributes": []
+  },
+  "prefixes": {"rdfs": "http://www.w3.org/2000/01/rdf-schema#", "obo": "http://purl.obolibrary.org/obo/", "skos": "http://www.w3.org/2004/02/skos/core#", "sio": "http://semanticscience.org/resource/", "owl": "http://www.geneontology.org/formats/oboInOwl#"},
+  "graph_iri_pattern": "http://rdf.biogateway.eu/graph/{graph}"
+}
+
+Authored SPARQL:
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX obo:  <http://purl.obolibrary.org/obo/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX sio:  <http://semanticscience.org/resource/>
+PREFIX owl:  <http://www.geneontology.org/formats/oboInOwl#>
+SELECT DISTINCT ?name_n0
+WHERE {
+  GRAPH <http://rdf.biogateway.eu/graph/gene2bp> {
+      ?n0 obo:RO_0002331 ?n1 .
+  }
+  GRAPH <http://rdf.biogateway.eu/graph/go> {
+      ?n1 rdfs:label ?name_n1 ; owl:hasExactSynonym ?syn_n1 .
+      FILTER( REGEX(?name_n1,"DNA repair","i") || REGEX(?syn_n1,"DNA repair","i") )
+  }
+  GRAPH <http://rdf.biogateway.eu/graph/gene> {
+      ?n0 rdfs:subClassOf sio:SIO_010035 ;   # anchor: GENERATED
+          skos:prefLabel ?name_n0 ;           # projection: GENERATED
+          obo:RO_0002162 ?n2 .
+  }
+  GRAPH <http://rdf.biogateway.eu/graph/taxon> {
+      ?n2 rdfs:label "Homo sapiens" .         # bind grounding
+  }
+  # grounding "n3" (Mus musculus) DROPPED: no edge or projection references it.
+}
+
+Now do the same for this brief. Output ONLY the SPARQL query.
+
+Brief: $BRIEF
