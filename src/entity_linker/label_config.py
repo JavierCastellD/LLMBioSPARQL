@@ -3,7 +3,8 @@
 For each named graph, scans its spreadsheet sheet for literal-typed predicates
 whose property label contains "name", "label", "synonym", or "title", and maps
 them to the friendly names exposed to the LLM:
-  "preferred label", "label", "synonyms", "title".
+  "preferred label", "label", "synonym", "exact synonym", "broad synonym",
+  "narrow synonym", "related synonym", "title".
 """
 from __future__ import annotations
 
@@ -16,10 +17,11 @@ import openpyxl
 FALLBACK = {
     "preferred label": ["http://www.w3.org/2004/02/skos/core#prefLabel"],
     "label":           ["http://www.w3.org/2000/01/rdf-schema#label"],
-    "synonyms": [
-        "http://www.w3.org/2004/02/skos/core#altLabel",
-        "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym",
-    ],
+    "synonym":         ["http://www.w3.org/2004/02/skos/core#altLabel"],
+    "exact synonym":   ["http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"],
+    "broad synonym":   ["http://www.geneontology.org/formats/oboInOwl#hasBroadSynonym"],
+    "narrow synonym":  ["http://www.geneontology.org/formats/oboInOwl#hasNarrowSynonym"],
+    "related synonym": ["http://www.geneontology.org/formats/oboInOwl#hasRelatedSynonym"],
 }
 
 # Type alias: graph_name -> {friendly_name -> [predicate_iri, ...]}
@@ -43,7 +45,15 @@ def _friendly_name(prop_label: str) -> str | None:
     """
     lbl = prop_label.lower()
     if "synonym" in lbl:
-        return "synonyms"
+        if "exact" in lbl:
+            return "exact synonym"
+        if "broad" in lbl:
+            return "broad synonym"
+        if "narrow" in lbl:
+            return "narrow synonym"
+        if "related" in lbl:
+            return "related synonym"
+        return "synonym"
     # \bname\b matches "has name" but NOT "namespace" or "obo_namespace"
     if re.search(r"\bname\b", lbl):
         return "preferred label"
@@ -51,6 +61,42 @@ def _friendly_name(prop_label: str) -> str | None:
         return "label"
     if "title" in lbl:
         return "title"
+    return None
+
+
+def graph_names_from_classification(wb) -> list[str]:
+    """Collect short graph names from the workbook's 'graphs' classification sheet.
+
+    Parameters:
+        wb: An openpyxl Workbook for BGW_graphs.xlsx.
+
+    Returns:
+        Short graph names (e.g. "gene", "taxon") for every Entity/Relation graph.
+    """
+    graph_names: list[str] = []
+    for row in wb["graphs"].iter_rows(min_row=2, values_only=True):
+        iri, gtype = row[0], row[1]
+        if iri and gtype and gtype in ("Entity graph", "Relation graph"):
+            name = str(iri).rstrip("/").split("/")[-1]
+            graph_names.append(name)
+    return graph_names
+
+
+def find_graph_sheet(wb, graph_name: str):
+    """Locate a graph's worksheet, trying both spreadsheet naming conventions.
+
+    Parameters:
+        wb: An openpyxl Workbook for BGW_graphs.xlsx.
+        graph_name (str):
+            Short graph name (e.g. "gene", "taxon").
+
+    Returns:
+        The matching Worksheet, or None if neither "<name> graph" nor "<name>"
+        exists as a sheet.
+    """
+    for candidate in (f"{graph_name} graph", graph_name):
+        if candidate in wb.sheetnames:
+            return wb[candidate]
     return None
 
 
@@ -69,22 +115,9 @@ def build_label_config(excel_path: Path) -> LabelConfig:
     """
     wb = openpyxl.load_workbook(excel_path)
 
-    # Collect short graph names from the 'graphs' classification sheet.
-    graph_names: list[str] = []
-    for row in wb["graphs"].iter_rows(min_row=2, values_only=True):
-        iri, gtype = row[0], row[1]
-        if iri and gtype and gtype in ("Entity graph", "Relation graph"):
-            name = str(iri).rstrip("/").split("/")[-1]
-            graph_names.append(name)
-
     config: LabelConfig = {}
-    for graph_name in graph_names:
-        # Sheet names follow two conventions: "gene graph" or plain "taxon".
-        ws = None
-        for candidate in (f"{graph_name} graph", graph_name):
-            if candidate in wb.sheetnames:
-                ws = wb[candidate]
-                break
+    for graph_name in graph_names_from_classification(wb):
+        ws = find_graph_sheet(wb, graph_name)
         if ws is None:
             continue
 
