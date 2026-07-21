@@ -1,54 +1,44 @@
-"""Run a single question through the full NL->SPARQL pipeline and display each
-stage's result: concept extraction, output designation, entity linking, path
-planning, and SPARQL generation.
+"""Run the full NL->SPARQL pipeline over a batch of questions and save the results.
 
 Usage:
-    python tests/run_pipeline.py "Which genes are involved in DNA repair in humans?"
+    python tests/run_pipeline.py <input.json> <output.json>
+
+<input.json> is a list of objects, each with at least a "question" key (any
+other keys are ignored -- every stage is run fresh, from the question alone).
+<output.json> is written as a list of Text2SPARQLPipeline.run() results, one
+per question: {"question", "extraction", "output_designation", "linker",
+"plan", "generation"} (or just {"question", "extraction", "skipped"} if
+concept extraction failed).
 """
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.pathmap.planner import print_resolved
 from src.pipeline import Text2SPARQLPipeline
 
 
 def main() -> None:
-    if len(sys.argv) != 2:
-        print(f"Usage: python {Path(__file__).name} \"<question>\"")
-        sys.exit(1)
-    question = sys.argv[1]
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("input", type=Path, help='JSON file with a list of {"question": ...} objects')
+    parser.add_argument("output", type=Path, help="Where to write the JSON results")
+    args = parser.parse_args()
 
-    result = Text2SPARQLPipeline().run(question)
+    questions = json.loads(args.input.read_text(encoding="utf-8"))
 
-    print("--- Concept extraction ---")
-    print(json.dumps(result["extraction"], indent=2, ensure_ascii=False))
-    if "skipped" in result:
-        print(f"\nSKIPPED: {result['skipped']}")
-        return
+    pipeline = Text2SPARQLPipeline()
+    results = []
+    for i, item in enumerate(questions, start=1):
+        question = item["question"]
+        print(f"[{i}/{len(questions)}] {question}")
+        results.append(pipeline.run(question))
 
-    print("\n--- Output designation ---")
-    print(json.dumps(result["output_designation"], indent=2, ensure_ascii=False))
-
-    print("\n--- Entity linker ---")
-    print(json.dumps(result["linker"], indent=2, ensure_ascii=False))
-
-    print("\n--- Path plan ---")
-    print_resolved(result["plan"])
-
-    print("\n--- SPARQL generation ---")
-    generation = result["generation"]
-    print(generation["query"])
-    if generation.get("warnings"):
-        print("\nBrief-assembly warnings:")
-        for w in generation["warnings"]:
-            print(f"  - {w}")
-    if "error" in generation:
-        print(f"\nLive validation never succeeded: {generation['error']}")
+    args.output.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"Wrote {len(results)} results to {args.output}")
 
 
 if __name__ == "__main__":
