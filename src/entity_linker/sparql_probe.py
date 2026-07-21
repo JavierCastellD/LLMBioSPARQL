@@ -24,8 +24,11 @@ from ..config import (
 if not SPARQL_VERIFY_SSL:
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# 20 rows is enough to distinguish 0 / 1 / many distinct URIs.
-_LIMIT = 20
+# Default row cap: 20 is enough to distinguish 0 / 1 / many distinct URIs, which
+# is all the linker's branching needs. Callers may override per-call (e.g. a
+# larger number, or None for unbounded) when an accurate count matters more
+# than speed — such as ad-hoc diagnostics.
+DEFAULT_LIMIT: int | None = 20
 
 
 def _graph_iri(graph_name: str) -> str:
@@ -61,14 +64,20 @@ def _label_vars(predicate_iris: list[str]) -> list[str]:
     return [f"label{i}" for i in range(len(predicate_iris))]
 
 
-def _build_query(graph_iri: str, predicate_iris: list[str], term: str, mode: str) -> str:
-    """Build the SPARQL SELECT that retrieves up to _LIMIT matching (uri, label...) rows.
+def _build_query(
+    graph_iri: str,
+    predicate_iris: list[str],
+    term: str,
+    mode: str,
+    limit: int | None = DEFAULT_LIMIT,
+) -> str:
+    """Build the SPARQL SELECT that retrieves up to `limit` matching (uri, label...) rows.
 
-    Each predicate is bound to its own OPTIONAL variable on the same subject, so an
-    entity only needs a value for AT LEAST ONE of the listed predicates — it is not
-    excluded just because it lacks one of the others. The regex is OR'd across
-    whichever variables are bound, guarded by BOUND() so unbound optionals don't
-    error the FILTER.
+    Each predicate gets its own UNION branch, each a plain indexed triple pattern
+    (?uri <predicate> ?labelN, filtered by regex). An entity matches if it has a
+    value for AT LEAST ONE of the listed predicates — it is not excluded just
+    because it lacks one of the others — without the cost of an unrestricted
+    "?uri ?p ?o" scan over the whole graph that an OPTIONAL-based version would need.
 
     Parameters:
         graph_iri (str):
@@ -79,6 +88,9 @@ def _build_query(graph_iri: str, predicate_iris: list[str], term: str, mode: str
             Search term or regex pattern depending on mode.
         mode (str):
             Either "exact" (term is escaped and anchored) or "regex" (term is used as-is).
+        limit (int | None):
+            Max rows to return, or None for no LIMIT clause (unbounded — useful
+            for diagnostics, but can be slow on broad regex terms).
 
     Returns:
         A SPARQL SELECT query string.
@@ -92,22 +104,20 @@ def _build_query(graph_iri: str, predicate_iris: list[str], term: str, mode: str
     escaped_pattern = _sparql_string_escape(pattern)
 
     var_names = _label_vars(predicate_iris)
-    optionals = "\n    ".join(
-        f"OPTIONAL {{ ?uri <{p}> ?{v} }}" for p, v in zip(predicate_iris, var_names)
-    )
-    filter_str = " || ".join(
-        f'(BOUND(?{v}) && REGEX(STR(?{v}), "{escaped_pattern}", "i"))' for v in var_names
-    )
+    branches = [
+        f'{{ ?uri <{p}> ?{v} . FILTER(REGEX(STR(?{v}), "{escaped_pattern}", "i")) }}'
+        for p, v in zip(predicate_iris, var_names)
+    ]
+    union_body = "\n    UNION\n    ".join(branches)
     select_vars = " ".join(f"?{v}" for v in var_names)
+    limit_clause = f" LIMIT {limit}" if limit is not None else ""
 
     return (
         f"SELECT DISTINCT ?uri {select_vars} WHERE {{\n"
         f"  GRAPH <{graph_iri}> {{\n"
-        f"    ?uri ?_p_ ?_o_ .\n"
-        f"    {optionals}\n"
-        f"    FILTER({filter_str})\n"
+        f"    {union_body}\n"
         f"  }}\n"
-        f"}} LIMIT {_LIMIT}"
+        f"}}{limit_clause}"
     )
 
 
@@ -119,6 +129,7 @@ def probe(
     endpoint: str = BIOGATEWAY_SPARQL_ENDPOINT,
     timeout: int = SPARQL_TIMEOUT,
     verify_ssl: bool = SPARQL_VERIFY_SSL,
+    limit: int | None = DEFAULT_LIMIT,
 ) -> dict:
     """Run a SPARQL probe against a BioGateway named graph and return result metadata.
 
@@ -137,6 +148,11 @@ def probe(
             Request timeout in seconds. Defaults to SPARQL_TIMEOUT.
         verify_ssl (bool):
             Whether to verify SSL certificates. Defaults to SPARQL_VERIFY_SSL.
+        limit (int | None):
+            Max rows to fetch, or None for unbounded. Defaults to DEFAULT_LIMIT (20).
+            The linker's bind/many/filter branching only needs 0 vs 1 vs many, so
+            the default is plenty; raise it (or pass None) when the exact
+            "candidates" count matters, e.g. for diagnostics.
 
     Returns:
         A dict with keys "count" (number of distinct URIs found), "matches" (list of
@@ -144,7 +160,7 @@ def probe(
         Raises requests.HTTPError on HTTP errors.
     """
     full_iri = _graph_iri(graph)
-    query = _build_query(full_iri, predicate_iris, term, mode)
+    query = _build_query(full_iri, predicate_iris, term, mode, limit)
 
     resp = requests.post(
         endpoint,
