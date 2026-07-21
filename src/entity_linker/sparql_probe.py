@@ -56,14 +56,25 @@ def _sparql_string_escape(s: str) -> str:
     return s.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n")
 
 
+def _label_vars(predicate_iris: list[str]) -> list[str]:
+    """Return one SPARQL variable name per predicate, e.g. ["label0", "label1"]."""
+    return [f"label{i}" for i in range(len(predicate_iris))]
+
+
 def _build_query(graph_iri: str, predicate_iris: list[str], term: str, mode: str) -> str:
-    """Build the SPARQL SELECT that retrieves up to _LIMIT matching (uri, pred, label) rows.
+    """Build the SPARQL SELECT that retrieves up to _LIMIT matching (uri, label...) rows.
+
+    Each predicate is bound to its own OPTIONAL variable on the same subject, so an
+    entity only needs a value for AT LEAST ONE of the listed predicates — it is not
+    excluded just because it lacks one of the others. The regex is OR'd across
+    whichever variables are bound, guarded by BOUND() so unbound optionals don't
+    error the FILTER.
 
     Parameters:
         graph_iri (str):
             Full IRI of the named graph to query.
         predicate_iris (list[str]):
-            List of predicate IRIs to filter on.
+            List of predicate IRIs to search across.
         term (str):
             Search term or regex pattern depending on mode.
         mode (str):
@@ -72,22 +83,29 @@ def _build_query(graph_iri: str, predicate_iris: list[str], term: str, mode: str
     Returns:
         A SPARQL SELECT query string.
     """
-    preds = ", ".join(f"<{p}>" for p in predicate_iris)
-
     if mode == "exact":
         # Escape regex metacharacters in the literal term, then anchor it.
         pattern = "^" + re.escape(term) + "$"
-        filter_str = f'FILTER(REGEX(STR(?label), "{_sparql_string_escape(pattern)}", "i"))'
     else:
         # The LLM already produced a regex pattern; just pass it through.
-        filter_str = f'FILTER(REGEX(STR(?label), "{_sparql_string_escape(term)}", "i"))'
+        pattern = term
+    escaped_pattern = _sparql_string_escape(pattern)
+
+    var_names = _label_vars(predicate_iris)
+    optionals = "\n    ".join(
+        f"OPTIONAL {{ ?uri <{p}> ?{v} }}" for p, v in zip(predicate_iris, var_names)
+    )
+    filter_str = " || ".join(
+        f'(BOUND(?{v}) && REGEX(STR(?{v}), "{escaped_pattern}", "i"))' for v in var_names
+    )
+    select_vars = " ".join(f"?{v}" for v in var_names)
 
     return (
-        f"SELECT DISTINCT ?uri ?pred ?label WHERE {{\n"
+        f"SELECT DISTINCT ?uri {select_vars} WHERE {{\n"
         f"  GRAPH <{graph_iri}> {{\n"
-        f"    ?uri ?pred ?label .\n"
-        f"    FILTER(?pred IN ({preds}))\n"
-        f"    {filter_str}\n"
+        f"    ?uri ?_p_ ?_o_ .\n"
+        f"    {optionals}\n"
+        f"    FILTER({filter_str})\n"
         f"  }}\n"
         f"}} LIMIT {_LIMIT}"
     )
@@ -139,15 +157,26 @@ def probe(
 
     bindings = resp.json()["results"]["bindings"]
 
+    # Compile the same pattern used in the query to find which bound predicate
+    # actually satisfied the regex, for reporting in "matches".
+    pattern = "^" + re.escape(term) + "$" if mode == "exact" else term
+    compiled = re.compile(pattern, re.IGNORECASE)
+    var_names = _label_vars(predicate_iris)
+
     # Deduplicate by URI so that one entity matching via several predicates still counts as 1.
     seen_uris: set[str] = set()
     matches: list[dict] = []
     for b in bindings:
         uri = b["uri"]["value"] if "uri" in b else ""
-        label = b["label"]["value"] if "label" in b else ""
-        pred = b["pred"]["value"] if "pred" in b else ""
-        if uri not in seen_uris:
-            seen_uris.add(uri)
-            matches.append({"uri": uri, "label": label, "predicate": pred})
+        if not uri or uri in seen_uris:
+            continue
+        seen_uris.add(uri)
+
+        label, pred = "", predicate_iris[0]
+        for v, p in zip(var_names, predicate_iris):
+            if v in b and compiled.search(b[v]["value"]):
+                label, pred = b[v]["value"], p
+                break
+        matches.append({"uri": uri, "label": label, "predicate": pred})
 
     return {"count": len(seen_uris), "matches": matches, "query": query}
