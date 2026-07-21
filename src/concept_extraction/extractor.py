@@ -21,17 +21,19 @@ _PROMPTS_DIR = Path(__file__).resolve().parent / "prompts"
 ENTITY_TYPES = VALID_OBJECT_TYPES | {"disease"}
 
 
-def _connected_to_output(nodes: dict, triples: list[dict]) -> set[str]:
-    """Return the set of node ids reachable from OUTPUT via triples, treated as an undirected graph.
+def _connected_to_output(nodes: dict, triples: list[dict], outputs: list[str]) -> set[str]:
+    """Return the set of node ids reachable from any output id via triples, treated as an undirected graph.
 
     Parameters:
         nodes (dict):
             Mapping of node id to node descriptor dict.
         triples (list[dict]):
             List of triple dicts, each with "subject", "relation", and "object" keys.
+        outputs (list[str]):
+            Node ids the question asks to return (BFS roots).
 
     Returns:
-        Set of node ids connected to OUTPUT, including OUTPUT itself.
+        Set of node ids connected to any output id, including the output ids themselves.
     """
     adjacency: dict[str, set[str]] = {node_id: set() for node_id in nodes}
     for triple in triples:
@@ -40,8 +42,8 @@ def _connected_to_output(nodes: dict, triples: list[dict]) -> set[str]:
             adjacency[subj].add(obj)
             adjacency[obj].add(subj)
 
-    visited = {"OUTPUT"}
-    queue = deque(["OUTPUT"])
+    visited = {o for o in outputs if o in adjacency}
+    queue = deque(visited)
     while queue:
         node_id = queue.popleft()
         for neighbour in adjacency.get(node_id, ()):
@@ -74,8 +76,13 @@ def _validate(parsed: Any) -> list[str]:
     if not isinstance(triples, list):
         return ['"triples" must be a list']
 
-    if "OUTPUT" not in nodes:
-        errors.append('"nodes" must contain a node with id "OUTPUT"')
+    outputs = parsed.get("outputs")
+    if not isinstance(outputs, list) or not outputs:
+        return ['"outputs" must be a non-empty list of node ids']
+
+    for node_id in outputs:
+        if node_id not in nodes:
+            errors.append(f'"outputs" references unknown node id {node_id!r}')
 
     for node_id, node in nodes.items():
         if not isinstance(node, dict) or "type" not in node:
@@ -104,17 +111,18 @@ def _validate(parsed: Any) -> list[str]:
         return errors
 
     if not triples:
-        if "span" not in nodes["OUTPUT"]:
+        missing_span = [o for o in outputs if "span" not in nodes[o]]
+        if missing_span:
             errors.append(
-                '"triples" is empty, so OUTPUT must have a "span" '
-                '(an attribute-only question must name the entity)'
+                f'"triples" is empty, so every output node must have a "span" '
+                f'(an attribute-only question must name the entity): {missing_span}'
             )
     else:
-        connected = _connected_to_output(nodes, triples)
+        connected = _connected_to_output(nodes, triples, outputs)
         disconnected = set(nodes) - connected
         if disconnected:
             errors.append(
-                f'nodes not connected to "OUTPUT" via "triples": {sorted(disconnected)}'
+                f'nodes not connected to any output via "triples": {sorted(disconnected)}'
             )
 
     return errors
