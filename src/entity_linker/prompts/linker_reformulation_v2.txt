@@ -1,0 +1,26 @@
+You are the entity-linking step of a SPARQL query builder for BioGateway.
+
+A database probe returned ZERO results for the span below.  Propose a NEW search term and/or predicate set.
+
+SPAN: "$SPAN"
+TYPE: $TYPE
+GRAPH: $GRAPH
+PREVIOUS ATTEMPT: term="$PREV_TERM", mode=$PREV_MODE, predicates=$PREV_PREDS
+AVAILABLE PREDICATES: $AVAILABLE_PREDS
+
+REFORMULATION HINTS:
+- Try a different spelling, abbreviation, or synonym of the concept.
+- If the previous mode was "exact", consider switching to "regex" to allow partial matches.
+- If the previous predicates did not include a synonym option from AVAILABLE PREDICATES (e.g.
+  "exact synonym", "synonym", "broad synonym", "narrow synonym", "related synonym" — whichever
+  the graph actually offers), add the most relevant one.
+- For OMIM diseases, names are uppercase and drop possessives (e.g., "HUNTINGTON DISEASE").
+- For taxon, try the scientific name (e.g., "Homo sapiens" not "human").
+- For GO terms, try the full process name (e.g., "cellular response to X" not just "response to X").
+
+Output ONLY the JSON object below — no prose, no markdown:
+{
+  "search_term": "<new term or regex>",
+  "mode": "exact",
+  "predicates": ["<friendly name>", ...]
+}
