@@ -225,6 +225,11 @@ class EntityLinker:
 
         Returns:
             A list of result dicts, one per input span_node, in the same order.
+            Every result also carries "attempts": a list of {"term", "mode",
+            "predicates_requested", "predicates_resolved", "candidates",
+            "error"?} dicts, one per proposal/probe tried for that span (in
+            order) — useful to see exactly what the LLM proposed and why an
+            "unresolved" span failed.
         """
         if not span_nodes:
             return []
@@ -255,12 +260,15 @@ class EntityLinker:
                 continue
             node = nodes[i]
             proposal = proposals.get(node["node_id"]) or _fallback_proposal(node["span"])
-            results[i] = self._reformulate_loop(node, proposal)
+            results[i] = self._reformulate_loop(node, proposal, [result.pop("_attempt")])
 
-        # Convert the internal "_zero" sentinel (exhausted reformulation) to "unresolved".
+        # Convert the internal "_zero" sentinel (exhausted reformulation) to "unresolved",
+        # and promote each span's lone first-try "_attempt" into the "attempts" list.
         for r in results:
             if r["mode"] == "_zero":
                 r["mode"] = "unresolved"
+            if "_attempt" in r:
+                r["attempts"] = [r.pop("_attempt")]
 
         return results
 
@@ -319,6 +327,10 @@ class EntityLinker:
               "many"   — multiple URIs, exact search; keys: term, label_predicate.
               "filter" — multiple URIs, regex search; keys: term, predicates.
               "_zero"  — internal sentinel that triggers reformulation.
+            Every result also carries "_attempt": a debug record of this probe
+            (term, mode, requested/resolved predicates, candidate count, and
+            error if any) — consumed and removed by link()/_reformulate_loop(),
+            which fold it into the final "attempts" list.
         """
         span = node["span"]
         graph = node["graph"]
@@ -326,10 +338,17 @@ class EntityLinker:
         mode = proposal.get("mode", "exact")
         predicate_labels = proposal.get("predicates", ["preferred label"])
 
-        # Resolve predicate label names (e.g. "synonyms") to full IRIs.
+        # Resolve predicate label names (e.g. "exact synonym") to full IRIs.
         pred_iris = get_predicates(self._label_cfg, graph, predicate_labels)
         if not pred_iris:
             pred_iris = ["http://www.w3.org/2004/02/skos/core#prefLabel"]
+
+        attempt = {
+            "term": term,
+            "mode": mode,
+            "predicates_requested": predicate_labels,
+            "predicates_resolved": pred_iris,
+        }
 
         # Cache probes within the session to avoid redundant HTTP requests.
         cache_key = (graph, term, mode, frozenset(pred_iris))
@@ -337,16 +356,19 @@ class EntityLinker:
             try:
                 self._cache[cache_key] = sparql_probe(graph, pred_iris, term, mode)
             except Exception as exc:
+                attempt["error"] = str(exc)
                 return {
                     "span": span,
                     "mode": "unresolved",
                     "candidates": 0,
                     "error": str(exc),
+                    "_attempt": attempt,
                 }
 
         result = self._cache[cache_key]
         count = result["count"]
         matches = result["matches"]
+        attempt["candidates"] = count
 
         if count == 0:
             # Return a sentinel so the caller knows to attempt reformulation.
@@ -358,6 +380,7 @@ class EntityLinker:
                 "_last_mode": mode,
                 "_last_preds": predicate_labels,
                 "_last_iris": pred_iris,
+                "_attempt": attempt,
             }
 
         if count == 1:
@@ -365,7 +388,7 @@ class EntityLinker:
             if self._llm_confirm_single:
                 # Optional LLM confirmation before committing the binding.
                 if not self._sanity_check(span, match):
-                    return {"span": span, "mode": "unresolved", "candidates": 1}
+                    return {"span": span, "mode": "unresolved", "candidates": 1, "_attempt": attempt}
             return {
                 "span": span,
                 "mode": "bind",
@@ -373,6 +396,7 @@ class EntityLinker:
                 "term": match["label"],
                 "label_predicate": match["predicate"],
                 "candidates": 1,
+                "_attempt": attempt,
             }
 
         if mode != "regex":
@@ -383,6 +407,7 @@ class EntityLinker:
                 "term": term,
                 "label_predicate": pred_iris[0],
                 "candidates": count,
+                "_attempt": attempt,
             }
 
         # Regex search with many matches: pass all searched predicates to the SPARQL generator.
@@ -392,13 +417,14 @@ class EntityLinker:
             "term": term,
             "predicates": pred_iris,
             "candidates": count,
+            "_attempt": attempt,
         }
 
     # ------------------------------------------------------------------
     # Step 3: reformulation loop
     # ------------------------------------------------------------------
 
-    def _reformulate_loop(self, node: dict, initial_proposal: dict) -> dict:
+    def _reformulate_loop(self, node: dict, initial_proposal: dict, attempts: list[dict]) -> dict:
         """Ask the LLM for a new search term up to max_iterations times for a zero-result span.
 
         Parameters:
@@ -406,10 +432,15 @@ class EntityLinker:
                 Span node dict with keys span, type, and graph.
             initial_proposal (dict):
                 The proposal that yielded zero results and triggered the loop.
+            attempts (list[dict]):
+                Debug records of every attempt so far (starts with the initial
+                zero-result attempt); extended in place with each reformulation
+                tried here and attached to the returned result as "attempts".
 
         Returns:
             The first non-zero result dict from _probe_and_branch, or an
-            "unresolved" result if all iterations are exhausted.
+            "unresolved" result if all iterations are exhausted. Either way,
+            carries "attempts": the full list of attempts tried for this span.
         """
         span = node["span"]
         proposal = initial_proposal
@@ -417,12 +448,14 @@ class EntityLinker:
         for _iter in range(self._max_iter):
             new_proposal = self._llm_reformulate(node, proposal)
             result = self._probe_and_branch(node, new_proposal)
+            attempts.append(result.pop("_attempt"))
             if result["mode"] != "_zero":
+                result["attempts"] = attempts
                 return result
             # Carry the new proposal forward so the LLM sees what was already tried.
             proposal = new_proposal
 
-        return {"span": span, "mode": "unresolved", "candidates": 0}
+        return {"span": span, "mode": "unresolved", "candidates": 0, "attempts": attempts}
 
     def _llm_reformulate(self, node: dict, prev_proposal: dict) -> dict:
         """Ask the LLM to propose a new search term after a zero-result probe.
@@ -490,5 +523,5 @@ def _fallback_proposal(span: str) -> dict:
     return {
         "search_term": span,
         "mode": "exact",
-        "predicates": ["preferred label", "label", "synonyms"],
+        "predicates": ["preferred label", "label", "synonym"],
     }
