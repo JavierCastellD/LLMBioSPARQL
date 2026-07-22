@@ -26,19 +26,19 @@ Q: What are the synonyms for the GRCh38 assembly?
 Outputs: n0 (genome assembly, "GRCh38 assembly")
 {"attributes":[{"on":"n0","attribute":"synonym"}]}
 
-Q: Tell me the start and end positions of the GLA gene.
-Outputs: n0 (gene, "GLA")
+Q: Tell me the start and end positions of the BRCA1 gene.
+Outputs: n0 (gene, "BRCA1")
 {"attributes":[{"on":"n0","attribute":"start position"},{"on":"n0","attribute":"end position"}]}
 
-Q: What is the definition of the Fzd1 gene?
-Outputs: n0 (gene, "Fzd1")
+Q: What is the definition of the MYC gene?
+Outputs: n0 (gene, "MYC")
 {"attributes":[{"on":"n0","attribute":"definition"}]}
 
-Q: What are the close matches to the GLA gene?
-Outputs: n0 (gene, "GLA")
+Q: What are the close matches to the ABCD1 gene?
+Outputs: n0 (gene, "ABCD1")
 {"attributes":[{"on":"n0","attribute":"close match"}]}
 
-Q: In which organisms is the Fbxl6 gene found? Provide the taxon and its synonym.
+Q: In which organisms is the NOTCH1 gene found? Provide the taxon and its synonym.
 Outputs: n0 (organism)
 {"attributes":[{"on":"n0","attribute":"synonym"}]}
 
