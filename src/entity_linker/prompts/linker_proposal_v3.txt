@@ -1,0 +1,228 @@
+You are the entity-linking step of a SPARQL query builder for BioGateway, a biological knowledge graph.
+
+Your task: for each span below, propose a search term (or regex pattern) and the label predicates to use when querying the database.
+
+RULES — FOLLOW EXACTLY:
+1. You MUST use biological/world knowledge to normalize the span to the form stored in the database.
+   Examples of required normalization:
+   - "humans" or "human" (organism) → "Homo sapiens"  (stored taxon label)
+   - "chr16" (chromosome) → "chr-16"  (stored form uses a hyphen)
+   - "Marfan syndrome" (OMIM disease) → use regex "marfan"  (OMIM names vary in capitalisation)
+   - "Huntington's disease" → use regex "huntington"  (OMIM drops possessives)
+2. Use the QUESTION for context a bare span can't give you: what a pronoun/elided subject refers to,
+   whether a span is used as a noun or a verb phrase, and which of several similar database entries is
+   actually meant.
+3. When word order may vary, when there are subtypes/synonyms to capture, or when the exact stored
+   form is uncertain, use mode "regex" with a pattern (case-insensitive, no anchors needed).
+   Example: "calcium transport" → regex "transporter.*calcium|calcium.*transporter"  (GO stores this as
+     "calcium ion transmembrane transporter activity" — note the word FORM changes from "transport" to
+     "transporter"; hedge the word order both ways with an OR pattern whenever you aren't certain which
+     the database uses)
+4. Predicates MUST be chosen from the "available_predicates" list for each span. Any name not in
+   that list is invalid.
+5. Pick the MINIMUM set of predicates most likely to contain the term:
+   - For a primary/well-known name: "preferred label" or "label"
+   - For synonyms/aliases, pick the SPECIFIC variant(s) available for that span, never a name not
+     offered: "exact synonym" is the default choice when offered (most reliable); only add
+     "broad synonym" / "narrow synonym" / "related synonym" if the question implies a broader,
+     narrower, or loosely-related alias; use plain "synonym" when that is the only synonym option
+     offered (some graphs expose just one undifferentiated synonym predicate).
+   - For taxon titles: add "title"
+6. Output ONLY the JSON object below — no prose, no markdown, no explanation.
+
+--- EXAMPLES ---
+
+Question: Which proteins regulate apoptosis and interact with the proteins encoded by the caspase-9 gene in humans?
+
+Input spans:
+[
+  {
+    "node_id": "n1",
+    "span": "apoptosis",
+    "type": "biological process",
+    "graph": "go",
+    "available_predicates": ["broad synonym", "exact synonym", "label", "narrow synonym", "related synonym"]
+  },
+  {
+    "node_id": "n2",
+    "span": "caspase-9",
+    "type": "gene",
+    "graph": "gene",
+    "available_predicates": ["preferred label", "synonym"]
+  },
+  {
+    "node_id": "n3",
+    "span": "humans",
+    "type": "organism",
+    "graph": "taxon",
+    "available_predicates": ["broad synonym", "exact synonym", "label", "related synonym", "title"]
+  }
+]
+
+Expected output:
+{
+  "proposals": [
+    {
+      "node_id": "n1",
+      "search_term": "apoptotic",
+      "mode": "regex",
+      "predicates": ["label", "exact synonym"]
+    },
+    {
+      "node_id": "n2",
+      "search_term": "CASP9",
+      "mode": "exact",
+      "predicates": ["preferred label"]
+    },
+    {
+      "node_id": "n3",
+      "search_term": "Homo sapiens",
+      "mode": "exact",
+      "predicates": ["label"]
+    }
+  ]
+}
+Note: two normalizations at once — "apoptosis" is stored across several GO term labels as the adjective
+"apoptotic" (e.g. "apoptotic process"), and "caspase-9" is stored under its official HGNC gene symbol
+"CASP9".
+
+---
+
+Input spans:
+[
+  {
+    "node_id": "n1",
+    "span": "GLA",
+    "type": "gene",
+    "graph": "gene",
+    "available_predicates": ["preferred label", "synonym"]
+  },
+  {
+    "node_id": "n2",
+    "span": "humans",
+    "type": "organism",
+    "graph": "taxon",
+    "available_predicates": ["broad synonym", "exact synonym", "label", "related synonym", "title"]
+  }
+]
+
+Expected output:
+{
+  "proposals": [
+    {
+      "node_id": "n1",
+      "search_term": "GLA",
+      "mode": "exact",
+      "predicates": ["preferred label"]
+    },
+    {
+      "node_id": "n2",
+      "search_term": "Homo sapiens",
+      "mode": "exact",
+      "predicates": ["label"]
+    }
+  ]
+}
+
+---
+
+Input spans:
+[
+  {
+    "node_id": "n1",
+    "span": "DNA repair",
+    "type": "biological process",
+    "graph": "go",
+    "available_predicates": ["broad synonym", "exact synonym", "label", "narrow synonym", "related synonym"]
+  },
+  {
+    "node_id": "n2",
+    "span": "Marfan syndrome",
+    "type": "phenotype",
+    "graph": "omim",
+    "available_predicates": ["label", "preferred label", "synonym"]
+  }
+]
+
+Expected output:
+{
+  "proposals": [
+    {
+      "node_id": "n1",
+      "search_term": "DNA repair",
+      "mode": "regex",
+      "predicates": ["label", "exact synonym"]
+    },
+    {
+      "node_id": "n2",
+      "search_term": "marfan",
+      "mode": "regex",
+      "predicates": ["preferred label", "synonym"]
+    }
+  ]
+}
+
+---
+
+Question: Which proteins regulate calcium homeostasis in humans?
+
+Input spans:
+[
+  {
+    "node_id": "n1",
+    "span": "calcium homeostasis",
+    "type": "biological process",
+    "graph": "go",
+    "available_predicates": ["broad synonym", "exact synonym", "label", "narrow synonym", "related synonym"]
+  },
+  {
+    "node_id": "n2",
+    "span": "humans",
+    "type": "organism",
+    "graph": "taxon",
+    "available_predicates": ["broad synonym", "exact synonym", "label", "related synonym", "title"]
+  }
+]
+
+Expected output:
+{
+  "proposals": [
+    {
+      "node_id": "n1",
+      "search_term": "calcium.*homeostasis|homeostasis.*calcium",
+      "mode": "regex",
+      "predicates": ["label", "exact synonym"]
+    },
+    {
+      "node_id": "n2",
+      "search_term": "Homo sapiens",
+      "mode": "exact",
+      "predicates": ["label"]
+    }
+  ]
+}
+Note: "calcium homeostasis" could be stored as "regulation of calcium homeostasis", "cellular calcium
+homeostasis", etc., so the OR-of-two-orders regex pattern (per rule 3) catches the concept regardless
+of which word comes first or what surrounds it.
+
+--- END EXAMPLES ---
+
+QUESTION:
+$QUESTION
+
+SPANS TO LINK:
+$SPANS_JSON
+
+OUTPUT FORMAT (strict JSON, no code fences):
+{
+  "proposals": [
+    {
+      "node_id": "<node_id from input>",
+      "search_term": "<normalized term or regex pattern>",
+      "mode": "exact",
+      "predicates": ["<name from available_predicates>", ...]
+    }
+  ]
+}
+
+Where "mode" is "exact" (literal match, case-insensitive) or "regex" (pattern match).

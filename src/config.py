@@ -29,8 +29,8 @@ OUTPUT_DESIGNATION_MAX_RETRIES = 2
 
 # Names of the prompt templates (under src/entity_linker/prompts/, without the
 # ".txt" extension) used for the two LLM calls in the entity linker.
-LINKER_PROPOSAL_PROMPT = "linker_proposal_v2"
-LINKER_REFORMULATION_PROMPT = "linker_reformulation_v2"
+LINKER_PROPOSAL_PROMPT = "linker_proposal_v3"
+LINKER_REFORMULATION_PROMPT = "linker_reformulation_v3"
 
 # BioGateway SPARQL endpoint. SSL verification is disabled because the server
 # certificate does not validate against the default CA bundle.

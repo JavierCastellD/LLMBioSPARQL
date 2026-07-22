@@ -34,7 +34,7 @@ def main() -> None:
         question = item["question"]
         span_nodes = item["linker"]["input"]
         print(f"[{i}/{len(examples)}] {question}")
-        output = linker.link(span_nodes)
+        output = linker.link(question, span_nodes)
         results.append({"question": question, "linker": {"input": span_nodes, "output": output}})
 
     args.output.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")

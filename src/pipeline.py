@@ -129,7 +129,7 @@ class Text2SPARQLPipeline:
             designation = {"attributes": []}
 
         span_nodes = _span_nodes_from_extraction(extraction)
-        linker_output = self.linker.link(span_nodes)
+        linker_output = self.linker.link(question, span_nodes)
         result["linker"] = {"input": span_nodes, "output": linker_output}
 
         plan = self.planner.resolve_relations(extraction["nodes"], extraction["triples"])

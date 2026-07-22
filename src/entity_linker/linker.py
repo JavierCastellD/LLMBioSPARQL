@@ -40,12 +40,15 @@ TYPE_TO_GRAPH: dict[str, str] = {
 }
 
 
-def build_proposal_prompt(spans_payload: list[dict]) -> str:
+def build_proposal_prompt(spans_payload: list[dict], question: str) -> str:
     """Render the batch proposal prompt for a list of span descriptors.
 
     Parameters:
         spans_payload (list[dict]):
             List of dicts, each with node_id, span, type, graph, and available_predicates.
+        question (str):
+            The full natural-language question the spans were extracted from,
+            given as disambiguating context (the LLM links the spans, not the question).
 
     Returns:
         The fully rendered prompt string ready to send to the LLM.
@@ -53,11 +56,12 @@ def build_proposal_prompt(spans_payload: list[dict]) -> str:
     return render_prompt(
         LINKER_PROPOSAL_PROMPT,
         prompts_dir=_PROMPTS_DIR,
+        QUESTION=question,
         SPANS_JSON=json.dumps(spans_payload, indent=2),
     )
 
 
-def build_reformulation_prompt(node: dict, prev_proposal: dict, menu: list[str]) -> str:
+def build_reformulation_prompt(node: dict, prev_proposal: dict, menu: list[str], question: str) -> str:
     """Render the zero-result reformulation prompt for a single span.
 
     Parameters:
@@ -68,6 +72,8 @@ def build_reformulation_prompt(node: dict, prev_proposal: dict, menu: list[str])
             with keys search_term, mode, and predicates.
         menu (list[str]):
             Friendly predicate names available for the node's graph.
+        question (str):
+            The full natural-language question the span was extracted from.
 
     Returns:
         The fully rendered prompt string ready to send to the LLM.
@@ -75,6 +81,7 @@ def build_reformulation_prompt(node: dict, prev_proposal: dict, menu: list[str])
     return render_prompt(
         LINKER_REFORMULATION_PROMPT,
         prompts_dir=_PROMPTS_DIR,
+        QUESTION=question,
         SPAN=node["span"],
         TYPE=node["type"],
         GRAPH=node["graph"],
@@ -208,12 +215,17 @@ class EntityLinker:
 
     def link(
         self,
+        question: str,
         span_nodes: list[dict],
         proposals_override: dict[str, dict] | None = None,
     ) -> list[dict]:
         """Link a list of spans to BioGateway entities.
 
         Parameters:
+            question (str):
+                The full natural-language question the spans were extracted
+                from — given to the LLM as disambiguating context (it links
+                the spans, not the question itself).
             span_nodes (list[dict]):
                 List of dicts, each with keys:
                   - node_id (str): unique identifier for this span.
@@ -244,7 +256,7 @@ class EntityLinker:
         if proposals_override is not None:
             proposals = proposals_override
         else:
-            proposals = self._batch_propose(nodes)
+            proposals = self._batch_propose(nodes, question)
 
         # Step 2 — run a SPARQL probe for each span and branch on the result count.
         results: list[dict] = []
@@ -260,7 +272,7 @@ class EntityLinker:
                 continue
             node = nodes[i]
             proposal = proposals.get(node["node_id"]) or _fallback_proposal(node["span"])
-            results[i] = self._reformulate_loop(node, proposal, [result.pop("_attempt")])
+            results[i] = self._reformulate_loop(node, proposal, [result.pop("_attempt")], question)
 
         # Convert the internal "_zero" sentinel (exhausted reformulation) to "unresolved",
         # and promote each span's lone first-try "_attempt" into the "attempts" list.
@@ -276,12 +288,14 @@ class EntityLinker:
     # Step 1: batch LLM proposal
     # ------------------------------------------------------------------
 
-    def _batch_propose(self, nodes: list[dict]) -> dict[str, dict]:
+    def _batch_propose(self, nodes: list[dict], question: str) -> dict[str, dict]:
         """Call the LLM once to get search-term proposals for all spans.
 
         Parameters:
             nodes (list[dict]):
                 Span node dicts with graph names already normalised to short form.
+            question (str):
+                The full natural-language question, given as disambiguating context.
 
         Returns:
             A mapping of node_id to proposal dict. Falls back to _fallback_proposal
@@ -298,7 +312,7 @@ class EntityLinker:
             }
             for n in nodes
         ]
-        prompt = build_proposal_prompt(spans_payload)
+        prompt = build_proposal_prompt(spans_payload, question)
 
         expected_ids = {n["node_id"] for n in nodes}
         parsed = llm_call_with_retry(self._llm, prompt, lambda p: _validate_proposals(p, expected_ids))
@@ -424,7 +438,9 @@ class EntityLinker:
     # Step 3: reformulation loop
     # ------------------------------------------------------------------
 
-    def _reformulate_loop(self, node: dict, initial_proposal: dict, attempts: list[dict]) -> dict:
+    def _reformulate_loop(
+        self, node: dict, initial_proposal: dict, attempts: list[dict], question: str
+    ) -> dict:
         """Ask the LLM for a new search term up to max_iterations times for a zero-result span.
 
         Parameters:
@@ -436,6 +452,8 @@ class EntityLinker:
                 Debug records of every attempt so far (starts with the initial
                 zero-result attempt); extended in place with each reformulation
                 tried here and attached to the returned result as "attempts".
+            question (str):
+                The full natural-language question, given as disambiguating context.
 
         Returns:
             The first non-zero result dict from _probe_and_branch, or an
@@ -446,7 +464,7 @@ class EntityLinker:
         proposal = initial_proposal
 
         for _iter in range(self._max_iter):
-            new_proposal = self._llm_reformulate(node, proposal)
+            new_proposal = self._llm_reformulate(node, proposal, question)
             result = self._probe_and_branch(node, new_proposal)
             attempts.append(result.pop("_attempt"))
             if result["mode"] != "_zero":
@@ -457,7 +475,7 @@ class EntityLinker:
 
         return {"span": span, "mode": "unresolved", "candidates": 0, "attempts": attempts}
 
-    def _llm_reformulate(self, node: dict, prev_proposal: dict) -> dict:
+    def _llm_reformulate(self, node: dict, prev_proposal: dict, question: str) -> dict:
         """Ask the LLM to propose a new search term after a zero-result probe.
 
         Parameters:
@@ -465,13 +483,15 @@ class EntityLinker:
                 Span node dict with keys span, type, and graph.
             prev_proposal (dict):
                 The previous proposal that yielded zero results.
+            question (str):
+                The full natural-language question, given as disambiguating context.
 
         Returns:
             A new proposal dict with keys search_term, mode, and predicates.
             Falls back to _fallback_proposal if all LLM retries fail.
         """
         menu = predicate_label_menu(self._label_cfg, node["graph"])
-        prompt = build_reformulation_prompt(node, prev_proposal, menu)
+        prompt = build_reformulation_prompt(node, prev_proposal, menu, question)
         parsed = llm_call_with_retry(self._llm, prompt, _validate_single_proposal)
         return parsed if parsed is not None else _fallback_proposal(node["span"])
 
