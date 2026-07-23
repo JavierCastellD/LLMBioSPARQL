@@ -88,9 +88,12 @@ def _resolve_attribute_iri(
 ) -> str | None:
     """Resolve an output-designation attribute name to a predicate IRI for a graph.
 
-    "synonym" is delegated to label_config (which already covers it with a
-    sensible fallback); every other category is looked up in attr_cfg, which
-    has no cross-graph fallback since these are graph-specific facts.
+    "synonym" is delegated to label_config: tries the graph's generic "synonym"
+    predicate first, falling back to "exact synonym" for graphs (like taxon,
+    go) that only expose the subtyped synonym variants — the same default
+    preference the entity linker itself uses. Every other category is looked
+    up in attr_cfg, which has no cross-graph fallback since these are
+    graph-specific facts.
 
     Parameters:
         label_cfg (LabelConfig):
@@ -107,19 +110,74 @@ def _resolve_attribute_iri(
     """
     category = normalize_attribute_name(attribute_name)
     if category == "synonym":
-        iris = get_predicates(label_cfg, graph, ["synonym"])
+        iris = get_predicates(label_cfg, graph, ["synonym"]) or get_predicates(label_cfg, graph, ["exact synonym"])
         return iris[0] if iris else None
     return resolve_attribute(attr_cfg, graph, category)
+
+
+def _bridge_intermediate_type(hop: dict) -> str:
+    """Return the resolved type of the node a bridge hop lands on (not the side it came from).
+
+    Parameters:
+        hop (dict):
+            A single segment hop with subject_type, object_type, and reverse.
+
+    Returns:
+        hop["object_type"] if the hop runs subject->object in traversal order,
+        or hop["subject_type"] if "reverse" (traversal runs the other way).
+    """
+    return hop["subject_type"] if hop["reverse"] else hop["object_type"]
+
+
+def _seed_bridge_cache(resolved: list[dict]) -> dict[tuple[str, str, tuple[str, ...]], str]:
+    """Pre-seed the bridge-variable cache from every non-bridged edge's resolved object.
+
+    A bridge hop that passes through the same (source, type, predicate-chain) as an
+    already-named node (e.g. "n1 encodes n0") should promote to that node's own id
+    instead of minting a fresh one — see docs/planner_variable_identity_spec.md. This
+    must run as a separate pass BEFORE any bridge hop is expanded, since the relevant
+    non-bridged entry can appear anywhere in "resolved" relative to the bridged ones
+    it should inform (observed in practice: the direct "encodes" edge often comes
+    after the bridged edges that should reuse it).
+
+    Parameters:
+        resolved (list[dict]):
+            The "resolved" list from PathPlanner.resolve_relations().
+
+    Returns:
+        A dict mapping (source_node_id, landed_on_type, predicate_chain) to the
+        already-named node id, for every single-hop (non-bridged) resolved entry.
+    """
+    cache: dict[tuple[str, str, tuple[str, ...]], str] = {}
+    for entry in resolved:
+        segment = entry["segments"][0]
+        if len(segment) > 1:
+            continue  # bridged; nothing named to promote to here
+        hop = segment[0]
+        key = (entry["subject"], _bridge_intermediate_type(hop), (to_curie(hop["predicate"]),))
+        cache.setdefault(key, entry["object"])
+    return cache
 
 
 def _edges_from_resolved(resolved: list[dict]) -> list[dict]:
     """Turn the planner's type-level "resolved" paths into node-id-level edges.
 
-    Picks the first (shortest) alternative path per resolved triple and mints
-    fresh intermediate node ids (x1, x2, ...) for any bridge hops. Every edge is
-    emitted in its TRUE RDF subject->object direction (never flipped), using
-    each hop's "reverse" flag to tell which side of the traversal is the real
-    subject.
+    Picks the first (shortest) alternative path per resolved triple. Bridge hops
+    (multi-hop segments) reuse a variable for their intermediate node rather than
+    always minting a fresh one: a cache keyed by (source_node_id, intermediate_type,
+    predicate_chain_from_source) is shared across every resolved entry, so two
+    independent bridged paths starting from the same node via the same predicate
+    chain (e.g. "this gene's protein" reached via "encodes" for two different
+    onward constraints) collapse onto one variable instead of each inventing its
+    own — and a bridge hop that matches an already-NAMED node's own (source, type,
+    chain) promotes to that node's id instead of minting an "x" var at all. Two
+    same-typed intermediates only stay distinct when they differ in source and/or
+    predicate chain (e.g. an "encoded protein" vs. a separate "interactor protein"
+    reached via a different predicate) — see docs/planner_variable_identity_spec.md.
+
+    Every edge is emitted in its TRUE RDF subject->object direction (never
+    flipped), using each hop's "reverse" flag to tell which side of the
+    traversal is the real subject.
 
     Parameters:
         resolved (list[dict]):
@@ -134,19 +192,28 @@ def _edges_from_resolved(resolved: list[dict]) -> list[dict]:
     """
     edges: list[dict] = []
     intermediate_count = 0
+    bridge_cache = _seed_bridge_cache(resolved)
 
     for entry in resolved:
         segment = entry["segments"][0]
         current_id = entry["subject"]
         bridged = len(segment) > 1
+        chain: list[str] = []  # predicate CURIEs from entry["subject"] up to the current hop
 
         for i, hop in enumerate(segment):
             is_last = i == len(segment) - 1
+            pred_curie = to_curie(hop["predicate"])
+            chain.append(pred_curie)
+
             if is_last:
                 next_id = entry["object"]
             else:
-                intermediate_count += 1
-                next_id = f"x{intermediate_count}"
+                key = (entry["subject"], _bridge_intermediate_type(hop), tuple(chain))
+                next_id = bridge_cache.get(key)
+                if next_id is None:
+                    intermediate_count += 1
+                    next_id = f"x{intermediate_count}"
+                    bridge_cache[key] = next_id
 
             if hop["reverse"]:
                 # Traversal direction is object->subject; the true RDF triple
@@ -157,7 +224,7 @@ def _edges_from_resolved(resolved: list[dict]) -> list[dict]:
 
             edge = {
                 "subject": subj_id,
-                "predicate": to_curie(hop["predicate"]),
+                "predicate": pred_curie,
                 "object": obj_id,
                 "subject_graph": hop["graph"],
             }

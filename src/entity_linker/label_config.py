@@ -154,8 +154,12 @@ def get_predicates(
 ) -> list[str]:
     """Resolve predicate label names to IRIs for a given graph.
 
-    Falls back to FALLBACK when the graph is not in the config or a friendly
-    name is not mapped for that graph. Never raises.
+    Falls back to FALLBACK only when the graph itself is entirely unknown (not
+    present in config). For a known graph, a friendly name it doesn't have
+    resolves to no IRIs — it does NOT borrow an unrelated graph's default,
+    since callers (e.g. brief_builder's name-predicate probing) rely on an
+    empty result to mean "this graph doesn't have this" and try the next
+    option themselves. Never raises.
 
     Parameters:
         config (LabelConfig):
@@ -172,8 +176,7 @@ def get_predicates(
     iris: list[str] = []
     seen: set[str] = set()
     for fname in predicate_labels:
-        # If a friendly name is missing from this graph's config, use the FALLBACK entry.
-        for iri in graph_cfg.get(fname, FALLBACK.get(fname, [])):
+        for iri in graph_cfg.get(fname, []):
             if iri not in seen:
                 seen.add(iri)
                 iris.append(iri)
