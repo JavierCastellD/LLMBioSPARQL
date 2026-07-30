@@ -17,6 +17,7 @@ from typing import Any
 from ..entity_linker.label_config import LabelConfig, build_label_config, get_predicates
 from ..entity_linker.linker import TYPE_TO_GRAPH
 from .attribute_resolver import AttributeConfig, build_attribute_config, normalize_attribute_name, resolve_attribute
+from .path_resolver import PathResolver, hop_orientation
 
 _DEFAULT_EXCEL = Path(__file__).resolve().parents[2] / "data" / "BGW_graphs.xlsx"
 
@@ -159,10 +160,55 @@ def _seed_bridge_cache(resolved: list[dict]) -> dict[tuple[str, str, tuple[str, 
     return cache
 
 
+def _resolve_segments(
+    resolved: list[dict], question: str, path_resolver: PathResolver, nodes: dict[str, dict]
+) -> tuple[list[dict], list[dict]]:
+    """Narrow each resolved edge's candidate "segments" down to the one PathResolver chose.
+
+    The planner may return several equal-length candidate paths per edge (see
+    docs/path_resolver_spec.md); this must run BEFORE _seed_bridge_cache/
+    _edges_from_resolved so both of them can keep reading "segments[0]" as
+    before and always get the chosen path, not an arbitrary first alternative.
+
+    Parameters:
+        resolved (list[dict]):
+            The "resolved" list from PathPlanner.resolve_relations().
+        question (str):
+            The full natural-language question, given to the resolver as
+            disambiguating context for its LLM tiebreak tiers.
+        path_resolver (PathResolver):
+            Chooses one segment per edge; see path_resolver.PathResolver.resolve().
+        nodes (dict[str, dict]):
+            Concept-extraction's node id -> {"type", "span"?} mapping, passed
+            through so the resolver's LLM tiebreak can show which phrase in
+            the question each edge's subject/object refer to.
+
+    Returns:
+        A tuple (resolved, records): "resolved" is a copy of the input with
+        every entry's "segments" replaced by a single-element list containing
+        only the chosen candidate; "records" mirrors PathResolver's
+        per-edge resolution info (tier, validated, etc.) for logging/
+        inspection — never sent to the LLM as part of the brief.
+    """
+    narrowed: list[dict] = []
+    records: list[dict] = []
+    for entry in resolved:
+        result = path_resolver.resolve(question, entry, nodes)
+        narrowed.append({**entry, "segments": [result["segment"]]})
+        records.append({
+            "subject": entry["subject"],
+            "relation": entry["relation"],
+            "object": entry["object"],
+            **result["record"],
+        })
+    return narrowed, records
+
+
 def _edges_from_resolved(resolved: list[dict]) -> list[dict]:
     """Turn the planner's type-level "resolved" paths into node-id-level edges.
 
-    Picks the first (shortest) alternative path per resolved triple. Bridge hops
+    Expects "resolved" to already carry exactly one candidate per entry (see
+    _resolve_segments) — this function just reads segments[0]. Bridge hops
     (multi-hop segments) reuse a variable for their intermediate node rather than
     always minting a fresh one: a cache keyed by (source_node_id, intermediate_type,
     predicate_chain_from_source) is shared across every resolved entry, so two
@@ -181,9 +227,10 @@ def _edges_from_resolved(resolved: list[dict]) -> list[dict]:
 
     Parameters:
         resolved (list[dict]):
-            The "resolved" list from PathPlanner.resolve_relations(), each with
-            keys subject, object (original node ids) and segments (alternative
-            paths, each a list of edge dicts with from/to/predicate/label/graph/
+            The "resolved" list from PathPlanner.resolve_relations() (already
+            narrowed to one candidate per entry by _resolve_segments), each with
+            keys subject, object (original node ids) and segments (a single
+            chosen path, a list of edge dicts with from/to/predicate/label/graph/
             subject_type/object_type/reverse).
 
     Returns:
@@ -215,12 +262,7 @@ def _edges_from_resolved(resolved: list[dict]) -> list[dict]:
                     next_id = f"x{intermediate_count}"
                     bridge_cache[key] = next_id
 
-            if hop["reverse"]:
-                # Traversal direction is object->subject; the true RDF triple
-                # runs the other way (next_id is the true subject).
-                subj_id, obj_id = next_id, current_id
-            else:
-                subj_id, obj_id = current_id, next_id
+            subj_id, obj_id = hop_orientation(hop, current_id, next_id)
 
             edge = {
                 "subject": subj_id,
@@ -253,7 +295,10 @@ def _grounding_from_linker(linker_input: list[dict], linker_output: list[dict]) 
     Returns:
         A tuple (grounding, warnings): grounding maps node_id -> a compact
         mode/graph/term/predicate(s) dict; warnings lists any span that
-        couldn't be grounded (dropped, fail-soft).
+        couldn't be grounded (dropped, fail-soft). A "bind" entry also carries
+        "uri": the linker's already-resolved URI, copied verbatim (not
+        CURIE-shortened) so the generator can inline it directly instead of
+        re-emitting a label-lookup triple for an entity that's already known.
     """
     grounding: dict[str, dict] = {}
     warnings: list[str] = []
@@ -267,7 +312,15 @@ def _grounding_from_linker(linker_input: list[dict], linker_output: list[dict]) 
             warnings.append(f"node {node_id!r}: unknown type {inp['type']!r} — grounding omitted")
             continue
 
-        if mode in ("bind", "many"):
+        if mode == "bind":
+            grounding[node_id] = {
+                "mode": mode,
+                "graph": graph,
+                "term": out["term"],
+                "label_predicate": to_curie(out["label_predicate"]),
+                "uri": out["uri"],
+            }
+        elif mode == "many":
             grounding[node_id] = {
                 "mode": mode,
                 "graph": graph,
@@ -385,7 +438,8 @@ def build_brief(
     label_cfg: LabelConfig | None = None,
     attr_cfg: AttributeConfig | None = None,
     excel_path: Path | None = None,
-) -> tuple[dict, list[str]]:
+    path_resolver: PathResolver | None = None,
+) -> tuple[dict, list[str], list[dict]]:
     """Assemble the LLM-facing SPARQL-generation brief from every upstream step's output.
 
     Parameters:
@@ -407,20 +461,30 @@ def build_brief(
             Pre-built attribute config; built from excel_path if omitted.
         excel_path (Path):
             Path to BGW_graphs.xlsx, used only if label_cfg/attr_cfg are omitted.
+        path_resolver (PathResolver):
+            Chooses one candidate segment per resolved edge when the planner
+            found several equal-length alternatives; built with defaults if
+            omitted (see docs/path_resolver_spec.md).
 
     Returns:
-        A tuple (brief, warnings): brief is the JSON-serializable assembly brief;
-        warnings lists every element dropped during fail-soft resolution.
+        A tuple (brief, warnings, path_resolutions): brief is the
+        JSON-serializable assembly brief; warnings lists every element dropped
+        during fail-soft resolution; path_resolutions is one record per
+        resolved edge (tier, validated, etc.) for logging/inspection only —
+        never sent to the LLM as part of the brief.
     """
     xlsx = excel_path or _DEFAULT_EXCEL
     if label_cfg is None:
         label_cfg = build_label_config(xlsx) if xlsx.exists() else {}
     if attr_cfg is None:
         attr_cfg = build_attribute_config(xlsx) if xlsx.exists() else {}
+    if path_resolver is None:
+        path_resolver = PathResolver()
 
     nodes = extraction["nodes"]
 
-    edges = _edges_from_resolved(planner_result.get("resolved", []))
+    resolved, path_resolutions = _resolve_segments(planner_result.get("resolved", []), question, path_resolver, nodes)
+    edges = _edges_from_resolved(resolved)
     grounding, grounding_warnings = _grounding_from_linker(linker_input, linker_output)
     proj_outputs, output_warnings = _projection_outputs(extraction["outputs"], nodes, label_cfg)
     proj_attributes, attr_warnings = _projection_attributes(
@@ -438,4 +502,4 @@ def build_brief(
         "graph_iri_pattern": GRAPH_IRI_PATTERN,
     }
     warnings = grounding_warnings + output_warnings + attr_warnings
-    return brief, warnings
+    return brief, warnings, path_resolutions

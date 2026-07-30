@@ -31,10 +31,18 @@ Your responsibilities, every time:
    models relations between entities, it usually does NOT include the output
    or attribute triples.
 
-3. MATERIALIZE every entry in "grounding" inside its own graph's GRAPH block:
-   - mode "bind" or "many": add `?var {label_predicate} "{term}" .`
-   - mode "filter": bind each of "predicates" to its own variable on the same
-     subject, and add one FILTER with a REGEX disjunct per predicate:
+3. MATERIALIZE every entry in "grounding":
+   - mode "bind": this node is ALREADY a known, specific entity — its "uri"
+     field gives its exact IRI. Substitute that URI for the node's variable
+     EVERYWHERE it appears in the query (as a CURIE if "prefixes" covers its
+     namespace, otherwise as a bracketed `<...>` IRI). Emit NO grounding
+     triple and NO GRAPH block whose only purpose is to look this entity up
+     by label — that lookup is unnecessary, the identity is already resolved.
+   - mode "many": inside the node's own graph's GRAPH block, add
+     `?var {label_predicate} "{term}" .`
+   - mode "filter": inside the node's own graph's GRAPH block, bind each of
+     "predicates" to its own variable on the same subject, and add one FILTER
+     with a REGEX disjunct per predicate:
      `FILTER( REGEX(?v1,"{term}","i") || REGEX(?v2,"{term}","i") )`.
 
 4. ADD any other structurally necessary triple not in the brief (anchors,
@@ -45,7 +53,10 @@ Your responsibilities, every time:
 
 5. NEVER invent a predicate, graph, or IRI. If something the question needs
    is genuinely absent from the brief, omit it and leave a `# NOTE:` comment
-   rather than making one up.
+   rather than making one up. This applies to constraints too: only emit a
+   FILTER/REGEX that comes from a "filter"-mode grounding entry. NEVER invent
+   a FILTER or REGEX out of words in the question on your own (e.g. adding a
+   spurious filter on gene names for the literal word "gene").
 
 6. Wrap every GRAPH's IRI using "graph_iri_pattern" with the graph's short
    name substituted in. Emit `PREFIX` lines only for prefixes you actually
@@ -70,7 +81,7 @@ Brief:
   ],
   "grounding": {
     "n1": {"mode": "filter", "graph": "go", "term": "DNA repair", "predicates": ["rdfs:label", "owl:hasExactSynonym"]},
-    "n2": {"mode": "bind", "graph": "taxon", "term": "Homo sapiens", "label_predicate": "rdfs:label"}
+    "n2": {"mode": "bind", "graph": "taxon", "term": "Homo sapiens", "label_predicate": "rdfs:label", "uri": "http://purl.obolibrary.org/obo/NCBITaxon_9606"}
   },
   "projection": {
     "outputs": {"n0": {"graph": "gene", "name_predicate": "skos:prefLabel", "class_anchor": "sio:SIO_010035"}},
@@ -99,10 +110,7 @@ WHERE {
       ?uri_gen rdfs:subClassOf sio:SIO_010035 ;   # anchor: GENERATED (not in skeleton)
                sio:SIO_010078 ?protein ;
                skos:prefLabel ?name_gen ;          # projection: GENERATED
-               obo:RO_0002162 ?taxon .
-  }
-  GRAPH <http://rdf.biogateway.eu/graph/taxon> {
-      ?taxon rdfs:label "Homo sapiens" .           # bind grounding
+               obo:RO_0002162 obo:NCBITaxon_9606 . # bind grounding: URI inlined directly, no lookup triple
   }
 }
 
@@ -114,7 +122,7 @@ Brief:
   "outputs": ["n0"],
   "nodes": {"n0": {"type": "genome assembly", "span": "GRCh38 assembly"}},
   "edges": [],
-  "grounding": {"n0": {"mode": "bind", "graph": "gene", "term": "GRCh38", "label_predicate": "skos:prefLabel"}},
+  "grounding": {"n0": {"mode": "bind", "graph": "gene", "term": "GRCh38", "label_predicate": "skos:prefLabel", "uri": "http://rdf.biogateway.eu/gene/GRCh38"}},
   "projection": {
     "outputs": {"n0": {"graph": "gene", "name_predicate": "skos:prefLabel"}},
     "attributes": [{"on": "n0", "predicate": "skos:altLabel", "label": "synonym"}]
@@ -128,9 +136,8 @@ PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 SELECT DISTINCT ?name_n0 ?synonym_n0
 WHERE {
   GRAPH <http://rdf.biogateway.eu/graph/gene> {
-      ?n0 skos:prefLabel "GRCh38" .        # bind grounding
-      BIND("GRCh38" AS ?name_n0)           # projection: GENERATED (same predicate as grounding, so reuse the literal)
-      ?n0 skos:altLabel ?synonym_n0 .      # attribute: GENERATED (synonym)
+      <http://rdf.biogateway.eu/gene/GRCh38> skos:prefLabel ?name_n0 ;    # bind grounding: URI inlined (no prefix covers this namespace, so bracketed); also serves as projection
+                                                skos:altLabel ?synonym_n0 . # attribute: GENERATED (synonym)
   }
 }
 
@@ -148,7 +155,7 @@ Brief:
   ],
   "grounding": {
     "n2": {"mode": "filter", "graph": "omim", "term": "melanoma", "predicates": ["skos:prefLabel", "skos:altLabel"]},
-    "n3": {"mode": "bind", "graph": "taxon", "term": "Homo sapiens", "label_predicate": "rdfs:label"}
+    "n3": {"mode": "bind", "graph": "taxon", "term": "Homo sapiens", "label_predicate": "rdfs:label", "uri": "http://purl.obolibrary.org/obo/NCBITaxon_9606"}
   },
   "projection": {
     "outputs": {
@@ -179,14 +186,11 @@ WHERE {
       ?n0 rdfs:subClassOf sio:SIO_010035 ;   # anchor: GENERATED
           skos:prefLabel ?name_n0 ;           # projection: GENERATED
           sio:SIO_010078 ?n1 ;
-          obo:RO_0002162 ?taxon .
+          obo:RO_0002162 obo:NCBITaxon_9606 . # bind grounding: URI inlined directly, no lookup triple
   }
   GRAPH <http://rdf.biogateway.eu/graph/prot> {
       ?n1 rdfs:subClassOf sio:SIO_010043 ;   # anchor: GENERATED
           skos:prefLabel ?name_n1 .           # projection: GENERATED
-  }
-  GRAPH <http://rdf.biogateway.eu/graph/taxon> {
-      ?taxon rdfs:label "Homo sapiens" .      # bind grounding
   }
 }
 
@@ -203,8 +207,8 @@ Brief:
   ],
   "grounding": {
     "n1": {"mode": "filter", "graph": "go", "term": "DNA repair", "predicates": ["rdfs:label", "owl:hasExactSynonym"]},
-    "n2": {"mode": "bind", "graph": "taxon", "term": "Homo sapiens", "label_predicate": "rdfs:label"},
-    "n3": {"mode": "bind", "graph": "taxon", "term": "Mus musculus", "label_predicate": "rdfs:label"}
+    "n2": {"mode": "bind", "graph": "taxon", "term": "Homo sapiens", "label_predicate": "rdfs:label", "uri": "http://purl.obolibrary.org/obo/NCBITaxon_9606"},
+    "n3": {"mode": "bind", "graph": "taxon", "term": "Mus musculus", "label_predicate": "rdfs:label", "uri": "http://purl.obolibrary.org/obo/NCBITaxon_10090"}
   },
   "projection": {
     "outputs": {"n0": {"graph": "gene", "name_predicate": "skos:prefLabel", "class_anchor": "sio:SIO_010035"}},
@@ -232,10 +236,7 @@ WHERE {
   GRAPH <http://rdf.biogateway.eu/graph/gene> {
       ?n0 rdfs:subClassOf sio:SIO_010035 ;   # anchor: GENERATED
           skos:prefLabel ?name_n0 ;           # projection: GENERATED
-          obo:RO_0002162 ?n2 .
-  }
-  GRAPH <http://rdf.biogateway.eu/graph/taxon> {
-      ?n2 rdfs:label "Homo sapiens" .         # bind grounding
+          obo:RO_0002162 obo:NCBITaxon_9606 . # bind grounding: URI inlined directly, no lookup triple
   }
   # grounding "n3" (Mus musculus) DROPPED: no edge or projection references it.
 }
