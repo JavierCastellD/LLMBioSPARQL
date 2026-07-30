@@ -58,6 +58,11 @@ SPARQL_GENERATOR_PROMPT = "sparql_generator"
 # back to the same LLM. 0 disables repair (validate once, return as-is).
 SPARQL_GENERATOR_MAX_REPAIR = 2
 
-# When True, skip live validation against the SPARQL endpoint entirely (no
-# network calls) and return the first-generated query unvalidated.
-SPARQL_GENERATOR_OFFLINE_MODE = False
+# --- Path resolver (equal-length candidate path selection) ------------------
+
+# Name of the prompt template (under src/sparql_generator/prompts/, without the
+# ".txt" extension) used for the LLM's 1-of-N tiebreak among candidate paths.
+PATH_RESOLVER_TIEBREAK_PROMPT = "path_resolver_tiebreak"
+
+# How many times to retry if the model returns malformed JSON.
+PATH_RESOLVER_MAX_RETRIES = 2

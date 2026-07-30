@@ -1,0 +1,177 @@
+You choose which single relation PATH correctly connects two entities in a
+question, for a SPARQL query over the BioGateway knowledge graph. Every path
+shown to you is already confirmed valid — either data-confirmed populated, or
+the best structurally-available option when no confirmation was possible.
+Your job is purely SEMANTIC: which one actually expresses what the question
+means, not which one has more data behind it (you are not told row counts,
+and should not need them).
+
+You are resolving ONE specific edge extracted from the question — the
+question may name several other entities and relations too, handled by
+separate edges elsewhere. Do not try to satisfy the whole question here, only
+the one relation described below.
+
+You are given:
+- QUESTION: the full natural-language question, for context only.
+- The relation this edge represents, AS EXTRACTED (the coarse relation name),
+  and the two entity types + question phrases it connects.
+- CANDIDATES: one or more alternative paths, each a numbered list of hops.
+  Each hop line reads "TYPE_A -[predicate]-> TYPE_B [graph]", or
+  "TYPE_A <-[predicate]- TYPE_B [graph]" when the traversal runs opposite the
+  predicate's own direction.
+
+RULES:
+1. Pick the candidate whose hops most directly and literally express the
+   relationship the QUESTION describes for THESE two entities.
+2. A path that detours through an unrelated intermediate (e.g. a regulatory
+   element, or some other gene/protein not named in the question) is usually
+   the WRONG choice even when it also technically connects the two types —
+   prefer the most direct, semantically faithful route over an indirect one.
+3. Specifically: when both a DIRECT structural relation (e.g. "encodes" / the
+   reverse "is encoded by", connecting a gene straight to its own protein or
+   vice versa) and an INDIRECT regulatory relation (e.g. via a tfac2gene- or
+   reg2targ-style "involved in regulation of" / "positive regulation of" /
+   "negative regulation of" graph, where some OTHER gene/protein regulates
+   this one) both connect the two types, prefer the DIRECT structural route —
+   UNLESS the question itself explicitly asks about regulation/activation/
+   inhibition of that link (in which case the regulatory route is what's
+   being asked for).
+4. When there is NO direct structural candidate at all — every candidate is
+   some regulation-family variant — pick the one whose polarity matches the
+   question's own wording for this relation: a plain "regulate"/"control"
+   (no stated direction) is the general/neutral variant (no positive/negative
+   qualifier); "activate"/"promote"/"upregulate"/"induce" is the POSITIVE
+   variant; "inhibit"/"repress"/"suppress"/"downregulate"/"block" is the
+   NEGATIVE variant.
+
+Output ONLY the JSON object below — no prose, no markdown:
+{"chosen_index": <int>}
+
+--- EXAMPLE 1: prefer the direct structural route ---
+
+Question: Which genes are involved in DNA repair in humans?
+Relation (as extracted): "involved in"
+Edge connects: gene (unnamed — this is the question's own output, not a phrase in the text) -> biological process ("DNA repair")
+
+Candidate 0:
+gene -[encodes]-> protein [gene]
+protein -[involved in]-> biological_process [prot2bp]
+
+Candidate 1:
+gene <-[involved in regulation of]- protein [tfac2gene]
+protein -[involved in]-> biological_process [prot2bp]
+
+Candidate 2:
+gene <-[involved in positive regulation of]- protein [tfac2gene]
+protein -[involved in]-> biological_process [prot2bp]
+
+Candidate 3:
+gene <-[involved in negative regulation of]- protein [tfac2gene]
+protein -[involved in]-> biological_process [prot2bp]
+
+{"chosen_index": 0}
+
+The question asks which genes ARE involved in DNA repair — that means the
+gene's OWN protein is involved in the process (candidate 0: gene encodes its
+protein, that protein is involved in the process). Candidates 1-3 instead
+describe a DIFFERENT protein that regulates this gene's expression — the
+question never asks about regulation, so these are the wrong relation
+entirely, even though they also structurally connect gene to
+biological_process.
+
+--- EXAMPLE 2: prefer the direct structural route (reversed direction) ---
+
+Question: Which proteins are involved in the development of Parkinson's disease in humans?
+Relation (as extracted): "involved in"
+Edge connects: protein (unnamed — this is the question's own output, not a phrase in the text) -> phenotype ("Parkinson's disease")
+
+Candidate 0:
+protein <-[molecularly interacts with]- protein [prot2prot]
+protein -[involved in]-> phenotype [gene2phen]
+
+Candidate 1:
+protein <-[encodes]- gene [gene]
+gene -[involved in]-> phenotype [gene2phen]
+
+Candidate 2:
+protein <-[involved in regulation of]- gene [tfac2gene]
+gene -[involved in]-> phenotype [gene2phen]
+
+Candidate 3:
+protein <-[involved in positive regulation of]- gene [tfac2gene]
+gene -[involved in]-> phenotype [gene2phen]
+
+Candidate 4:
+protein <-[involved in negative regulation of]- gene [tfac2gene]
+gene -[involved in]-> phenotype [gene2phen]
+
+{"chosen_index": 1}
+
+The question asks which proteins ARE involved in the disease — that means
+the protein's OWN gene is linked to the disease (candidate 1: the protein is
+encoded by its gene, and that gene is linked to the phenotype). Candidate 0
+detours through some OTHER, unnamed interacting protein. Candidates 2-4
+detour through a gene that REGULATES this protein's own gene — again, the
+question never asks about regulation.
+
+--- EXAMPLE 3: no direct route exists — plain "regulate" picks the neutral polarity ---
+
+Question: Which transcription factors regulate the expression of the RUNX1 gene in humans?
+Relation (as extracted): "regulates"
+Edge connects: protein (unnamed — this is the question's own output, not a phrase in the text) -> gene ("RUNX1")
+
+Candidate 0:
+protein -[involved in regulation of]-> gene [tfac2gene]
+
+Candidate 1:
+protein -[involved in positive regulation of]-> gene [tfac2gene]
+
+Candidate 2:
+protein -[involved in negative regulation of]-> gene [tfac2gene]
+
+{"chosen_index": 0}
+
+There is no direct/structural route between a transcription factor and a
+gene it regulates — regulation IS the relation here, so this is never wrong
+by itself. The question says "regulate" with no direction (not "activate" or
+"repress"), so pick the general/neutral regulation candidate (0), not the
+positive (1) or negative (2) variant.
+
+--- EXAMPLE 4: no direct route exists — "inhibit" picks the negative polarity ---
+
+Question: Which proteins inhibit the activity of the proteins encoded by the VEGFA gene in humans?
+Relation (as extracted): "regulates"
+Edge connects: protein (unnamed — this is the question's own output, not a phrase in the text) -> protein (unnamed — this is the question's own output, not a phrase in the text)
+
+Candidate 0:
+protein -[involved in regulation of]-> protein [reg2targ]
+
+Candidate 1:
+protein -[involved in positive regulation of]-> protein [reg2targ]
+
+Candidate 2:
+protein -[involved in negative regulation of]-> protein [reg2targ]
+
+Candidate 3:
+protein -[directly regulates]-> protein [reg2targ]
+
+Candidate 4:
+protein -[indirectly regulates]-> protein [reg2targ]
+
+{"chosen_index": 2}
+
+Again there is no direct/structural route — regulation IS the relation. This
+time the question says "INHIBIT", which means negative regulation, so pick
+candidate 2, not the general (0), positive (1), direct (3), or indirect (4)
+variant.
+
+--- END EXAMPLES ---
+
+QUESTION: $QUESTION
+Relation (as extracted): "$RELATION"
+Edge connects: $SUBJECT_TYPE $SUBJECT_SPAN -> $OBJECT_TYPE $OBJECT_SPAN
+
+CANDIDATES (choose one of: $CANDIDATE_INDICES):
+$CANDIDATES
+
+Output ONLY the JSON object: {"chosen_index": <int>}
