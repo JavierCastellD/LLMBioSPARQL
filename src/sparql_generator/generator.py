@@ -21,7 +21,6 @@ import urllib3
 from ..config import (
     BIOGATEWAY_SPARQL_ENDPOINT,
     SPARQL_GENERATOR_MAX_REPAIR,
-    SPARQL_GENERATOR_OFFLINE_MODE,
     SPARQL_GENERATOR_PROMPT,
     SPARQL_TIMEOUT,
     SPARQL_VERIFY_SSL,
@@ -31,6 +30,7 @@ from ..utils.llm import LLMCallable, OllamaLLM
 from ..utils.prompts_loader import render_prompt
 from .attribute_resolver import AttributeConfig, build_attribute_config
 from .brief_builder import build_brief
+from .path_resolver import PathResolver
 
 if not SPARQL_VERIFY_SSL:
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -143,8 +143,6 @@ class SPARQLGenerator:
             If None, uses data/BGW_graphs.xlsx relative to the project root.
         max_repair (int):
             Maximum number of repair attempts after a failed live validation.
-        offline (bool):
-            When True, skip live validation entirely (no network calls).
     """
 
     def __init__(
@@ -152,7 +150,6 @@ class SPARQLGenerator:
         llm_client: LLMCallable | None = None,
         excel_path: Path | None = None,
         max_repair: int = SPARQL_GENERATOR_MAX_REPAIR,
-        offline: bool = SPARQL_GENERATOR_OFFLINE_MODE,
     ) -> None:
         """Initializes the attributes of the class.
 
@@ -163,16 +160,14 @@ class SPARQLGenerator:
                 Path to BGW_graphs.xlsx. If None, the default project path is used.
             max_repair (int):
                 Maximum number of repair attempts after a failed live validation.
-            offline (bool):
-                When True, skip live validation entirely (no network calls).
         """
         self._llm = llm_client or OllamaLLM()
         self._max_repair = max_repair
-        self._offline = offline
 
         xlsx = excel_path or _DEFAULT_EXCEL
         self._label_cfg: LabelConfig = build_label_config(xlsx) if xlsx.exists() else {}
         self._attr_cfg: AttributeConfig = build_attribute_config(xlsx) if xlsx.exists() else {}
+        self._path_resolver = PathResolver(llm_client=self._llm)
 
     def generate(
         self,
@@ -201,12 +196,15 @@ class SPARQLGenerator:
 
         Returns:
             A dict with keys:
-              "query"    — the authored SPARQL query (str).
-              "brief"    — the assembly brief that was sent to the LLM.
-              "warnings" — brief-assembly warnings (fail-soft drops), list[str].
-              "error"    — present only if live validation never succeeded.
+              "query"            — the authored SPARQL query (str).
+              "brief"            — the assembly brief that was sent to the LLM.
+              "warnings"         — brief-assembly warnings (fail-soft drops), list[str].
+              "path_resolutions" — one record per resolved edge (tier, validated,
+                                   etc.) from the path resolver, for logging/
+                                   inspection only (see docs/path_resolver_spec.md).
+              "error"            — present only if live validation never succeeded.
         """
-        brief, warnings = build_brief(
+        brief, warnings, path_resolutions = build_brief(
             question,
             extraction,
             planner_result,
@@ -215,14 +213,12 @@ class SPARQLGenerator:
             designation,
             label_cfg=self._label_cfg,
             attr_cfg=self._attr_cfg,
+            path_resolver=self._path_resolver,
         )
 
         prompt = build_generation_prompt(brief)
         raw = self._llm(prompt)
         query = extract_sparql(raw)
-
-        if self._offline:
-            return {"query": query, "brief": brief, "warnings": warnings}
 
         error = _validate_live(query)
         attempt = 0
@@ -232,7 +228,7 @@ class SPARQLGenerator:
             error = _validate_live(query)
             attempt += 1
 
-        result = {"query": query, "brief": brief, "warnings": warnings}
+        result = {"query": query, "brief": brief, "warnings": warnings, "path_resolutions": path_resolutions}
         if error is not None:
             result["error"] = error
         return result
