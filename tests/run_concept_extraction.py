@@ -5,9 +5,9 @@ Usage:
 
 <input.json> is a list of objects, each with at least a "question" key (any
 other keys are ignored). <output.json> is written as a list of
-{"question": ..., "result": ...} objects, one per input question, where
-"result" is whatever ConceptExtractor.extract() returned (either the
-extracted {"nodes", "triples"} or a structured error).
+{"question": ..., "extractor": ...} objects, one per input question, where
+"extractor" is whatever ConceptExtractor.extract() returned (either the
+extracted {"outputs", "nodes", "triples"} or a structured error).
 """
 from __future__ import annotations
 
