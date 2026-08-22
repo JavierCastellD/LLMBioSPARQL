@@ -1,0 +1,17 @@
+#Which genes associated with prostate-related phenotypes encode proteins, and what biological processes are those proteins involved in?
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX sio: <http://semanticscience.org/resource/>
+SELECT DISTINCT ?phen ?gene ?prot ?bp
+WHERE {
+    ?phen skos:prefLabel ?phenotype_label .
+    Filter(regex(?phenotype_label, "prostate cancer" , "i"))
+     ?gene obo:RO_0002331 ?phen .
+	 ?gene <http://purl.obolibrary.org/obo/RO_0002162> <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
+     ?gene sio:SIO_010078 ?prot .
+    OPTIONAL {
+	?prot obo:RO_0002331 ?bp .
+   } 
+}

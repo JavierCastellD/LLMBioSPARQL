@@ -1,0 +1,23 @@
+#Retrieve genes for prostate cancer phenotypes, their encoded proteins, and details of prostate-active enhancers.
+BASE <http://rdf.biogateway.eu/graph/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX sio: <http://semanticscience.org/resource/>
+SELECT DISTINCT ?phen ?gene ?prot ?crm ?enh_label ?enh_start ?enh_end ?chr ?evidence
+WHERE {
+
+?phen skos:prefLabel ?d .
+Filter(regex(?d, "prostate cancer" , "i"))
+?gene obo:RO_0002331 ?phen .
+?crm obo:RO_0002429 ?gene .
+?gene sio:SIO_010078 ?prot .
+?crm rdfs:subClassOf obo:SO_0000727 .
+?crm skos:prefLabel ?enh_label .
+?crm obo:GENO_0000894 ?enh_start .
+?crm obo:GENO_0000895 ?enh_end .
+?crm obo:BFO_0000050 ?chr .
+?enh_inst rdf:type ?crm .
+?enh_inst	obo:TXPO_0003500 ?evidence .	
+}

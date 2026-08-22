@@ -1,0 +1,15 @@
+# What are the species present in BioGateWay and their scientific and common names?
+BASE <http://rdf.biogateway.eu/graph/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX taxon: <http://purl.obolibrary.org/obo/ncbitaxon#>
+PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
+SELECT distinct ?s ?label ?syn
+WHERE {
+GRAPH <taxon> {
+     ?s taxon:has_rank <http://purl.obolibrary.org/obo/NCBITaxon_species> .
+     ?s rdfs:label ?label .
+     OPTIONAL {?s oboInOwl:hasRelatedSynonym ?syn . }
+	}
+}
+limit 10

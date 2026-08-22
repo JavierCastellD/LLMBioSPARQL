@@ -1,0 +1,36 @@
+# What are the proteins where the APOC1 Homo sapiens gene encodes?
+BASE <http://rdf.biogateway.eu/graph/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?o
+WHERE {
+   ?s ?r "APOC1" .
+   ?s <http://semanticscience.org/resource/SIO_010078> ?o .
+   ?s <http://purl.obolibrary.org/obo/RO_0002162> ?t .
+   ?t rdfs:label "Homo sapiens" .
+} 
+
+
+#Retrieve cis-regulatory modules that regulate BRCA1 and contribute to phenotypic conditions associated with BRCA1
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sio: <http://semanticscience.org/resource/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+prefix obo: <http://purl.obolibrary.org/obo/>
+
+SELECT distinct ?label ?crm ?phen
+WHERE {
+ <http://rdf.biogateway.eu/gene/9606/BRCA1> rdfs:subClassOf	sio:SIO_010035 .    
+ <http://rdf.biogateway.eu/gene/9606/BRCA1> obo:RO_0002162 <http://purl.obolibrary.org/obo/NCBITaxon_9606> . 
+ <http://rdf.biogateway.eu/gene/9606/BRCA1> skos:prefLabel ?label .
+{
+?crm obo:RO_0002428	<http://rdf.biogateway.eu/gene/9606/BRCA1> . 
+} UNION {
+?crm obo:RO_0002429 <http://rdf.biogateway.eu/gene/9606/BRCA1> . 
+} UNION {
+?crm obo:RO_0002430 <http://rdf.biogateway.eu/gene/9606/BRCA1> . 
+}
+
+?crm obo:RO_0002331 ?phen .
+<http://rdf.biogateway.eu/gene/9606/BRCA1> obo:RO_0002331 ?phen .
+}
+
+

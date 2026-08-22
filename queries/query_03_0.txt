@@ -1,0 +1,87 @@
+# Which genes associated with APOC1 encode a protein, and what organism do they belong to?
+BASE <http://rdf.biogateway.eu/graph/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?graph ?s ?o ?t ?l
+WHERE {
+GRAPH ?graph {
+   ?s ?r "APOC1" .
+   ?s <http://semanticscience.org/resource/SIO_010078> ?o .
+   ?s <http://purl.obolibrary.org/obo/RO_0002162> ?t .
+}
+graph ?g {
+   ?t rdfs:label ?l .
+}
+}
+
+#Identify human genes located entirely within the genomic region between positions 43,000,000 and 44,000,000, based on their genomic start and end coordinates.
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sio: <http://semanticscience.org/resource/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+prefix obo: <http://purl.obolibrary.org/obo/>
+
+SELECT distinct ?s ?ini ?fin
+WHERE {
+ ?s rdfs:subClassOf	sio:SIO_010035 .   
+ ?s obo:RO_0002162 <http://purl.obolibrary.org/obo/NCBITaxon_9606> . 
+ ?s obo:GENO_0000894 ?ini .
+ ?s obo:GENO_0000895 ?fin .
+FILTER (?ini > 43000000 && ?fin < 44000000)
+}
+
+
+#Identify the topologically associating domains (TADs) that encompass the entire BRCA1 gene locus.
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sio: <http://semanticscience.org/resource/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+prefix obo: <http://purl.obolibrary.org/obo/>
+
+SELECT distinct ?tad 
+WHERE {
+ <http://rdf.biogateway.eu/gene/9606/BRCA1> obo:GENO_0000894 ?inig .
+ <http://rdf.biogateway.eu/gene/9606/BRCA1> obo:GENO_0000895 ?fing .
+ ?tad rdfs:subClassOf	obo:SO_0002304 .
+ ?tad obo:GENO_0000894 ?init .
+ ?tad obo:GENO_0000895 ?fint .
+FILTER (?inig > ?init && ?fing < ?fint)
+}
+
+#Identify cis-regulatory modules that positively regulate BRCA1 and molecularly interact with its encoded protein.
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sio: <http://semanticscience.org/resource/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+prefix obo: <http://purl.obolibrary.org/obo/>
+
+SELECT distinct ?label ?crm ?prot
+WHERE {
+ <http://rdf.biogateway.eu/gene/9606/BRCA1> rdfs:subClassOf	sio:SIO_010035 .    
+ <http://rdf.biogateway.eu/gene/9606/BRCA1> obo:RO_0002162 <http://purl.obolibrary.org/obo/NCBITaxon_9606> . 
+ <http://rdf.biogateway.eu/gene/9606/BRCA1> skos:prefLabel ?label .
+?crm obo:RO_0002429	<http://rdf.biogateway.eu/gene/9606/BRCA1> . 
+?crm obo:RO_0002436 ?prot .
+<http://rdf.biogateway.eu/gene/9606/BRCA1> sio:SIO_010078 ?prot  .
+}
+
+#Identify cis-regulatory modules that regulate BRCA1 and molecularly interact with its encoded protein.
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sio: <http://semanticscience.org/resource/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+prefix obo: <http://purl.obolibrary.org/obo/>
+
+SELECT distinct ?label ?crm ?prot
+WHERE {
+ <http://rdf.biogateway.eu/gene/9606/BRCA1> rdfs:subClassOf	sio:SIO_010035 .    
+ <http://rdf.biogateway.eu/gene/9606/BRCA1> obo:RO_0002162 <http://purl.obolibrary.org/obo/NCBITaxon_9606> . 
+ <http://rdf.biogateway.eu/gene/9606/BRCA1> skos:prefLabel ?label .
+{
+?crm obo:RO_0002428	<http://rdf.biogateway.eu/gene/9606/BRCA1> . 
+} UNION {
+?crm obo:RO_0002429 <http://rdf.biogateway.eu/gene/9606/BRCA1> . 
+} UNION {
+?crm obo:RO_0002430 <http://rdf.biogateway.eu/gene/9606/BRCA1> . 
+}
+
+?crm obo:RO_0002436 ?prot .
+<http://rdf.biogateway.eu/gene/9606/BRCA1> sio:SIO_010078 ?prot  .
+}
+
+

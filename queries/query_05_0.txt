@@ -1,0 +1,38 @@
+#Which proteins encoded by genes associated with “APOC1” in Homo sapiens interact with other proteins, and what are those interacting proteins?
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sio: <http://semanticscience.org/resource/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+prefix obo: <http://purl.obolibrary.org/obo/>
+
+SELECT DISTINCT ?o ?tf
+WHERE {
+  ?s <http://semanticscience.org/resource/SIO_010078> ?o .
+  ?s <http://purl.obolibrary.org/obo/RO_0002162> <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
+  {
+     ?s skos:prefLabel	?name .
+  } union {
+     ?s skos:altLabel   ?name .
+  }
+  FILTER(CONTAINS(LCASE(STR(?name)), "apoc1"))
+
+  ?o obo:RO_0002436 ?tf .
+}  
+
+##Which proteins encoded by genes associated with “BRCA2” in Homo sapiens interact with other proteins, and what are those interacting proteins?
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sio: <http://semanticscience.org/resource/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+prefix obo: <http://purl.obolibrary.org/obo/>
+
+SELECT DISTINCT ?o ?tf
+WHERE {
+  ?s <http://semanticscience.org/resource/SIO_010078> ?o .
+  ?s <http://purl.obolibrary.org/obo/RO_0002162> <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
+  {
+     ?s skos:prefLabel	?name .
+  } union {
+     ?s skos:altLabel   ?name .
+  }
+  FILTER(CONTAINS(LCASE(STR(?name)), "brca2"))
+  ?o obo:RO_0002436 ?tf .
+}  

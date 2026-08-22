@@ -1,0 +1,1082 @@
+[
+  {
+    "question": "Count all distinct taxa classified at the species rank in the NCBI Taxonomy.",
+    "sparql": "BASE <http://rdf.biogateway.eu/graph/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX taxon: <http://purl.obolibrary.org/obo/ncbitaxon#>\nSELECT (count( DISTINCT ?s) as ?taxon )\nWHERE {\nGRAPH <taxon> {\n  {?s taxon:has_rank <http://purl.obolibrary.org/obo/NCBITaxon_species> .}\n}\n}",
+    "extractor": {
+      "outputs": [
+        "n0"
+      ],
+      "nodes": {
+        "n0": {
+          "type": "organism"
+        }
+      },
+      "triples": []
+    },
+    "linker": {
+      "input": [],
+      "output": []
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "organism"
+        }
+      ],
+      "output": {
+        "attributes": [
+          {
+            "on": "n0",
+            "attribute": "count"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "question": "Retrieve all taxa ancestral to Homo sapiens in the taxonomic hierarchy, including direct and indirect ancestors, and report the number of hierarchical levels separating each ancestor from Homo sapiens.",
+    "sparql": "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\nSELECT DISTINCT ?ancestor ?level\nWHERE {\n  {\n    SELECT ?taxon ?ancestor\n    WHERE {\n      ?taxon rdfs:subClassOf ?ancestor\n    }\n  }\n  OPTION (\n    TRANSITIVE,\n    t_distinct,\n    t_in(?taxon),\n    t_out(?ancestor),\n    t_min(1),\n    t_step('step_no') AS ?level\n  )\n  FILTER (\n    ?taxon = <http://purl.obolibrary.org/obo/NCBITaxon_9606>\n  )\n}\nORDER BY ?level",
+    "extractor": {
+      "outputs": [
+        "n0"
+      ],
+      "nodes": {
+        "n0": {
+          "type": "organism"
+        },
+        "n1": {
+          "type": "organism",
+          "span": "Homo sapiens"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n0",
+          "relation": "ancestor of",
+          "object": "n1"
+        }
+      ]
+    },
+    "linker": {
+      "input": [
+        {
+          "node_id": "n1",
+          "span": "Homo sapiens",
+          "type": "organism"
+        }
+      ],
+      "output": [
+        {
+          "span": "Homo sapiens",
+          "mode": "bind",
+          "uri": "http://purl.obolibrary.org/obo/NCBITaxon_9606",
+          "term": "Homo sapiens",
+          "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
+        }
+      ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "organism"
+        }
+      ],
+      "output": {
+        "attributes": [
+          {
+            "on": "n0",
+            "attribute": "level"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "question": "Retrieve all taxa descending from Homo sapiens in the taxonomic hierarchy, including both direct and indirect subclasses, and indicate the number of hierarchical levels separating each taxon from Homo sapiens.?",
+    "sparql": "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\nSELECT DISTINCT ?sucesor ?level\nWHERE {\n  {\n    SELECT ?taxon ?sucesor\n    WHERE {\n      ?sucesor rdfs:subClassOf ?taxon\n    }\n  }\n  OPTION (\n    TRANSITIVE,\n    t_distinct,\n    t_in(?taxon),\n    t_out(?sucesor),\n    t_min(1),\n    t_step('step_no') AS ?level\n  )\n  FILTER (\n    ?taxon = <http://purl.obolibrary.org/obo/NCBITaxon_9606>\n  )\n}\nORDER BY ?level",
+    "extractor": {
+      "outputs": [
+        "n0"
+      ],
+      "nodes": {
+        "n0": {
+          "type": "organism"
+        },
+        "n1": {
+          "type": "organism",
+          "span": "Homo sapiens"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n0",
+          "relation": "descendant of",
+          "object": "n1"
+        }
+      ]
+    },
+    "linker": {
+      "input": [
+        {
+          "node_id": "n1",
+          "span": "Homo sapiens",
+          "type": "organism"
+        }
+      ],
+      "output": [
+        {
+          "span": "Homo sapiens",
+          "mode": "bind",
+          "uri": "http://purl.obolibrary.org/obo/NCBITaxon_9606",
+          "term": "Homo sapiens",
+          "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
+        }
+      ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "organism"
+        }
+      ],
+      "output": {
+        "attributes": [
+          {
+            "on": "n0",
+            "attribute": "level"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "question": "What are the species present in BioGateWay and their scientific and common names?",
+    "sparql": "BASE <http://rdf.biogateway.eu/graph/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX taxon: <http://purl.obolibrary.org/obo/ncbitaxon#>\nPREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>\nSELECT distinct ?s ?label ?syn\nWHERE {\nGRAPH <taxon> {\n     ?s taxon:has_rank <http://purl.obolibrary.org/obo/NCBITaxon_species> .\n     ?s rdfs:label ?label .\n     OPTIONAL {?s oboInOwl:hasRelatedSynonym ?syn . }\n\t}\n}\nlimit 10",
+    "extractor": {
+      "outputs": [
+        "n0"
+      ],
+      "nodes": {
+        "n0": {
+          "type": "organism"
+        }
+      },
+      "triples": []
+    },
+    "linker": {
+      "input": [],
+      "output": []
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "organism"
+        }
+      ],
+      "output": {
+        "attributes": [
+          {
+            "on": "n0",
+            "attribute": "synonym"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "question": "Which genes associated with APOC1 encode a protein, and what organism do they belong to?",
+    "sparql": "BASE <http://rdf.biogateway.eu/graph/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?graph ?s ?o ?t ?l\nWHERE {\nGRAPH ?graph {\n   ?s ?r \"APOC1\" .\n   ?s <http://semanticscience.org/resource/SIO_010078> ?o .\n   ?s <http://purl.obolibrary.org/obo/RO_0002162> ?t .\n}\ngraph ?g {\n   ?t rdfs:label ?l .\n}\n}",
+    "extractor": {
+      "outputs": [
+        "n0",
+        "n2"
+      ],
+      "nodes": {
+        "n0": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "gene",
+          "span": "APOC1"
+        },
+        "n2": {
+          "type": "organism"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n1",
+          "relation": "encodes",
+          "object": "n0"
+        },
+        {
+          "subject": "n1",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    },
+    "linker": {
+      "input": [
+        {
+          "node_id": "n1",
+          "span": "APOC1",
+          "type": "gene"
+        }
+      ],
+      "output": [
+        {
+          "span": "APOC1",
+          "mode": "many",
+          "term": "APOC1",
+          "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
+        }
+      ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        },
+        {
+          "node_id": "n2",
+          "type": "organism"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
+    }
+  },
+  {
+    "question": "Identify human genes located entirely within the genomic region between positions 43,000,000 and 44,000,000, based on their genomic start and end coordinates.",
+    "sparql": "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nprefix sio: <http://semanticscience.org/resource/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nprefix obo: <http://purl.obolibrary.org/obo/>\n\nSELECT distinct ?s ?ini ?fin\nWHERE {\n ?s rdfs:subClassOf\tsio:SIO_010035 .   \n ?s obo:RO_0002162 <http://purl.obolibrary.org/obo/NCBITaxon_9606> . \n ?s obo:GENO_0000894 ?ini .\n ?s obo:GENO_0000895 ?fin .\nFILTER (?ini > 43000000 && ?fin < 44000000)\n}",
+    "extractor": {
+      "outputs": [
+        "n0"
+      ],
+      "nodes": {
+        "n0": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "organism",
+          "span": "human"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n0",
+          "relation": "in taxon",
+          "object": "n1"
+        }
+      ]
+    },
+    "linker": {
+      "input": [
+        {
+          "node_id": "n1",
+          "span": "human",
+          "type": "organism"
+        }
+      ],
+      "output": [
+        {
+          "span": "human",
+          "mode": "bind",
+          "uri": "http://purl.obolibrary.org/obo/NCBITaxon_9606",
+          "term": "Homo sapiens",
+          "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
+        }
+      ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        }
+      ],
+      "output": {
+        "attributes": [
+          {
+            "on": "n0",
+            "attribute": "start position"
+          },
+          {
+            "on": "n0",
+            "attribute": "end position"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "question": "Identify the topologically associating domains (TADs) that encompass the entire BRCA1 gene locus.",
+    "sparql": "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nprefix sio: <http://semanticscience.org/resource/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nprefix obo: <http://purl.obolibrary.org/obo/>\n\nSELECT distinct ?tad \nWHERE {\n <http://rdf.biogateway.eu/gene/9606/BRCA1> obo:GENO_0000894 ?inig .\n <http://rdf.biogateway.eu/gene/9606/BRCA1> obo:GENO_0000895 ?fing .\n ?tad rdfs:subClassOf\tobo:SO_0002304 .\n ?tad obo:GENO_0000894 ?init .\n ?tad obo:GENO_0000895 ?fint .\nFILTER (?inig > ?init && ?fing < ?fint)\n}",
+    "extractor": {
+      "outputs": [
+        "n0"
+      ],
+      "nodes": {
+        "n0": {
+          "type": "tad"
+        },
+        "n1": {
+          "type": "gene",
+          "span": "BRCA1"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n1",
+          "relation": "located in",
+          "object": "n0"
+        }
+      ]
+    },
+    "linker": {
+      "input": [
+        {
+          "node_id": "n1",
+          "span": "BRCA1",
+          "type": "gene"
+        }
+      ],
+      "output": [
+        {
+          "span": "BRCA1",
+          "mode": "many",
+          "term": "BRCA1",
+          "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
+        }
+      ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "tad"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
+    }
+  },
+  {
+    "question": "Identify cis-regulatory modules that positively regulate BRCA1 and molecularly interact with its encoded protein.",
+    "sparql": "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nprefix sio: <http://semanticscience.org/resource/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nprefix obo: <http://purl.obolibrary.org/obo/>\n\nSELECT distinct ?label ?crm ?prot\nWHERE {\n <http://rdf.biogateway.eu/gene/9606/BRCA1> rdfs:subClassOf\tsio:SIO_010035 .    \n <http://rdf.biogateway.eu/gene/9606/BRCA1> obo:RO_0002162 <http://purl.obolibrary.org/obo/NCBITaxon_9606> . \n <http://rdf.biogateway.eu/gene/9606/BRCA1> skos:prefLabel ?label .\n?crm obo:RO_0002429\t<http://rdf.biogateway.eu/gene/9606/BRCA1> . \n?crm obo:RO_0002436 ?prot .\n<http://rdf.biogateway.eu/gene/9606/BRCA1> sio:SIO_010078 ?prot  .\n}",
+    "extractor": {
+      "outputs": [
+        "n0"
+      ],
+      "nodes": {
+        "n0": {
+          "type": "crm"
+        },
+        "n1": {
+          "type": "gene",
+          "span": "BRCA1"
+        },
+        "n2": {
+          "type": "protein"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n0",
+          "relation": "positively regulates",
+          "object": "n1"
+        },
+        {
+          "subject": "n1",
+          "relation": "encodes",
+          "object": "n2"
+        },
+        {
+          "subject": "n0",
+          "relation": "molecularly interacts with",
+          "object": "n2"
+        }
+      ]
+    },
+    "linker": {
+      "input": [
+        {
+          "node_id": "n1",
+          "span": "BRCA1",
+          "type": "gene"
+        }
+      ],
+      "output": [
+        {
+          "span": "BRCA1",
+          "mode": "many",
+          "term": "BRCA1",
+          "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
+        }
+      ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "crm"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
+    }
+  },
+  {
+    "question": "Identify cis-regulatory modules that regulate BRCA1 and molecularly interact with its encoded protein.",
+    "sparql": "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nprefix sio: <http://semanticscience.org/resource/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nprefix obo: <http://purl.obolibrary.org/obo/>\n\nSELECT distinct ?label ?crm ?prot\nWHERE {\n <http://rdf.biogateway.eu/gene/9606/BRCA1> rdfs:subClassOf\tsio:SIO_010035 .    \n <http://rdf.biogateway.eu/gene/9606/BRCA1> obo:RO_0002162 <http://purl.obolibrary.org/obo/NCBITaxon_9606> . \n <http://rdf.biogateway.eu/gene/9606/BRCA1> skos:prefLabel ?label .\n{\n?crm obo:RO_0002428\t<http://rdf.biogateway.eu/gene/9606/BRCA1> . \n} UNION {\n?crm obo:RO_0002429 <http://rdf.biogateway.eu/gene/9606/BRCA1> . \n} UNION {\n?crm obo:RO_0002430 <http://rdf.biogateway.eu/gene/9606/BRCA1> . \n}\n\n?crm obo:RO_0002436 ?prot .\n<http://rdf.biogateway.eu/gene/9606/BRCA1> sio:SIO_010078 ?prot  .\n}",
+    "extractor": {
+      "outputs": [
+        "n0"
+      ],
+      "nodes": {
+        "n0": {
+          "type": "crm"
+        },
+        "n1": {
+          "type": "gene",
+          "span": "BRCA1"
+        },
+        "n2": {
+          "type": "protein"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n0",
+          "relation": "regulates",
+          "object": "n1"
+        },
+        {
+          "subject": "n1",
+          "relation": "encodes",
+          "object": "n2"
+        },
+        {
+          "subject": "n0",
+          "relation": "molecularly interacts with",
+          "object": "n2"
+        }
+      ]
+    },
+    "linker": {
+      "input": [
+        {
+          "node_id": "n1",
+          "span": "BRCA1",
+          "type": "gene"
+        }
+      ],
+      "output": [
+        {
+          "span": "BRCA1",
+          "mode": "many",
+          "term": "BRCA1",
+          "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
+        }
+      ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "crm"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
+    }
+  },
+  {
+    "question": "What are the proteins where the APOC1 Homo sapiens gene encodes?",
+    "sparql": "BASE <http://rdf.biogateway.eu/graph/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?o\nWHERE {\n   ?s ?r \"APOC1\" .\n   ?s <http://semanticscience.org/resource/SIO_010078> ?o .\n   ?s <http://purl.obolibrary.org/obo/RO_0002162> ?t .\n   ?t rdfs:label \"Homo sapiens\" .\n} ",
+    "extractor": {
+      "outputs": [
+        "n0"
+      ],
+      "nodes": {
+        "n0": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "gene",
+          "span": "APOC1"
+        },
+        "n2": {
+          "type": "organism",
+          "span": "Homo sapiens"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n1",
+          "relation": "encodes",
+          "object": "n0"
+        },
+        {
+          "subject": "n1",
+          "relation": "in taxon",
+          "object": "n2"
+        }
+      ]
+    },
+    "linker": {
+      "input": [
+        {
+          "node_id": "n1",
+          "span": "APOC1",
+          "type": "gene"
+        },
+        {
+          "node_id": "n2",
+          "span": "Homo sapiens",
+          "type": "organism"
+        }
+      ],
+      "output": [
+        {
+          "span": "APOC1",
+          "mode": "many",
+          "term": "APOC1",
+          "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
+        },
+        {
+          "span": "Homo sapiens",
+          "mode": "bind",
+          "uri": "http://purl.obolibrary.org/obo/NCBITaxon_9606",
+          "term": "Homo sapiens",
+          "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
+        }
+      ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
+    }
+  },
+  {
+    "question": "Retrieve cis-regulatory modules that regulate BRCA1 and contribute to phenotypic conditions associated with BRCA1",
+    "sparql": "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nprefix sio: <http://semanticscience.org/resource/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nprefix obo: <http://purl.obolibrary.org/obo/>\n\nSELECT distinct ?label ?crm ?phen\nWHERE {\n <http://rdf.biogateway.eu/gene/9606/BRCA1> rdfs:subClassOf\tsio:SIO_010035 .    \n <http://rdf.biogateway.eu/gene/9606/BRCA1> obo:RO_0002162 <http://purl.obolibrary.org/obo/NCBITaxon_9606> . \n <http://rdf.biogateway.eu/gene/9606/BRCA1> skos:prefLabel ?label .\n{\n?crm obo:RO_0002428\t<http://rdf.biogateway.eu/gene/9606/BRCA1> . \n} UNION {\n?crm obo:RO_0002429 <http://rdf.biogateway.eu/gene/9606/BRCA1> . \n} UNION {\n?crm obo:RO_0002430 <http://rdf.biogateway.eu/gene/9606/BRCA1> . \n}\n\n?crm obo:RO_0002331 ?phen .\n<http://rdf.biogateway.eu/gene/9606/BRCA1> obo:RO_0002331 ?phen .\n}",
+    "extractor": {
+      "outputs": [
+        "n0"
+      ],
+      "nodes": {
+        "n0": {
+          "type": "crm"
+        },
+        "n1": {
+          "type": "gene",
+          "span": "BRCA1"
+        },
+        "n2": {
+          "type": "phenotype"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n0",
+          "relation": "regulates",
+          "object": "n1"
+        },
+        {
+          "subject": "n1",
+          "relation": "involved in",
+          "object": "n2"
+        },
+        {
+          "subject": "n0",
+          "relation": "involved in",
+          "object": "n2"
+        }
+      ]
+    },
+    "linker": {
+      "input": [
+        {
+          "node_id": "n1",
+          "span": "BRCA1",
+          "type": "gene"
+        }
+      ],
+      "output": [
+        {
+          "span": "BRCA1",
+          "mode": "many",
+          "term": "BRCA1",
+          "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
+        }
+      ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "crm"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
+    }
+  },
+  {
+    "question": "Which proteins encoded by genes associated with “APOC1” in Homo sapiens interact with other proteins, and what are those interacting proteins?",
+    "sparql": "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nprefix sio: <http://semanticscience.org/resource/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nprefix obo: <http://purl.obolibrary.org/obo/>\n\nSELECT DISTINCT ?o ?tf\nWHERE {\n  ?s <http://semanticscience.org/resource/SIO_010078> ?o .\n  ?s <http://purl.obolibrary.org/obo/RO_0002162> <http://purl.obolibrary.org/obo/NCBITaxon_9606> .\n  {\n     ?s skos:prefLabel\t?name .\n  } union {\n     ?s skos:altLabel   ?name .\n  }\n  FILTER(CONTAINS(LCASE(STR(?name)), \"apoc1\"))\n\n  ?o obo:RO_0002436 ?tf .\n}  ",
+    "extractor": {
+      "outputs": [
+        "n0",
+        "n2"
+      ],
+      "nodes": {
+        "n0": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "gene",
+          "span": "“APOC1”"
+        },
+        "n2": {
+          "type": "protein"
+        },
+        "n3": {
+          "type": "organism",
+          "span": "Homo sapiens"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n1",
+          "relation": "encodes",
+          "object": "n0"
+        },
+        {
+          "subject": "n1",
+          "relation": "in taxon",
+          "object": "n3"
+        },
+        {
+          "subject": "n0",
+          "relation": "molecularly interacts with",
+          "object": "n2"
+        }
+      ]
+    },
+    "linker": {
+      "input": [
+        {
+          "node_id": "n1",
+          "span": "“APOC1”",
+          "type": "gene"
+        },
+        {
+          "node_id": "n3",
+          "span": "Homo sapiens",
+          "type": "organism"
+        }
+      ],
+      "output": [
+        {
+          "span": "“APOC1”",
+          "mode": "filter",
+          "term": "apoc1",
+          "predicates": [
+            "http://www.w3.org/2004/02/skos/core#prefLabel",
+            "http://www.w3.org/2004/02/skos/core#altLabel"
+          ]
+        },
+        {
+          "span": "Homo sapiens",
+          "mode": "bind",
+          "uri": "http://purl.obolibrary.org/obo/NCBITaxon_9606",
+          "term": "Homo sapiens",
+          "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
+        }
+      ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        },
+        {
+          "node_id": "n2",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
+    }
+  },
+  {
+    "question": "Which proteins encoded by genes associated with “BRCA2” in Homo sapiens interact with other proteins, and what are those interacting proteins?",
+    "sparql": "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nprefix sio: <http://semanticscience.org/resource/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nprefix obo: <http://purl.obolibrary.org/obo/>\n\nSELECT DISTINCT ?o ?tf\nWHERE {\n  ?s <http://semanticscience.org/resource/SIO_010078> ?o .\n  ?s <http://purl.obolibrary.org/obo/RO_0002162> <http://purl.obolibrary.org/obo/NCBITaxon_9606> .\n  {\n     ?s skos:prefLabel\t?name .\n  } union {\n     ?s skos:altLabel   ?name .\n  }\n  FILTER(CONTAINS(LCASE(STR(?name)), \"brca2\"))\n  ?o obo:RO_0002436 ?tf .\n}  ",
+    "extractor": {
+      "outputs": [
+        "n0",
+        "n2"
+      ],
+      "nodes": {
+        "n0": {
+          "type": "protein"
+        },
+        "n1": {
+          "type": "gene",
+          "span": "“BRCA2”"
+        },
+        "n2": {
+          "type": "protein"
+        },
+        "n3": {
+          "type": "organism",
+          "span": "Homo sapiens"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n1",
+          "relation": "encodes",
+          "object": "n0"
+        },
+        {
+          "subject": "n1",
+          "relation": "in taxon",
+          "object": "n3"
+        },
+        {
+          "subject": "n0",
+          "relation": "molecularly interacts with",
+          "object": "n2"
+        }
+      ]
+    },
+    "linker": {
+      "input": [
+        {
+          "node_id": "n1",
+          "span": "“BRCA2”",
+          "type": "gene"
+        },
+        {
+          "node_id": "n3",
+          "span": "Homo sapiens",
+          "type": "organism"
+        }
+      ],
+      "output": [
+        {
+          "span": "“BRCA2”",
+          "mode": "filter",
+          "term": "brca2",
+          "predicates": [
+            "http://www.w3.org/2004/02/skos/core#prefLabel",
+            "http://www.w3.org/2004/02/skos/core#altLabel"
+          ]
+        },
+        {
+          "span": "Homo sapiens",
+          "mode": "bind",
+          "uri": "http://purl.obolibrary.org/obo/NCBITaxon_9606",
+          "term": "Homo sapiens",
+          "label_predicate": "http://www.w3.org/2000/01/rdf-schema#label"
+        }
+      ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "protein"
+        },
+        {
+          "node_id": "n2",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
+    }
+  },
+  {
+    "question": "Which genes associated with prostate-related phenotypes encode proteins, and what biological processes are those proteins involved in?",
+    "sparql": "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX sio: <http://semanticscience.org/resource/>\nSELECT DISTINCT ?phen ?gene ?prot ?bp\nWHERE {\n    ?phen skos:prefLabel ?phenotype_label .\n    Filter(regex(?phenotype_label, \"prostate cancer\" , \"i\"))\n     ?gene obo:RO_0002331 ?phen .\n\t ?gene <http://purl.obolibrary.org/obo/RO_0002162> <http://purl.obolibrary.org/obo/NCBITaxon_9606> .\n     ?gene sio:SIO_010078 ?prot .\n    OPTIONAL {\n\t?prot obo:RO_0002331 ?bp .\n   } \n}",
+    "extractor": {
+      "outputs": [
+        "n0",
+        "n2"
+      ],
+      "nodes": {
+        "n0": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "phenotype",
+          "span": "prostate-related phenotypes"
+        },
+        "n2": {
+          "type": "biological process"
+        },
+        "n3": {
+          "type": "protein"
+        },
+        "n4": {
+          "type": "organism"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n0",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "n0",
+          "relation": "in taxon",
+          "object": "n4"
+        },
+        {
+          "subject": "n0",
+          "relation": "encodes",
+          "object": "n3"
+        },
+        {
+          "subject": "n3",
+          "relation": "involved in",
+          "object": "n2"
+        }
+      ]
+    },
+    "linker": {
+      "input": [
+        {
+          "node_id": "n1",
+          "span": "prostate-related phenotypes",
+          "type": "phenotype"
+        }
+      ],
+      "output": [
+        {
+          "span": "prostate-related phenotypes",
+          "mode": "filter",
+          "term": "prostate cancer",
+          "predicates": [
+            "http://www.w3.org/2004/02/skos/core#prefLabel"
+          ]
+        }
+      ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        },
+        {
+          "node_id": "n2",
+          "type": "biological process"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
+    }
+  },
+  {
+    "question": "Which genes associated with breast cancer phenotypes have cis-regulatory modules active in particular cell lines, and which proteins do they encode?",
+    "sparql": "BASE <http://rdf.biogateway.eu/graph/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX sio: <http://semanticscience.org/resource/>\nprefix biolink: <https://w3id.org/biolink/vocab/>\nSELECT DISTINCT ?phen ?gene ?crm ?cell_line ?prot\nWHERE {\n\n    ?phen skos:prefLabel ?d .\n    Filter(regex(?d, \"breast cancer\" , \"i\"))\n    ?gene obo:RO_0002331 ?phen .\n    ?crm obo:RO_0002429 ?gene .\n    ?crm2gene rdf:subject ?crm .\n    ?crm2gene rdf:object ?gene .\n    ?inst_crm2gene rdf:type ?crm2gene .\n    ?inst_crm2gene obo:TXPO_0003500 ?cell_line .\n    ?cell_line biolink:category\tbiolink:CellLine .\n    ?gene sio:SIO_010078 ?prot .\n}",
+    "extractor": {
+      "outputs": [
+        "n0",
+        "n3"
+      ],
+      "nodes": {
+        "n0": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "phenotype",
+          "span": "breast cancer phenotypes"
+        },
+        "n2": {
+          "type": "crm"
+        },
+        "n3": {
+          "type": "protein"
+        },
+        "n4": {
+          "type": "cell line"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n0",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "n2",
+          "relation": "positively regulates",
+          "object": "n0"
+        },
+        {
+          "subject": "n2",
+          "relation": "active in",
+          "object": "n4"
+        },
+        {
+          "subject": "n0",
+          "relation": "encodes",
+          "object": "n3"
+        }
+      ]
+    },
+    "linker": {
+      "input": [
+        {
+          "node_id": "n1",
+          "span": "breast cancer phenotypes",
+          "type": "phenotype"
+        }
+      ],
+      "output": [
+        {
+          "span": "breast cancer phenotypes",
+          "mode": "filter",
+          "term": "breast cancer",
+          "predicates": [
+            "http://www.w3.org/2004/02/skos/core#prefLabel"
+          ]
+        }
+      ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        },
+        {
+          "node_id": "n3",
+          "type": "protein"
+        }
+      ],
+      "output": {
+        "attributes": []
+      }
+    }
+  },
+  {
+    "question": "Retrieve genes for prostate cancer phenotypes, their encoded proteins, and details of prostate-active enhancers.",
+    "sparql": "BASE <http://rdf.biogateway.eu/graph/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX sio: <http://semanticscience.org/resource/>\nSELECT DISTINCT ?phen ?gene ?prot ?crm ?enh_label ?enh_start ?enh_end ?chr ?evidence\nWHERE {\n\n?phen skos:prefLabel ?d .\nFilter(regex(?d, \"prostate cancer\" , \"i\"))\n?gene obo:RO_0002331 ?phen .\n?crm obo:RO_0002429 ?gene .\n?gene sio:SIO_010078 ?prot .\n?crm rdfs:subClassOf obo:SO_0000727 .\n?crm skos:prefLabel ?enh_label .\n?crm obo:GENO_0000894 ?enh_start .\n?crm obo:GENO_0000895 ?enh_end .\n?crm obo:BFO_0000050 ?chr .\n?enh_inst rdf:type ?crm .\n?enh_inst\tobo:TXPO_0003500 ?evidence .\t\n}",
+    "extractor": {
+      "outputs": [
+        "n0",
+        "n2",
+        "n3"
+      ],
+      "nodes": {
+        "n0": {
+          "type": "gene"
+        },
+        "n1": {
+          "type": "phenotype",
+          "span": "prostate cancer phenotypes"
+        },
+        "n2": {
+          "type": "protein"
+        },
+        "n3": {
+          "type": "crm"
+        }
+      },
+      "triples": [
+        {
+          "subject": "n0",
+          "relation": "involved in",
+          "object": "n1"
+        },
+        {
+          "subject": "n3",
+          "relation": "positively regulates",
+          "object": "n0"
+        },
+        {
+          "subject": "n0",
+          "relation": "encodes",
+          "object": "n2"
+        }
+      ]
+    },
+    "linker": {
+      "input": [
+        {
+          "node_id": "n1",
+          "span": "prostate cancer phenotypes",
+          "type": "phenotype"
+        }
+      ],
+      "output": [
+        {
+          "span": "prostate cancer phenotypes",
+          "mode": "filter",
+          "term": "prostate cancer",
+          "predicates": [
+            "http://www.w3.org/2004/02/skos/core#prefLabel"
+          ]
+        }
+      ]
+    },
+    "output_designation": {
+      "input": [
+        {
+          "node_id": "n0",
+          "type": "gene"
+        },
+        {
+          "node_id": "n2",
+          "type": "protein"
+        },
+        {
+          "node_id": "n3",
+          "type": "crm"
+        }
+      ],
+      "output": {
+        "attributes": [
+          {
+            "on": "n3",
+            "attribute": "start position"
+          },
+          {
+            "on": "n3",
+            "attribute": "end position"
+          }
+        ]
+      }
+    }
+  }
+]

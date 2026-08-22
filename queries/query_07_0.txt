@@ -1,0 +1,23 @@
+#Which genes associated with breast cancer phenotypes have cis-regulatory modules active in particular cell lines, and which proteins do they encode?
+BASE <http://rdf.biogateway.eu/graph/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX sio: <http://semanticscience.org/resource/>
+prefix biolink: <https://w3id.org/biolink/vocab/>
+SELECT DISTINCT ?phen ?gene ?crm ?cell_line ?prot
+WHERE {
+
+    ?phen skos:prefLabel ?d .
+    Filter(regex(?d, "breast cancer" , "i"))
+    ?gene obo:RO_0002331 ?phen .
+    ?crm obo:RO_0002429 ?gene .
+    ?crm2gene rdf:subject ?crm .
+    ?crm2gene rdf:object ?gene .
+    ?inst_crm2gene rdf:type ?crm2gene .
+    ?inst_crm2gene obo:TXPO_0003500 ?cell_line .
+    ?cell_line biolink:category	biolink:CellLine .
+    ?gene sio:SIO_010078 ?prot .
+}
+

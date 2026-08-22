@@ -1,0 +1,61 @@
+# Count all distinct taxa classified at the species rank in the NCBI Taxonomy.
+BASE <http://rdf.biogateway.eu/graph/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX taxon: <http://purl.obolibrary.org/obo/ncbitaxon#>
+SELECT (count( DISTINCT ?s) as ?taxon )
+WHERE {
+GRAPH <taxon> {
+  {?s taxon:has_rank <http://purl.obolibrary.org/obo/NCBITaxon_species> .}
+}
+}
+
+# Retrieve all taxa ancestral to Homo sapiens in the taxonomic hierarchy, including direct and indirect ancestors, and report the number of hierarchical levels separating each ancestor from Homo sapiens.
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?ancestor ?level
+WHERE {
+  {
+    SELECT ?taxon ?ancestor
+    WHERE {
+      ?taxon rdfs:subClassOf ?ancestor
+    }
+  }
+  OPTION (
+    TRANSITIVE,
+    t_distinct,
+    t_in(?taxon),
+    t_out(?ancestor),
+    t_min(1),
+    t_step('step_no') AS ?level
+  )
+  FILTER (
+    ?taxon = <http://purl.obolibrary.org/obo/NCBITaxon_9606>
+  )
+}
+ORDER BY ?level
+
+# Retrieve all taxa descending from Homo sapiens in the taxonomic hierarchy, including both direct and indirect subclasses, and indicate the number of hierarchical levels separating each taxon from Homo sapiens.?
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?sucesor ?level
+WHERE {
+  {
+    SELECT ?taxon ?sucesor
+    WHERE {
+      ?sucesor rdfs:subClassOf ?taxon
+    }
+  }
+  OPTION (
+    TRANSITIVE,
+    t_distinct,
+    t_in(?taxon),
+    t_out(?sucesor),
+    t_min(1),
+    t_step('step_no') AS ?level
+  )
+  FILTER (
+    ?taxon = <http://purl.obolibrary.org/obo/NCBITaxon_9606>
+  )
+}
+ORDER BY ?level
