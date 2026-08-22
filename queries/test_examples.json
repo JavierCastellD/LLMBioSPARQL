@@ -325,7 +325,7 @@
   },
   {
     "question": "On which chromosome is the GLA gene located?",
-    "sparql": "SELECT DISTINCT ?uri_gene ?chr ?name_chr WHERE { ?uri_gene <http://www.w3.org/2004/02/skos/core#prefLabel> \"GLA\"; <http://purl.obolibrary.org/obo/BFO_0000050> ?chr . ?chr <http://www.w3.org/2004/02/skos/core#prefLabel> ?name_chr. }",
+    "sparql": "SELECT DISTINCT ?name_chr WHERE { ?uri_gene <http://www.w3.org/2004/02/skos/core#prefLabel> \"GLA\"; <http://purl.obolibrary.org/obo/BFO_0000050> ?chr . ?chr <http://www.w3.org/2004/02/skos/core#prefLabel> ?name_chr. }",
     "extractor": {
       "outputs": [
         "n0"
@@ -3970,8 +3970,7 @@
       "output": [
         {
           "span": "chromosome 2",
-          "mode": "bind",
-          "uri": "<FILL>",
+          "mode": "many",
           "term": "chr-2",
           "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
         },
@@ -4163,8 +4162,7 @@
       "output": [
         {
           "span": "chromosome 11",
-          "mode": "bind",
-          "uri": "<FILL>",
+          "mode": "many",
           "term": "chr-11",
           "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
         },
@@ -4359,8 +4357,7 @@
         },
         {
           "span": "chromosome 19",
-          "mode": "bind",
-          "uri": "<FILL>",
+          "mode": "many",
           "term": "chr-19",
           "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
         },
@@ -4548,8 +4545,7 @@
         },
         {
           "span": "chromosome X",
-          "mode": "bind",
-          "uri": "<FILL>",
+          "mode": "many",
           "term": "chr-X",
           "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
         },
@@ -4737,8 +4733,7 @@
         },
         {
           "span": "chromosome 1",
-          "mode": "bind",
-          "uri": "<FILL>",
+          "mode": "many",
           "term": "chr-1",
           "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
         },
@@ -4913,8 +4908,7 @@
       "output": [
         {
           "span": "chromosome 6",
-          "mode": "bind",
-          "uri": "<FILL>",
+          "mode": "many",
           "term": "chr-6",
           "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
         },
@@ -5100,8 +5094,7 @@
         },
         {
           "span": "chromosome 3",
-          "mode": "bind",
-          "uri": "<FILL>",
+          "mode": "many",
           "term": "chr-3",
           "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
         },
@@ -5289,8 +5282,7 @@
         },
         {
           "span": "chromosome 21",
-          "mode": "bind",
-          "uri": "<FILL>",
+          "mode": "many",
           "term": "chr-21",
           "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
         },
