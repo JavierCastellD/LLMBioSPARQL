@@ -19,7 +19,19 @@
         {
           "subject": "n1",
           "relation": "in taxon",
-          "object": "n0"
+          "object": "n0",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -331,7 +343,19 @@
         {
           "subject": "n1",
           "relation": "located on",
-          "object": "n0"
+          "object": "n0",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "chromosome",
+              "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+              "label": "part of",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "chromosome",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -395,22 +419,70 @@
         {
           "subject": "n1",
           "relation": "encodes",
-          "object": "x1"
+          "object": "x1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "enables",
-          "object": "n0"
+          "object": "n0",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "molecular_function",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002327",
+              "label": "enables",
+              "graph": "prot2mf",
+              "subject_type": "protein",
+              "object_type": "molecular_function",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n1",
           "relation": "involved in",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "phenotype",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "gene2phen",
+              "subject_type": "gene",
+              "object_type": "phenotype",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n1",
           "relation": "in taxon",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -496,17 +568,73 @@
         {
           "subject": "n0",
           "relation": "located in",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "chromosome",
+              "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+              "label": "part of",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "chromosome",
+              "reverse": false
+            },
+            {
+              "from": "chromosome",
+              "to": "tad",
+              "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+              "label": "part of",
+              "graph": "tad",
+              "subject_type": "tad",
+              "object_type": "chromosome",
+              "reverse": true
+            }
+          ]
         },
         {
           "subject": "n1",
           "relation": "located in",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "chromosome",
+              "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+              "label": "part of",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "chromosome",
+              "reverse": false
+            },
+            {
+              "from": "chromosome",
+              "to": "tad",
+              "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+              "label": "part of",
+              "graph": "tad",
+              "subject_type": "tad",
+              "object_type": "chromosome",
+              "reverse": true
+            }
+          ]
         },
         {
           "subject": "n1",
           "relation": "in taxon",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -580,7 +708,19 @@
         {
           "subject": "n1",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -652,17 +792,53 @@
         {
           "subject": "n0",
           "relation": "interacts with",
-          "object": "x1"
+          "object": "x1",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "protein",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002436",
+              "label": "molecularly interacts with",
+              "graph": "prot2prot",
+              "subject_type": "protein",
+              "object_type": "protein",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "encoded by",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "gene",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": true
+            }
+          ]
         },
         {
           "subject": "n1",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -735,17 +911,73 @@
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n1",
           "relation": "involved in",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "biological_process",
+              "to": "protein",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": true
+            },
+            {
+              "from": "protein",
+              "to": "gene",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": true
+            },
+            {
+              "from": "gene",
+              "to": "phenotype",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "gene2phen",
+              "subject_type": "gene",
+              "object_type": "phenotype",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "prot",
+              "subject_type": "protein",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -831,12 +1063,36 @@
         {
           "subject": "n0",
           "relation": "enables",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "molecular_function",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002327",
+              "label": "enables",
+              "graph": "prot2mf",
+              "subject_type": "protein",
+              "object_type": "molecular_function",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "prot",
+              "subject_type": "protein",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -912,17 +1168,53 @@
         {
           "subject": "n0",
           "relation": "enables",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "molecular_function",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002327",
+              "label": "enables",
+              "graph": "prot2mf",
+              "subject_type": "protein",
+              "object_type": "molecular_function",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "prot",
+              "subject_type": "protein",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -1008,12 +1300,46 @@
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -1089,17 +1415,63 @@
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "phenotype",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "gene2phen",
+              "subject_type": "gene",
+              "object_type": "phenotype",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -1185,12 +1557,46 @@
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -1262,12 +1668,36 @@
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "prot",
+              "subject_type": "protein",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -1339,12 +1769,46 @@
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -1416,12 +1880,46 @@
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -1493,12 +1991,46 @@
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -1570,12 +2102,36 @@
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "prot",
+              "subject_type": "protein",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -1647,12 +2203,46 @@
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -1724,12 +2314,36 @@
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "prot",
+              "subject_type": "protein",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -1805,17 +2419,83 @@
         {
           "subject": "n0",
           "relation": "regulates",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n1",
           "relation": "involved in",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "biological_process",
+              "to": "protein",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": true
+            },
+            {
+              "from": "protein",
+              "to": "gene",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": true
+            },
+            {
+              "from": "gene",
+              "to": "phenotype",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "gene2phen",
+              "subject_type": "gene",
+              "object_type": "phenotype",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -1901,12 +2581,46 @@
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -1978,12 +2692,36 @@
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "prot",
+              "subject_type": "protein",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -2055,12 +2793,66 @@
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "biological_process",
+              "to": "protein",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": true
+            },
+            {
+              "from": "protein",
+              "to": "gene",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": true
+            },
+            {
+              "from": "gene",
+              "to": "phenotype",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "gene2phen",
+              "subject_type": "gene",
+              "object_type": "phenotype",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "biological_process",
+              "to": "protein",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": true
+            },
+            {
+              "from": "protein",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "prot",
+              "subject_type": "protein",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -2136,17 +2928,63 @@
         {
           "subject": "n0",
           "relation": "regulates",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "gene",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002428",
+              "label": "involved in regulation of",
+              "graph": "tfac2gene",
+              "subject_type": "protein",
+              "object_type": "gene",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "phenotype",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "gene2phen",
+              "subject_type": "gene",
+              "object_type": "phenotype",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -2233,17 +3071,83 @@
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "molecularly interacts with",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "protein",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002436",
+              "label": "molecularly interacts with",
+              "graph": "prot2prot",
+              "subject_type": "protein",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "gene",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": true
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -2330,17 +3234,53 @@
         {
           "subject": "n0",
           "relation": "enables",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "molecular_function",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002327",
+              "label": "enables",
+              "graph": "prot2mf",
+              "subject_type": "protein",
+              "object_type": "molecular_function",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "prot",
+              "subject_type": "protein",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -2426,12 +3366,46 @@
         {
           "subject": "n0",
           "relation": "regulates",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -2506,17 +3480,53 @@
         {
           "subject": "n0",
           "relation": "regulates",
-          "object": "x1"
+          "object": "x1",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "protein",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002428",
+              "label": "involved in regulation of",
+              "graph": "reg2targ",
+              "subject_type": "protein",
+              "object_type": "protein",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "enables",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "molecular_function",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002327",
+              "label": "enables",
+              "graph": "prot2mf",
+              "subject_type": "protein",
+              "object_type": "molecular_function",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "prot",
+              "subject_type": "protein",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -2588,12 +3598,57 @@
         {
           "subject": "n1",
           "relation": "involved in regulation of",
-          "object": "n0"
+          "object": "n0",
+          "correct_path": [
+            {
+              "from": "n1",
+              "to": "x_protein_tfg",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "x_protein_tfg",
+              "to": "x_protein_regulated",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002428",
+              "label": "involved in regulation of",
+              "graph": "reg2targ",
+              "subject_type": "protein",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "n0",
+              "to": "x_protein_regulated",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": true
+            }
+          ],
+          "correct_path_note": "Not among planner's candidates -- true path bridges via reg2targ (protein-protein regulation), a 3-hop route the shortest-path search never returns since a shorter 2-hop tfac2gene route also exists structurally (but is not what the gold data uses)."
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -2662,12 +3717,46 @@
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -2754,32 +3843,104 @@
         {
           "subject": "n0",
           "relation": "located on",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "chromosome",
+              "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+              "label": "part of",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "chromosome",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "encoded by",
-          "object": "n0"
+          "object": "n0",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "gene",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": true
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "enables",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "molecular_function",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002327",
+              "label": "enables",
+              "graph": "prot2mf",
+              "subject_type": "protein",
+              "object_type": "molecular_function",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "involved in",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "x2"
+          "object": "x2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "phenotype",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "gene2phen",
+              "subject_type": "gene",
+              "object_type": "phenotype",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n4"
+          "object": "n4",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -2858,8 +4019,8 @@
     }
   },
   {
-    "question": "Which genes on chromosome 11 encode proteins involved in the apoptotic process of B cells located in the cytoplasm or nucleus in humans?",
-    "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen ?name_biologic_process\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon;\n        obo:BFO_0000050 ?chromosome.\n        ?chromosome skos:prefLabel \"chr-11\".\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n       ?protein obo:RO_0002331 ?biological_process\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot2cc> {\n\t?protein obo:BFO_0000050 ?cellular_component\n}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n      ?biologic_process rdfs:label ?name_biologic_process;\n\t  owl:hasExactSynonym ?synonym_name_biologic_process.\n     ?cellular_component rdfs:label ?name_cellular_component;\n\t owl:hasExactSynonym ?synonym_name_cellular_component.\n    FILTER(REGEX(?name_biologic_process,\"B cell apoptotic process\",\"i\")||REGEX(?synonym_name_biologic_process,\"B cell apoptotic process\",\"i\"))\n    FILTER(REGEX(?name_cellular_component,\"cytoplasm|nucleus\",\"i\")||REGEX(?synonym_name_cellular_component,\"cytoplasm|nucleus\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
+    "question": "Which genes on chromosome 11 encode proteins involved in the apoptotic process located in the cytoplasm or nucleus in humans?",
+    "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen ?name_biologic_process\nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon;\n        obo:BFO_0000050 ?chromosome.\n        ?chromosome skos:prefLabel \"chr-11\".\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n       ?protein obo:RO_0002331 ?biological_process\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot2cc> {\n\t?protein obo:BFO_0000050 ?cellular_component\n}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n      ?biological_process rdfs:label ?name_biologic_process .\n      OPTIONAL { ?biological_process owl:hasExactSynonym ?synonym_name_biologic_process. }\n      ?cellular_component rdfs:label ?name_cellular_component .\n      OPTIONAL { ?cellular_component owl:hasExactSynonym ?synonym_name_cellular_component. }\n    FILTER(REGEX(?name_biologic_process,\"^apoptotic process$\",\"i\")||REGEX(?synonym_name_biologic_process,\"^apoptotic process$\",\"i\"))\n    FILTER(REGEX(?name_cellular_component,\"cytoplasm|nucleus\",\"i\")||REGEX(?synonym_name_cellular_component,\"cytoplasm|nucleus\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
     "extractor": {
       "outputs": [
         "n0"
@@ -2877,7 +4038,7 @@
         },
         "n2": {
           "type": "biological process",
-          "span": "apoptotic process of B cells"
+          "span": "apoptotic process"
         },
         "n3": {
           "type": "cellular component",
@@ -2892,27 +4053,87 @@
         {
           "subject": "n0",
           "relation": "located on",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "chromosome",
+              "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+              "label": "part of",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "chromosome",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "encodes",
-          "object": "x1"
+          "object": "x1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "involved in",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "located in",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "cellular_component",
+              "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+              "label": "part of",
+              "graph": "prot2cc",
+              "subject_type": "protein",
+              "object_type": "cellular_component",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n4"
+          "object": "n4",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -2925,7 +4146,7 @@
         },
         {
           "node_id": "n2",
-          "span": "apoptotic process of B cells",
+          "span": "apoptotic process",
           "type": "biological process"
         },
         {
@@ -2948,9 +4169,9 @@
           "label_predicate": "http://www.w3.org/2004/02/skos/core#prefLabel"
         },
         {
-          "span": "apoptotic process of B cells",
+          "span": "apoptotic process",
           "mode": "filter",
-          "term": "B cell apoptotic process",
+          "term": "apoptotic process",
           "predicates": [
             "http://www.w3.org/2000/01/rdf-schema#label",
             "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
@@ -3021,27 +4242,87 @@
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "located on",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "chromosome",
+              "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+              "label": "part of",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "chromosome",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "encodes",
-          "object": "x1"
+          "object": "x1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "enables",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "molecular_function",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002327",
+              "label": "enables",
+              "graph": "prot2mf",
+              "subject_type": "protein",
+              "object_type": "molecular_function",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "involved in",
-          "object": "n4"
+          "object": "n4",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -3150,27 +4431,87 @@
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "located on",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "chromosome",
+              "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+              "label": "part of",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "chromosome",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "encodes",
-          "object": "x1"
+          "object": "x1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "enables",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "molecular_function",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002327",
+              "label": "enables",
+              "graph": "prot2mf",
+              "subject_type": "protein",
+              "object_type": "molecular_function",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "involved in",
-          "object": "n4"
+          "object": "n4",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -3279,27 +4620,87 @@
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "located on",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "chromosome",
+              "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+              "label": "part of",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "chromosome",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "encodes",
-          "object": "x1"
+          "object": "x1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "enables",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "molecular_function",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002327",
+              "label": "enables",
+              "graph": "prot2mf",
+              "subject_type": "protein",
+              "object_type": "molecular_function",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "involved in",
-          "object": "n4"
+          "object": "n4",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -3407,27 +4808,87 @@
         {
           "subject": "n0",
           "relation": "located on",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "chromosome",
+              "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+              "label": "part of",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "chromosome",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "encoded by",
-          "object": "n0"
+          "object": "n0",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "gene",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": true
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "involved in",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "x2"
+          "object": "x2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "phenotype",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "gene2phen",
+              "subject_type": "gene",
+              "object_type": "phenotype",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -3489,7 +4950,7 @@
   },
   {
     "question": "What are the human genes located on chromosome 3 associated with ADP binding and related to DNA recombination?",
-    "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen \nWHERE {\n  GRAPH <http://rdf.biogateway.eu/graph/gene> {\n    ?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n          skos:prefLabel ?name_gen;\n          sio:SIO_010078 ?protein;\n          obo:RO_0002162 ?taxon;\n          obo:BFO_0000050 ?chromosome.\n          ?chromosome skos:prefLabel \"chr-3\".\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n    ?protein obo:RO_0002331 ?biologic_process.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n    ?protein obo:RO_0002327 ?molecular_function.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/go> {\n    ?biologic_process rdfs:label ?name_biologic_process;\n    owl:hasExactSynonym ?synonym_name_biologic_process.\n    ?molecular_function rdfs:label ?name_molecular_function;\n    owl:hasExactSynonym ?synonym_name_molecular_function.\n    FILTER(REGEX(?name_molecular_function, \"ADP binding\", \"i\")|| REGEX(?synonym_name_molecular_function, \"ADP binding\", \"i\"))\n    FILTER(REGEX(?name_biologic_process, \"DNA recombination\", \"i\") ||REGEX(?synonym_name_biologic_process, \"DNA recombination\", \"i\"))\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    ?taxon rdfs:label \"Homo sapiens\".\n  }\n}",
+    "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen \nWHERE {\n  GRAPH <http://rdf.biogateway.eu/graph/gene> {\n    ?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n          skos:prefLabel ?name_gen;\n          sio:SIO_010078 ?protein;\n          obo:RO_0002162 ?taxon;\n          obo:BFO_0000050 ?chromosome.\n          ?chromosome skos:prefLabel \"chr-3\".\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n    ?protein obo:RO_0002331 ?biologic_process.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n    ?protein obo:RO_0002327 ?molecular_function.\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/go> {\n    ?biologic_process rdfs:label ?name_biologic_process.\n    OPTIONAL { ?biologic_process owl:hasExactSynonym ?synonym_name_biologic_process. }\n    ?molecular_function rdfs:label ?name_molecular_function.\n    OPTIONAL { ?molecular_function owl:hasExactSynonym ?synonym_name_molecular_function. }\n    FILTER(REGEX(?name_molecular_function, \"ADP binding\", \"i\")||REGEX(?synonym_name_molecular_function, \"ADP binding\", \"i\"))\n    FILTER(REGEX(?name_biologic_process, \"DNA recombination\", \"i\")||REGEX(?synonym_name_biologic_process, \"DNA recombination\", \"i\"))\n  }\n  GRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    ?taxon rdfs:label \"Homo sapiens\".\n  }\n}",
     "extractor": {
       "outputs": [
         "n0"
@@ -3519,22 +4980,90 @@
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "located on",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "chromosome",
+              "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+              "label": "part of",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "chromosome",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "enables",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "molecular_function",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002327",
+              "label": "enables",
+              "graph": "prot2mf",
+              "subject_type": "protein",
+              "object_type": "molecular_function",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n4"
+          "object": "n4",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -3610,7 +5139,7 @@
   },
   {
     "question": "What are the human genes on chromosome 21 that encode proteins associated with histone binding and DNA repair?",
-    "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon;\n        obo:BFO_0000050 ?chromosome.\n        ?chromosome skos:prefLabel \"chr-21\".\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n       ?protein obo:RO_0002331 ?biologic_process\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n     ?protein obo:RO_0002327 ?molecular_function.\n}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n      ?biologic_process rdfs:label ?name_biologic_process;\n\t  owl:hasExactSynonym ?synonym_name_biologic_process\n      ?molecular_function rdfs:label ?name_molecular_function;\n\t  owl:hasExactSynonym ?synonym_name_molecular_function\n      FILTER(REGEX(?name_molecular_function,\"histone binding\",\"i\")||REGEX(?synonym_name_molecular_function,\"histone binding\",\"i\"))\n      FILTER(REGEX(?name_biologic_process,\"DNA repair\",\"i\")||REGEX(?synonym_name_biologic_process,\"DNA repair\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
+    "sparql": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX obo: <http://purl.obolibrary.org/obo/>\nPREFIX sio: <http://semanticscience.org/resource/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>\n\nSELECT DISTINCT ?name_gen \nWHERE {\nGRAPH <http://rdf.biogateway.eu/graph/gene> {\n\t?uri_gen rdfs:subClassOf <http://semanticscience.org/resource/SIO_010035>;\n     \tskos:prefLabel ?name_gen;\n     \tsio:SIO_010078 ?protein;\n     \tobo:RO_0002162 ?taxon;\n        obo:BFO_0000050 ?chromosome.\n        ?chromosome skos:prefLabel \"chr-21\".\n\t}\nGRAPH <http://rdf.biogateway.eu/graph/prot2bp> {\n       ?protein obo:RO_0002331 ?biologic_process\n}\nGRAPH <http://rdf.biogateway.eu/graph/prot2mf> {\n     ?protein obo:RO_0002327 ?molecular_function.\n}\nGRAPH <http://rdf.biogateway.eu/graph/go> {\n      ?biologic_process rdfs:label ?name_biologic_process .\n      OPTIONAL { ?biologic_process owl:hasExactSynonym ?synonym_name_biologic_process . }\n      ?molecular_function rdfs:label ?name_molecular_function .\n      OPTIONAL { ?molecular_function owl:hasExactSynonym ?synonym_name_molecular_function . }\n      FILTER(REGEX(?name_molecular_function,\"histone binding\",\"i\")||REGEX(?synonym_name_molecular_function,\"histone binding\",\"i\"))\n      FILTER(REGEX(?name_biologic_process,\"DNA repair\",\"i\")||REGEX(?synonym_name_biologic_process,\"DNA repair\",\"i\"))\n}\nGRAPH <http://rdf.biogateway.eu/graph/taxon> {\n    \t?taxon rdfs:label \"Homo sapiens\".\n  \t}\n}",
     "extractor": {
       "outputs": [
         "n0"
@@ -3643,27 +5172,87 @@
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "located on",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "chromosome",
+              "predicate": "http://purl.obolibrary.org/obo/BFO_0000050",
+              "label": "part of",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "chromosome",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "encodes",
-          "object": "x1"
+          "object": "x1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "enables",
-          "object": "x2"
+          "object": "x2",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "molecular_function",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002327",
+              "label": "enables",
+              "graph": "prot2mf",
+              "subject_type": "protein",
+              "object_type": "molecular_function",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "involved in",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -3764,17 +5353,53 @@
         {
           "subject": "n0",
           "relation": "encoded by",
-          "object": "x1"
+          "object": "x1",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "gene",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": true
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "involved in",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "phenotype",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "gene2phen",
+              "subject_type": "gene",
+              "object_type": "phenotype",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "x1",
           "relation": "in taxon",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -3853,22 +5478,90 @@
         {
           "subject": "n2",
           "relation": "in taxon",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "encoded by",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "gene",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": true
+            }
+          ]
         },
         {
           "subject": "n2",
           "relation": "enables",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "molecular_function",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002327",
+              "label": "enables",
+              "graph": "prot2mf",
+              "subject_type": "protein",
+              "object_type": "molecular_function",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n2",
           "relation": "involved in",
-          "object": "n4"
+          "object": "n4",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            },
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -3961,22 +5654,70 @@
         {
           "subject": "n0",
           "relation": "encodes",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "protein",
+              "predicate": "http://semanticscience.org/resource/SIO_010078",
+              "label": "encodes",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "protein",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n1",
           "relation": "involved in",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n3"
+          "object": "n3",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "phenotype",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "gene2phen",
+              "subject_type": "gene",
+              "object_type": "phenotype",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n4"
+          "object": "n4",
+          "correct_path": [
+            {
+              "from": "gene",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "gene",
+              "subject_type": "gene",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
@@ -4062,12 +5803,36 @@
         {
           "subject": "n0",
           "relation": "involved in",
-          "object": "n1"
+          "object": "n1",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "biological_process",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002331",
+              "label": "involved in",
+              "graph": "prot2bp",
+              "subject_type": "protein",
+              "object_type": "biological_process",
+              "reverse": false
+            }
+          ]
         },
         {
           "subject": "n0",
           "relation": "in taxon",
-          "object": "n2"
+          "object": "n2",
+          "correct_path": [
+            {
+              "from": "protein",
+              "to": "organism",
+              "predicate": "http://purl.obolibrary.org/obo/RO_0002162",
+              "label": "in taxon",
+              "graph": "prot",
+              "subject_type": "protein",
+              "object_type": "organism",
+              "reverse": false
+            }
+          ]
         }
       ]
     },
