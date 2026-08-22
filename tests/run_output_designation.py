@@ -58,8 +58,8 @@ def main() -> None:
         print(f"[{i}/{len(examples)}] {question}")
         result = designator.designate(question, output_nodes)
         results.append({"question": question, "output_designation": result})
+        args.output.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    args.output.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"Wrote {len(results)} results to {args.output}")
 
 

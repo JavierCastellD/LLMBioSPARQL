@@ -48,8 +48,8 @@ def main() -> None:
             item["output_designation"]["output"],
         )
         results.append({"question": question, **result})
+        args.output.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    args.output.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"Wrote {len(results)} results to {args.output}")
 
 

@@ -39,8 +39,8 @@ def main() -> None:
         print(f"[{i}/{len(items)}] {question}")
         result = planner.resolve_relations(extracted["nodes"], extracted["triples"])
         results.append({"question": question, "result": result})
+        args.output.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    args.output.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"Wrote {len(results)} results to {args.output}")
 
 

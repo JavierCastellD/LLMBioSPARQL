@@ -1,7 +1,7 @@
 import os
 
 OLLAMA_BASE_URL = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
-OLLAMA_MODEL = "qwen3:32b"
+OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "qwen3:32b")
 #"qwen3:32b" "qwen2.5:7b"
 
 # Whether to enable "thinking"/reasoning traces for models that support it

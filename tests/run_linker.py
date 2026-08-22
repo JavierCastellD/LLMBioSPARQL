@@ -36,8 +36,8 @@ def main() -> None:
         print(f"[{i}/{len(examples)}] {question}")
         output = linker.link(question, span_nodes)
         results.append({"question": question, "linker": {"input": span_nodes, "output": output}})
+        args.output.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    args.output.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"Wrote {len(results)} results to {args.output}")
 
 
