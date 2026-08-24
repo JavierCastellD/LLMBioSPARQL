@@ -129,7 +129,3 @@ python tests/run_pipeline.py queries/test_examples.json results/pipeline/my_run_
 ```
 
 Batch-run an individual stage, or the tail of the pipeline (stages 4-6) fed with gold intermediate results to evaluate it in isolation — see `queries/test_examples.json` for the expected input schema and `tests/run_*.py` docstrings for each script's exact input/output shape.
-
-### Evaluation
-
-`evaluation.ipynb` scores each stage independently against `queries/test_examples.json` (concept extraction, output designation, entity linking, path planning/resolution), then scores SPARQL generation both in isolation and as the full chained pipeline — plus a separate section against the harder, hand-authored `queries/manual_examples.json`. Only `test_examples.json`/`manual_examples.json` are used for evaluation; `train_examples.json` supplies the in-prompt few-shot examples and is never scored.
