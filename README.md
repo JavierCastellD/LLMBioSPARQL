@@ -1,4 +1,4 @@
-# LLMBioSPARQL
+# Large Language Models for SPARQL Query Generation over Biomedical Knowledge Graphs
 
 A natural-language to SPARQL pipeline for [BioGateway](http://biogateway.eu), a biomedical RDF knowledge graph that integrates data about human genes, proteins, cis-regulatory modules (CRMs/enhancers), transcription factors, phenotypes/diseases, and Gene Ontology biological processes.
 
