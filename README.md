@@ -48,8 +48,6 @@ LLMBioSPARQL/
 │   ├── BGW_graphs.xlsx            # Spreadsheet describing BioGateway's named graphs/predicates
 │   └── pathmap.json               # Generated path map consumed by PathPlanner
 ├── queries/                        # Example/gold question-SPARQL pairs — see queries/README.md
-├── results/                        # Batch-run outputs, one subfolder per stage + pipeline
-├── evaluation.ipynb                # Per-stage and end-to-end evaluation against queries/test_examples.json
 └── requirements.txt
 ```
 
