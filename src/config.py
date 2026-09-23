@@ -66,3 +66,18 @@ PATH_RESOLVER_TIEBREAK_PROMPT = "path_resolver_tiebreak"
 
 # How many times to retry if the model returns malformed JSON.
 PATH_RESOLVER_MAX_RETRIES = 2
+
+# --- Direct generator (ablation baseline: single-prompt SPARQL generation) --
+
+# Name of the prompt template (under src/direct_generator/prompts/, without
+# the ".txt" extension) used to author SPARQL directly from the question.
+DIRECT_GENERATOR_PROMPT = "direct_generator"
+
+# Max repair attempts after a parse/execution error, same contract as
+# SPARQL_GENERATOR_MAX_REPAIR.
+DIRECT_GENERATOR_MAX_REPAIR = 2
+
+# Project-relative path to the {"question", "sparql"} few-shot examples used
+# to prompt the direct generator. Reuses the same train split as every other
+# stage, so the ablation and the full pipeline see identical examples.
+DIRECT_GENERATOR_FEWSHOT_FILE = "queries/train_examples.json"
